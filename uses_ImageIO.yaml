@@ -1,0 +1,25 @@
+Imports:
+- ../core_project.yaml
+- ../CcpCore/uses_CcpCore.yaml
+- ../../../../../../sdk/libpng/1.4.0/libpng_1.4.0.yaml
+- ../../../../../../sdk/libJPG/jpeg-8c/jpeg-8c.yaml
+
+Link:
+  AdditionalLibraryDirectories:
+  - ../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/
+
+Configurations:
+  Debug|Any:
+    Link:
+      AdditionalDependencies:
+      - ImageIO_d.lib
+  
+  Dev|Any:
+    Link:
+      AdditionalDependencies:
+      - ImageIO_dev.lib
+  
+  Release|Any:
+    Link:
+      AdditionalDependencies:
+      - ImageIO.lib

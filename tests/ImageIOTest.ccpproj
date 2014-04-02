@@ -1,0 +1,114 @@
+ProjectGuid: 504BC561-AF34-424A-82B7-D381526FA474
+# These are the SDKs that are used by all configurations
+Imports:
+- ../core_project.yaml
+- ../ImageIO/uses_ImageIO.yaml
+- ../../../../../../sdk/GoogleTest/1.6.0/gtest.yaml
+
+# Settings from the General section, for all configurations
+General:
+  ConfigurationType: Application
+  UseOfMfc: false
+  IntDir: ../temp/$(ProjectName)/$(Platform)/$(Configuration)/$(PlatformToolset)/
+  OutDir: ../../autobuild/ImageIOTest/$(Platform)/$(PlatformToolset)/
+  TargetExt: .exe
+
+ClCompile:
+  CppExceptions: true
+  RuntimeTypeInfo: true
+  EnableEnhancedInstructionSet: StreamingSIMDExtensions2
+  PrecompiledHeader: Use
+  PrecompiledHeaderFile: StdAfx.h
+  PrecompiledHeaderOutputFile: $(IntDir)imageio.pch
+  AdditionalIncludeDirectories:
+  - ..
+  PreprocessorDefinitions:
+  - BLUEBUILD
+
+Link:
+  GenerateDebugInformation: true
+  ProgramDatabaseFile: $(TargetDir)$(TargetName).pdb
+
+BaseConfigurations:
+  Windows:
+    Imports:
+    - ../../../../../../sdk/zlib/1.2.3/zlib_1.2.3.yaml
+
+  Android:
+    General:
+      AndroidTargetAPI: android-14
+      TargetExt: .so
+    Link:
+      AdditionalDependencies:
+      - log
+      - android
+      
+  Debug:
+    General: 
+      TargetName: ImageIOTest_d
+      LinkIncremental: true
+    ClCompile:
+      PreprocessorDefinitions:
+      - _DEBUG
+      Optimization: Disabled
+      RuntimeLibrary: MultiThreadedDebugDLL
+      DebugInformationFormat: EditAndContinue
+
+  Release:
+    General:
+      TargetName: ImageIOTest
+
+Configurations:
+  Debug|Win32,x64:
+    BaseConfigurations:
+    - Debug
+    - Windows
+
+  Debug|Linux32,Linux64,Mac64,ORBIS:
+    BaseConfigurations:
+    - Debug
+
+  Dev|Win32,x64:
+    BaseConfigurations:
+    - Windows
+    General: 
+      TargetName: ImageIOTest_dev
+    ClCompile:
+      Optimization: Disabled
+
+  Release|Win32,x64:
+    BaseConfigurations:
+    - Release
+    - Windows
+
+  Release|Win32,x64,Linux32,Linux64,Mac64,ORBIS:
+    BaseConfigurations:
+    - Release
+
+  Release_Coverage|Mac64:
+    Imports:
+    - ../CcpCore/uses_CcpCoreCoverage.yaml
+    General:
+      TargetName: ImageIOTest_cc
+      GenerateCodeCoverage: true
+
+  Debug|Tegra-Android:
+    BaseConfigurations:
+    - Android
+    General: 
+      TargetName: libImageIOTest_d
+    ClCompile:
+      PreprocessorDefinitions:
+      - _DEBUG
+      Optimization: Disabled
+    AntBuild:
+      AndroidManifestLocation: AndroidManifest_d.xml
+
+  Release|Tegra-Android:
+    BaseConfigurations:
+    - Android
+    General:
+      TargetName: libImageIOTest
+    ClCompile:
+      GenerateDebugInformation: False
+      OptimizationLevel: O3

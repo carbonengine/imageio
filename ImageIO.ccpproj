@@ -1,0 +1,139 @@
+# These are the SDKs that are used by all configurations
+Imports:
+- ../core_project.yaml
+- ../CcpCore/uses_CcpCore.yaml
+- ../../../../../../sdk/libpng/1.4.0/libpng_1.4.0.yaml
+- ../../../../../../sdk/libJPG/jpeg-8c/jpeg-8c.yaml
+
+# Settings from the General section, for all configurations
+General:
+  ConfigurationType: StaticLibrary
+  UseOfMfc: false
+  IntDir: ../temp/ImageIO/$(Platform)/$(Configuration)/$(PlatformToolset)/
+  OutDir: ../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/
+  TargetExt: .lib
+
+ClCompile:
+  CppExceptions: true
+  RuntimeTypeInfo: true
+  WarningLevel: Level3
+  TreatWarningAsError: true
+  BufferSecurityCheck: false
+  EnableEnhancedInstructionSet: StreamingSIMDExtensions2
+  PrecompiledHeader: Use
+  PrecompiledHeaderFile: StdAfx.h
+  PrecompiledHeaderOutputFile: $(IntDir)imageio.pch
+  FloatingPointModel: Fast
+  AdditionalIncludeDirectories:
+  - ..
+
+Link:
+  GenerateDebugInformation: true
+  ProgramDatabaseFile: $(TargetDir)$(TargetName).pdb
+
+BaseConfigurations:
+  Debug:
+    General: 
+      LinkIncremental: true
+    ClCompile:
+      PreprocessorDefinitions:
+      - _DEBUG
+      - CCP_ASSERT_ENABLED=1
+      Optimization: Disabled
+      RuntimeLibrary: MultiThreadedDebugDLL
+      DebugInformationFormat: EditAndContinue
+  
+  Dev:
+    General: 
+      LinkIncremental: true
+    ClCompile:
+      PreprocessorDefinitions:
+      - NDEBUG
+      - CCP_ASSERT_ENABLED=1
+      Optimization: Disabled
+      RuntimeLibrary: MultiThreadedDLL
+      DebugInformationFormat: EditAndContinue
+
+  Release:
+    ClCompile:
+      PreprocessorDefinitions:
+      - NDEBUG
+      Optimization: MaxSpeed
+      RuntimeLibrary: MultiThreadedDLL
+      DebugInformationFormat: ProgramDatabase
+      WholeProgramOptimization: true
+    Link:
+      LinkTimeCodeGeneration: UseLinkTimeCodeGeneration
+
+  CodeCoverage:
+    General: 
+      GenerateCodeCoverage: true
+    ClCompile:
+      PreprocessorDefinitions:
+      - NDEBUG
+      Optimization: Disabled
+      RuntimeLibrary: MultiThreadedDLL
+      DebugInformationFormat: ProgramDatabase
+
+  Windows:
+    Imports:
+    - ../../../../../../sdk/zlib/1.2.3/zlib_1.2.3.yaml
+  
+  Android:
+    General:
+      AndroidTargetAPI: android-14
+      TargetExt: .a
+
+Configurations:
+  Debug|Win32,x64:
+    BaseConfigurations:
+    - Debug
+    - Windows
+    General:
+      TargetName: ImageIO_d
+  
+  Debug|Linux32,Linux64,Mac32,Mac64:
+    BaseConfigurations:
+    - Debug
+    General:
+      TargetName: ImageIO_d
+  
+  Dev|Win32,x64:
+    BaseConfigurations:
+    - Dev
+    - Windows
+    General:
+      TargetName: ImageIO_dev
+  
+  Release|Win32,x64:
+    BaseConfigurations:
+    - Release
+    - Windows
+    General:
+      TargetName: ImageIO
+  
+  Release|Linux32,Linux64,Mac32,Mac64:
+    BaseConfigurations:
+    - Release
+    General:
+      TargetName: ImageIO
+  
+  Release_Coverage|Mac32,Mac64:
+    BaseConfigurations:
+    - CodeCoverage
+    General:
+      TargetName: ImageIO_cc
+
+  Debug|Tegra-Android:
+    BaseConfigurations:
+    - Debug
+    - Android
+    General:
+      TargetName: libImageIO_d
+
+  Release|Tegra-Android:
+    BaseConfigurations:
+    - Release
+    - Android
+    General:
+      TargetName: libImageIO
