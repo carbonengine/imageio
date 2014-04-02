@@ -4,9 +4,6 @@
     <Filter Include="Source Files"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="autoversion.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="HostBitmap.h">
       <Filter>Source Files</Filter>
     </ClInclude>
