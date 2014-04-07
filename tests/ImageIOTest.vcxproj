@@ -129,7 +129,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_DEBUG;BLUEBUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <PrecompiledHeaderOutputFile>$(IntDir)imageio.pch</PrecompiledHeaderOutputFile>
@@ -141,7 +141,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib_d.lib;zlib_d.lib;ImageIO_d.lib;CcpCore_d.lib;telemetry32.link.lib;libpng_d.lib;jpeg_d.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -151,7 +151,7 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>BLUEBUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <PrecompiledHeaderOutputFile>$(IntDir)imageio.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
@@ -161,7 +161,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;ImageIO.lib;CcpCore.lib;telemetry64.link.lib;libpng.lib;jpeg.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -171,7 +171,7 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>BLUEBUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <PrecompiledHeaderOutputFile>$(IntDir)imageio.pch</PrecompiledHeaderOutputFile>
       <Optimization>Disabled</Optimization>
@@ -182,7 +182,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;ImageIO_dev.lib;CcpCore.lib;telemetry32.link.lib;libpng.lib;jpeg.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -192,7 +192,7 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>BLUEBUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <PrecompiledHeaderOutputFile>$(IntDir)imageio.pch</PrecompiledHeaderOutputFile>
       <Optimization>Disabled</Optimization>
@@ -203,7 +203,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;ImageIO_dev.lib;CcpCore.lib;telemetry64.link.lib;libpng.lib;jpeg.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -214,7 +214,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_DEBUG;BLUEBUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <PrecompiledHeaderOutputFile>$(IntDir)imageio.pch</PrecompiledHeaderOutputFile>
@@ -226,7 +226,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib_d.lib;zlib_d.lib;ImageIO_d.lib;CcpCore_d.lib;telemetry64.link.lib;libpng_d.lib;jpeg_d.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -236,7 +236,7 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>BLUEBUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;$(CcpSdkPath)/googletest/1.6.0/include;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <PrecompiledHeaderOutputFile>$(IntDir)imageio.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
@@ -246,13 +246,14 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)/googletest/1.6.0/lib/VC100.SP1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);../../autobuild/ImageIO/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;ImageIO.lib;CcpCore.lib;telemetry32.link.lib;libpng.lib;jpeg.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile/>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="autoversion.h"/>
     <ClInclude Include="MemoryStream.h"/>
     <ClInclude Include="StdAfx.h"/>
     <ClInclude Include="TestHelpers.h"/>

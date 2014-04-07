@@ -129,7 +129,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_DEBUG;CCP_ASSERT_ENABLED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <TreatWarningAsError>True</TreatWarningAsError>
@@ -145,7 +145,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib_d.lib;zlib_d.lib;CcpCore_d.lib;telemetry32.link.lib;libpng_d.lib;jpeg_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -156,7 +156,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>_DEBUG;CCP_ASSERT_ENABLED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <TreatWarningAsError>True</TreatWarningAsError>
@@ -172,7 +172,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib_d.lib;zlib_d.lib;CcpCore_d.lib;telemetry64.link.lib;libpng_d.lib;jpeg_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -183,7 +183,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;CCP_ASSERT_ENABLED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <TreatWarningAsError>True</TreatWarningAsError>
@@ -199,7 +199,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;CcpCore.lib;telemetry32.link.lib;libpng.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -210,7 +210,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;CCP_ASSERT_ENABLED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <TreatWarningAsError>True</TreatWarningAsError>
@@ -226,7 +226,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;CcpCore.lib;telemetry64.link.lib;libpng.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -237,7 +237,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>True</WholeProgramOptimization>
@@ -255,7 +255,7 @@
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;CcpCore.lib;telemetry64.link.lib;libpng.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -266,7 +266,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0j\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CcpSdkPath)\zlib\1.2.3\include;$(CcpSdkPath)\zlib\1.2.3\include;.;$(CcpBranchPath)/carbon/src;$(CcpSdkPath)\telemetry\2.0k\include;$(CcpSdkPath)/libpng/1.4.0/include;$(CcpSdkPath)/libjpg/jpeg-8c;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>True</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>True</WholeProgramOptimization>
@@ -284,13 +284,14 @@
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0j\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0k\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;CcpCore.lib;telemetry32.link.lib;libpng.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile/>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="autoversion.h"/>
     <ClInclude Include="HostBitmap.h"/>
     <ClInclude Include="PsdHandler.h"/>
     <ClInclude Include="StdAfx.h"/>
