@@ -7,6 +7,7 @@
 #define DDS_INDEXED 0x00000020 // DDPF_INDEXED
 #define DDS_RGB     0x00000040 // DDPF_RGB
 #define DDS_RGBA    0x00000041 // DDPF_RGB | DDPF_ALPHAPIXELS
+#define DDS_LUMINANCE 0x20000
 
 #define DDS_HEADER_FLAGS_TEXTURE    0x00001007  // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT 
 #define DDS_HEADER_FLAGS_MIPMAP     0x00020000  // DDSD_MIPMAPCOUNT
@@ -374,7 +375,11 @@ bool Tr2DdsHandler::MakePixelFormat( DDS_PIXELFORMAT &ddspf, const Tr2BitmapDime
 				}
 				else
 				{
-					if( s_ddsFormats[i].amask != 0x0 || s_ddsFormats[i].fourCC != 0 )
+					if( s_ddsFormats[i].format == DDSFMT_L8 )
+					{
+						ddspf.dwFlags = DDS_LUMINANCE;
+					}
+					else if( s_ddsFormats[i].amask != 0x0 || s_ddsFormats[i].fourCC != 0 )
 					{
 						ddspf.dwFlags = DDS_RGBA;
 					}
@@ -558,7 +563,7 @@ bool Tr2DdsHandler::BuildHeader( const Tr2BitmapDimensions& bd )
 	// Figure out the linear data size (for compressed textures)
 	if( bCompressed )
 	{
-		m_header.dwPitchOrLinearSize = GetMipLevelSize( 0 );
+		m_header.dwPitchOrLinearSize = bd.GetMipSize( 0 );
 	}
 	// Figure out the pitch (for uncompressed textures)
 	else
