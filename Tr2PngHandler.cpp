@@ -184,20 +184,6 @@ bool Tr2PngHandler::ReadHeader( ICcpStream* stream )
 		isAlphaExpand = true;
 		png_set_tRNS_to_alpha( m_png );
 	}
-
-	// If the image Has 16 bits per channel precision... round it down to 8.
-#ifdef __clang__
-    // Disable deprecated warning for bit_depth
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#endif
-	if( m_info->bit_depth == 16 )
-	{
-		png_set_strip_16( m_png );
-	}
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
     
 	m_channels = IsValid() ? png_get_channels    ( m_png, m_info ) : 0;
 
@@ -217,15 +203,11 @@ bool Tr2PngHandler::ReadHeader( ICcpStream* stream )
 	}
 	else
 	{
-		if( IsValid() && png_get_bit_depth( m_png, m_info ) == 16 )
-		{
-			// using png_set_strip16 to reduce this to 32 bit
-			m_bitsPerPixel = IsValid() ? 8 * m_channels : 0;
-		}
-		else
-		{
-			m_bitsPerPixel = IsValid() ? png_get_bit_depth( m_png, m_info ) * m_channels : 0;
-		}
+		m_bitsPerPixel = IsValid() ? png_get_bit_depth( m_png, m_info ) * m_channels : 0;
+	}
+	if( png_get_bit_depth( m_png, m_info ) > 8 )
+	{
+		png_set_swap( m_png );
 	}
 
 	const float pngUnitScale = 1.0f / 1000000.0f;
@@ -251,6 +233,7 @@ bool Tr2PngHandler::IsSupported() const
 		m_bitsPerPixel == 16 ||
 		m_bitsPerPixel == 24 ||
 		m_bitsPerPixel == 32 ||
+		m_bitsPerPixel == 48 ||
 		m_bitsPerPixel == 64 )
 	{
 		return true;
@@ -265,16 +248,40 @@ bool Tr2PngHandler::IsSupported() const
 
 Tr2RenderContextEnum::PixelFormat Tr2PngHandler::GetFormat() const
 {
+	switch( m_channels )
+	{
+	case 1:
+		switch( m_bitsPerPixel )
+		{
+		case 8:
+			return PIXEL_FORMAT_R8_UNORM;
+		case 16:
+			return PIXEL_FORMAT_R16_UNORM;
+		}
+	case 2:
+		switch( m_bitsPerPixel )
+		{
+		case 16:
+			return PIXEL_FORMAT_R8G8_UNORM;
+		case 32:
+			return PIXEL_FORMAT_R16G16_UNORM;
+		}
+	case 3:
+		switch( m_bitsPerPixel )
+		{
+		case 24:
+		case 32:
+			return PIXEL_FORMAT_B8G8R8X8_UNORM;
+		case 48:
+			return PIXEL_FORMAT_R16G16B16A16_UNORM;
+		}
+	}
 	switch( m_bitsPerPixel )
 	{
-	case 8:
-		return PIXEL_FORMAT_R8_UNORM;
-
-	case 16:
-		return PIXEL_FORMAT_R8G8_UNORM;
-
-	case 24:
-		return PIXEL_FORMAT_B8G8R8X8_UNORM;
+	case 32:
+		return PIXEL_FORMAT_B8G8R8A8_UNORM;
+	case 64:
+		return PIXEL_FORMAT_R16G16B16A16_UNORM;
 	}
 	if( m_channels == 3 )
 	{
@@ -341,44 +348,83 @@ bool Tr2PngHandler::ReadImage( ICcpStream* stream )
 	if( !m_haveError && m_channels == 3 )
 	{
 		// upsample from RGB to D3DFMT_X8R8G8B8
-		unsigned newDataSize = GetWidth() * GetHeight() * 4;
-		uint8_t* newData = (uint8_t*)CCP_MALLOC( "Tr2PngHandler/newData", newDataSize );
-
-		if( !newData )
+		// upsample from RGB to D3DFMT_X8R8G8B8
+		if( m_bitsPerPixel == 48 )
 		{
-			CCP_LOGERR( "Tr2PngHandler/newData - out of memory!" );
-			m_haveError = true;
+			unsigned newDataSize = GetWidth() * GetHeight() * 8;
+			uint8_t* newData = (uint8_t*)CCP_MALLOC( "Tr2PngHandler/newData", newDataSize );
 
-			CCP_FREE( m_data );
+			if( !newData )
+			{
+				CCP_LOGERR( "Tr2PngHandler/newData - out of memory!" );
+				m_haveError = true;
 
-			m_dataSize		= 0;
-			m_data			= NULL;
-			m_bitsPerPixel	= 0;
-			m_channels		= 0;
+				CCP_FREE( m_data );
+
+				m_dataSize		= 0;
+				m_data			= NULL;
+				m_bitsPerPixel	= 0;
+				m_channels		= 0;
+			}
+			else
+			{
+				uint16_t* in = reinterpret_cast<uint16_t*>( m_data );
+				uint16_t* out = reinterpret_cast<uint16_t*>( newData );
+				unsigned count = GetWidth() * GetHeight();
+				while( count-- )
+				{
+					*out++ = *in++;
+					*out++ = *in++;
+					*out++ = *in++;
+					*out++ = 0xFFFF;
+				}
+				CCP_FREE( m_data );
+
+				m_dataSize = newDataSize;
+				m_data = newData;
+				m_bitsPerPixel = 64;
+				m_channels = 4;
+			}
 		}
 		else
 		{
-			uint8_t* in = m_data;
-			uint8_t* out = newData;
-			unsigned count = GetWidth() * GetHeight();
-			while( count-- )
+			unsigned newDataSize = GetWidth() * GetHeight() * 4;
+			uint8_t* newData = (uint8_t*)CCP_MALLOC( "Tr2PngHandler/newData", newDataSize );
+
+			if( !newData )
 			{
-				*out++ = in[2];
-				*out++ = in[1];
-				*out++ = in[0];
-				*out++ = 0xFF;
-				in += 3;
+				CCP_LOGERR( "Tr2PngHandler/newData - out of memory!" );
+				m_haveError = true;
+
+				CCP_FREE( m_data );
+
+				m_dataSize		= 0;
+				m_data			= NULL;
+				m_bitsPerPixel	= 0;
+				m_channels		= 0;
 			}
-			CCP_FREE( m_data );
+			else
+			{
+				uint8_t* in = m_data;
+				uint8_t* out = newData;
+				unsigned count = GetWidth() * GetHeight();
+				while( count-- )
+				{
+					*out++ = in[2];
+					*out++ = in[1];
+					*out++ = in[0];
+					*out++ = 0xFF;
+					in += 3;
+				}
+				CCP_FREE( m_data );
 
-			m_dataSize		= newDataSize;
-			m_data			= newData;
-			m_bitsPerPixel	= 32;
+				m_dataSize		= newDataSize;
+				m_data			= newData;
+				m_bitsPerPixel	= 32;
+			}
 		}
-
 	}
-	else
-	if( !m_haveError && m_channels > 2 )
+	else if( !m_haveError && m_channels > 2 && m_bitsPerPixel == 32 )
 	{
 		const unsigned bytes = m_bitsPerPixel / 8;
 
@@ -441,6 +487,8 @@ bool Tr2PngHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
 	if( bd.GetFormat() != PIXEL_FORMAT_B8G8R8X8_UNORM		&&
 		bd.GetFormat() != PIXEL_FORMAT_B8G8R8A8_UNORM		&& 
 		bd.GetFormat() != PIXEL_FORMAT_R8_UNORM				&&
+		bd.GetFormat() != PIXEL_FORMAT_R16_UNORM			&& 
+		bd.GetFormat() != PIXEL_FORMAT_R16G16B16A16_UNORM	&& 
 		bd.GetFormat() != PIXEL_FORMAT_R10G10B10A2_UNORM	&&
 		bd.GetFormat() != PIXEL_FORMAT_R10G10B10A2_TYPELESS )
 	{
@@ -490,13 +538,13 @@ static void FlushData( png_structp )
 //   true If image was saved
 //   false On error
 // --------------------------------------------------------------------------------------
-bool Tr2PngHandler::DoSaveImage( png_structp png, png_infop info )
+bool Tr2PngHandler::DoSaveImage( png_structp png, png_infop info, int transforms )
 {
 	if( setjmp( png_jmpbuf( png ) ) )
 	{
 		return false;
 	}
-	png_write_png( png, info, PNG_TRANSFORM_BGR, nullptr );
+	png_write_png( png, info, transforms, nullptr );
 	png_write_info( png, info );
 	return true;
 }
@@ -550,9 +598,12 @@ bool Tr2PngHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 	}
 
 	int colorType;
+	int bitDepth = 8;
+	int transforms = PNG_TRANSFORM_BGR;
 	switch( image.GetFormat() ) 
 	{
 	case PIXEL_FORMAT_R8_UNORM:
+	case PIXEL_FORMAT_R16_UNORM:
 		colorType = PNG_COLOR_TYPE_GRAY;
 		break;
 	case PIXEL_FORMAT_B8G8R8X8_UNORM:
@@ -563,13 +614,21 @@ bool Tr2PngHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 	default:
 		colorType = PNG_COLOR_TYPE_RGB_ALPHA;
 	}
+	switch( image.GetFormat() ) 
+	{
+	case PIXEL_FORMAT_R16_UNORM:
+	case PIXEL_FORMAT_R16G16B16A16_UNORM:
+		bitDepth = 16;
+		transforms = PNG_TRANSFORM_SWAP_ENDIAN;
+		break;
+	}
 	//PNG_COLOR_TYPE_GRAY
 	png_set_IHDR( 
 		png, 
 		info, 
 		image.GetWidth(), 
 		image.GetHeight(),
-		8, 
+		bitDepth, 
 		colorType, 
 		PNG_INTERLACE_NONE,
 		PNG_COMPRESSION_TYPE_DEFAULT, 
@@ -630,7 +689,7 @@ bool Tr2PngHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 
 	bool result = true;
 
-	if( !DoSaveImage( png, info ) )
+	if( !DoSaveImage( png, info, transforms ) )
 	{
 		CCP_LOGERR( "TriPNGHandler couldn't write PNG (%S)", m_sourceName.c_str() );
 		result = false;

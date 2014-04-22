@@ -30,7 +30,7 @@ private:
 	bool IsSupported() const;
 	bool DoReadHeader();
 	bool DoReadImage( png_bytep* rowPtrs );
-	bool DoSaveImage( png_structp png, png_infop info );
+	bool DoSaveImage( png_structp png, png_infop info, int transforms );
 
 	unsigned GetColorType() const	{ return IsValid() ? png_get_color_type  ( m_png, m_info ) : 0; }
 
