@@ -10,6 +10,9 @@
     <ClInclude Include="HostBitmap.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImageIOResult.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="PsdHandler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -35,6 +38,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClCompile Include="HostBitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageIOResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PsdHandler.cpp">

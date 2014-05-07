@@ -36,7 +36,13 @@
 
 extern bool g_isR10G10B10FormatInverted;
 
-struct Tr2JpgHandler::Impl
+using namespace Tr2RenderContextEnum;
+
+//callbacks for libjpeg source and error handlers
+namespace 
+{
+
+struct Impl
 {
 	Impl()
 	{
@@ -49,245 +55,126 @@ struct Tr2JpgHandler::Impl
 	jpeg_source_mgr m_sourceManager;
 	jpeg_error_mgr m_jpegError;
 };
-
-using namespace Tr2RenderContextEnum;
-
-//callbacks for libjpeg source and error handlers
-namespace 
-{
-	//source manager functions
-	void init_source(j_decompress_ptr cinfo)
-	{
-		Tr2JpgHandler::InputData *client = (Tr2JpgHandler::InputData *)cinfo->client_data;
-		if( !client )
-		{
-			CCP_LOGERR( "libjpeg - init_source: No input data");
-			return;
-		}
-		cinfo->src->next_input_byte = client->start;
-		cinfo->src->bytes_in_buffer = client->dataSize;
-	}
-
-	boolean fill_input_buffer(j_decompress_ptr)
-	{
-		//I guess this is irrelevant, as we have no additional data once our buffer is empty.
-		return 0;
-	}
-
-	void skip_input_data(j_decompress_ptr cinfo, long num_bytes)
-	{
-		if( num_bytes > (long)cinfo->src->bytes_in_buffer )
-		{
-			num_bytes = (long)cinfo->src->bytes_in_buffer;
-		}
-		cinfo->src->next_input_byte += num_bytes;
-		cinfo->src->bytes_in_buffer -= num_bytes;
-	}
-
-	void term_source(j_decompress_ptr)
-	{
-		//I guess this is used to clean up anything after reading, but we handle that externally.
-	}
-
-
-	//error manager functions
-	//a lot of these seem extremely spammy, but if they're not provided
-	//libjpeg will tend to kill the process.
-	void error_exit( j_common_ptr cinfo )
-	{
-		char buffer[JMSG_LENGTH_MAX];
-		cinfo->err->format_message( cinfo, buffer );
-		CCP_LOGERR( "libjpeg[x]: %08xd : %s", cinfo->err->msg_code, buffer );
-
-		Tr2JpgHandler::InputData *client = (Tr2JpgHandler::InputData *)cinfo->client_data;
-		longjmp( client->m_jmpBuf, 1 );
-	}
-
-	void emit_message( j_common_ptr, int )
-	{
-		//char buffer[JMSG_LENGTH_MAX];
-		//cinfo->err->format_message( cinfo, buffer );
-		//CCP_LOG( "libjpeg[%d]: %08xd : %s", msg_level, cinfo->err->msg_code, buffer );
-	}
-
-	void output_message( j_common_ptr )
-	{
-		//char buffer[JMSG_LENGTH_MAX];
-		//cinfo->err->format_message( cinfo, buffer );
-		//CCP_LOG( "libjpeg[-]:  %08xd : %s", cinfo->err->msg_code, buffer );
-	}
-	void reset_error_mgr( j_common_ptr )
-	{
-		// CCP_LOG( "libjpeg called reset_error_mgr" );
-	}
-}
-
-Tr2JpgHandler::Tr2JpgHandler( const wchar_t* sourceName )
-:	Tr2ImageHandler( sourceName ),
-	m_impl( new Impl ),
-	m_rgbData( "Tr2JpgHandler/m_rgbData" ),
-	m_compressedData( "Tr2JpgHandler/m_compressedData" ),
-	m_channels( 0 )
-{
-	if( setjmp( m_clientData.m_jmpBuf ) )
-	{
-		return;
-	}
-
-	jpeg_std_error( &m_impl->m_jpegError );
-	m_impl->m_jpegError.reset_error_mgr = reset_error_mgr;
-	m_impl->m_jpegError.output_message  = output_message;
-	m_impl->m_jpegError.error_exit      = error_exit;
-	m_impl->m_jpegError.emit_message    = emit_message;
-	m_impl->m_decode.err = &m_impl->m_jpegError;
-	jpeg_create_decompress( &m_impl->m_decode );
-
-	m_data = NULL;
-
-	//we always expand rgb and greyscale to argb8
-	m_bitsPerPixel = 32;
-}
-
-Tr2JpgHandler::~Tr2JpgHandler()
-{
-	CCP_DELETE[] m_data;
-	m_data = NULL;
-
-	if( setjmp( m_clientData.m_jmpBuf ) )
-	{
-		return;
-	}
-
-	jpeg_destroy_decompress( &m_impl->m_decode );
-}
-
-bool Tr2JpgHandler::ReadHeader( ICcpStream* stream )
-{
-	if( stream->GetSize() >= 0 )
-	{
-		m_compressedData.resize( stream->GetSize() );
-	}
-	if( m_compressedData.empty() )
-	{
-		return false;
-	}
-
-	stream->Read( &m_compressedData[0], m_compressedData.size() ); 
-
-	m_clientData.start = &m_compressedData[0];
-	m_clientData.dataSize = (uint32_t)m_compressedData.size();
-	m_impl->m_decode.client_data = (void*)&m_clientData;
-
-	m_impl->m_sourceManager.init_source       = init_source;
-	m_impl->m_sourceManager.fill_input_buffer = fill_input_buffer;
-	m_impl->m_sourceManager.resync_to_restart = NULL;
-	m_impl->m_sourceManager.skip_input_data   = skip_input_data;
-	m_impl->m_sourceManager.term_source       = term_source;
-	m_impl->m_sourceManager.next_input_byte   = &m_compressedData[0];
-	m_impl->m_sourceManager.bytes_in_buffer   = m_compressedData.size();
-
-	m_impl->m_decode.src = &m_impl->m_sourceManager;
-
-	if( setjmp( m_clientData.m_jmpBuf ) )
-	{
-		return false;
-	}
-
-	// jpeg files can contain multiple Start of Image tags, usually because the first is a thumbnail
-	// not sure of the best way to handle this yet.
-	int result = jpeg_read_header( &m_impl->m_decode, false );
-	if( result == JPEG_HEADER_OK ) 
-	{
-		if( jpeg_has_multiple_scans( &m_impl->m_decode ) )
-		{
-			CCP_LOG( "jpeg has multiple scans" );
-		}
-		m_height	= m_impl->m_decode.image_height;
-		m_width		= m_impl->m_decode.image_width;
-		m_channels	= m_impl->m_decode.num_components;
-		//CCP_LOG( "JPEG header read: %d x %d x %d", m_width, m_height, m_channels );
-	} 
-	else 
-	{
-		CCP_LOGERR( "Failed to read JPEG header from %S", m_sourceName.c_str() );
-		return false;
-	}
 	
-	return true;
-}
-
-Tr2RenderContextEnum::PixelFormat Tr2JpgHandler::GetFormat() const 
+struct InputData
 {
-	return Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM;
-}
+	uint8_t* start;
+	unsigned dataSize;
+	jmp_buf m_jmpBuf;
+};
 
-bool Tr2JpgHandler::ReadImage( ICcpStream* stream )
+//source manager functions
+void init_source(j_decompress_ptr cinfo)
 {
-	if( m_height > 4096 || m_width > 4096 ) 
+	InputData *client = (InputData *)cinfo->client_data;
+	if( !client )
 	{
-		CCP_LOGWARN( "Very large jpeg image being loaded: %d x %d", m_width, m_height );
+		CCP_LOGERR( "libjpeg - init_source: No input data");
+		return;
 	}
+	cinfo->src->next_input_byte = client->start;
+	cinfo->src->bytes_in_buffer = client->dataSize;
+}
 
+boolean fill_input_buffer(j_decompress_ptr)
+{
+	//I guess this is irrelevant, as we have no additional data once our buffer is empty.
+	return 0;
+}
+
+void skip_input_data(j_decompress_ptr cinfo, long num_bytes)
+{
+	if( num_bytes > (long)cinfo->src->bytes_in_buffer )
+	{
+		num_bytes = (long)cinfo->src->bytes_in_buffer;
+	}
+	cinfo->src->next_input_byte += num_bytes;
+	cinfo->src->bytes_in_buffer -= num_bytes;
+}
+
+void term_source(j_decompress_ptr)
+{
+	//I guess this is used to clean up anything after reading, but we handle that externally.
+}
+
+
+//error manager functions
+//a lot of these seem extremely spammy, but if they're not provided
+//libjpeg will tend to kill the process.
+void error_exit( j_common_ptr cinfo )
+{
+	char buffer[JMSG_LENGTH_MAX];
+	cinfo->err->format_message( cinfo, buffer );
+	CCP_LOGERR( "libjpeg[x]: %08xd : %s", cinfo->err->msg_code, buffer );
+
+	InputData *client = (InputData *)cinfo->client_data;
+	longjmp( client->m_jmpBuf, 1 );
+}
+
+void emit_message( j_common_ptr, int )
+{
+}
+
+void output_message( j_common_ptr )
+{
+}
+
+void reset_error_mgr( j_common_ptr )
+{
+}
+
+ImageIO::Result ReadImage( ImageIO::HostBitmap& bitmap, unsigned channels, InputData& clientData, Impl& impl )
+{
 	//initialise storage for decompressed data
-	m_rgbData.resize( m_height * m_width * m_channels );
-	if( m_rgbData.empty() )
+	CcpMallocBuffer rgbData( "Tr2JpgHandler::rgbData", bitmap.GetWidth() * bitmap.GetHeight() * channels );
+	if( rgbData.empty() )
 	{
-		return false;
+		return ImageIO::Result::OUT_OF_MEMORY;
 	}
 
-	memset( &m_rgbData[0], 0xff, m_height * m_width * m_channels );
-	
-	m_data = CCP_NEW("Tr2JpgHandler/m_data") unsigned char[ m_height * m_width * 4 ];
-	if( !m_data )
+	memset( rgbData.get(), 0xff, bitmap.GetWidth() * bitmap.GetHeight() * channels );
+
+	if( setjmp( clientData.m_jmpBuf ) )
 	{
-		m_rgbData.clear();
-		return false;
+		return ImageIO::Result::INVALID_DATA;
 	}
 
-	if( setjmp( m_clientData.m_jmpBuf ) )
-	{
-		CCP_DELETE [] m_data;
-		m_data = nullptr;
-		return false;
-	}
-
-	memset( m_data, 0x00, m_height * m_width * 4 );
+	memset( bitmap.GetRawData(), 0x00, bitmap.GetWidth() * bitmap.GetHeight() * 4 );
 
 	//decompression, one scanline at a time
-	jpeg_calc_output_dimensions( &m_impl->m_decode );
-	if( !jpeg_start_decompress( &m_impl->m_decode ) )
+	jpeg_calc_output_dimensions( &impl.m_decode );
+	if( !jpeg_start_decompress( &impl.m_decode ) )
 	{
 		CCP_LOGERR( "jpeg_start_decompress failed!" );
-		return false;
+		return ImageIO::Result::INVALID_DATA;
 	}
 
-	for( unsigned y = 0; y < m_height; ++y )
+	for( unsigned y = 0; y < bitmap.GetHeight(); ++y )
 	{
-		unsigned char *line = &m_rgbData[ y * m_width * m_channels ];
-		int lines = jpeg_read_scanlines( &m_impl->m_decode, &line, 1 );
+		unsigned char *line = reinterpret_cast<unsigned char*>( rgbData.get() + y * bitmap.GetWidth() * channels );
+		int lines = jpeg_read_scanlines( &impl.m_decode, &line, 1 );
 		if( lines != 1 )
 		{
 			CCP_LOGERR( "jpeg_read_scanlines failed (%d : %d)", y, lines );
-			return false;
+			return ImageIO::Result::INVALID_DATA;
 		}
 	}
-	jpeg_input_complete( &m_impl->m_decode );
+	jpeg_input_complete( &impl.m_decode );
 
-	if( !jpeg_finish_decompress( &m_impl->m_decode ) )
+	if( !jpeg_finish_decompress( &impl.m_decode ) )
 	{
 		CCP_LOGERR( "jpeg_finish_decompress failed!" );
-		return false;
+		return ImageIO::Result::INVALID_DATA;
 	}
 
-
 	//expand RGB8 or L8 to ARGB8
-	for( unsigned y=0; y<m_height; ++y )
+	for( unsigned y = 0; y < bitmap.GetHeight(); ++y )
 	{
-		unsigned char *src = &m_rgbData[ y * m_width * m_channels ];
-		unsigned char *dst = m_data + (y * m_width * 4);
-		for( unsigned x=0; x<m_width; ++x )
+		unsigned char *src = reinterpret_cast<unsigned char*>( rgbData.get() + y * bitmap.GetWidth() * channels );
+		unsigned char *dst = reinterpret_cast<unsigned char*>( bitmap.GetRawData() ) + (y * bitmap.GetWidth() * 4);
+		for( unsigned x = 0; x < bitmap.GetWidth(); ++x )
 		{
-			switch( m_channels )
+			switch( channels )
 			{
 			case 1:
 				dst[ x * 4 + 2 ] = src[ x ];
@@ -307,18 +194,8 @@ bool Tr2JpgHandler::ReadImage( ICcpStream* stream )
 		}
 	}
 
-	return true;
+	return ImageIO::Result::OK;
 }
-
-unsigned Tr2JpgHandler::GetBlockByteSize() const
-{
-	//not compressed
-	return 0;
-}
-
-unsigned Tr2JpgHandler::GetOffset( unsigned, unsigned ) const
-{
-	return 0;
 }
 
 
@@ -354,12 +231,160 @@ namespace {
 	}	
 }
 
-bool Tr2JpgHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
+
+namespace ImageIO
+{
+namespace Jpeg
+{
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Registers JPEG handler with ImageIO.
+// --------------------------------------------------------------------------------------
+void RegisterHandler()
+{
+	static bool s_registered = false;
+	if( !s_registered )
+	{
+		ImageFormatFunctions funcs = { &IsJpegExtension, &ReadImage, &IsSaveSupported, &Save };
+		RegisterImageHandler( funcs );
+		s_registered = true;
+	}
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Checks if provided extension (without leading dot) is JPEG extension.
+// Arguments:
+//   ext - File extension
+// Return Value:
+//   true If provided extension is JPEG extension
+// --------------------------------------------------------------------------------------
+bool IsJpegExtension( const wchar_t* ext )
+{
+	return ( ( ext[0] == L'j' || ext[0] == L'J' ) &&
+		( ext[1] == L'p' || ext[1] == L'P' ) &&
+		( ext[2] == L'g' || ext[2] == L'G' ) &&
+		ext[3] == 0 ) ||
+		( ( ext[0] == L'j' || ext[0] == L'J' ) &&
+		( ext[1] == L'p' || ext[1] == L'P' ) &&
+		( ext[2] == L'e' || ext[2] == L'E' ) &&
+		( ext[3] == L'g' || ext[3] == L'G' ) &&
+		ext[4] == 0 );
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Reads JPEG image from the stream.
+// Arguments:
+//   stream - Stream used for reading
+//   loadParameters - various loading parameters
+//   bitmap - (out) Destination bitmap
+//   metadata - (out) Optional image metadata
+// Return Value:
+//   Result of the operation
+// --------------------------------------------------------------------------------------
+Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata )
+{
+	if( stream.GetSize() == 0 )
+	{
+		return Result::READ_FAILURE;
+	}
+	CcpMallocBuffer compressedData( "Tr2JpgHandler::compressedData", stream.GetSize() );
+	if( compressedData.empty() )
+	{
+		return Result::OUT_OF_MEMORY;
+	}
+
+	stream.Read( compressedData.get(), compressedData.size() ); 
+
+	InputData clientData;
+	clientData.start = reinterpret_cast<uint8_t*>( compressedData.get() );
+	clientData.dataSize = (uint32_t)compressedData.size();
+
+	if( setjmp( clientData.m_jmpBuf ) )
+	{
+		return Result::ERROR_INITIALIZING_EXTERNAL_LIBRARY;
+	}
+
+	Impl impl;
+	jpeg_std_error( &impl.m_jpegError );
+	impl.m_jpegError.reset_error_mgr = reset_error_mgr;
+	impl.m_jpegError.output_message  = output_message;
+	impl.m_jpegError.error_exit      = error_exit;
+	impl.m_jpegError.emit_message    = emit_message;
+	impl.m_decode.err = &impl.m_jpegError;
+	impl.m_decode.client_data = &clientData;
+	jpeg_create_decompress( &impl.m_decode );
+
+	ON_BLOCK_EXIT( [&] {
+		if( setjmp( clientData.m_jmpBuf ) )
+		{
+			return;
+		}
+		jpeg_destroy_decompress( &impl.m_decode );
+	} );
+
+	impl.m_decode.client_data = (void*)&clientData;
+
+	impl.m_sourceManager.init_source       = init_source;
+	impl.m_sourceManager.fill_input_buffer = fill_input_buffer;
+	impl.m_sourceManager.resync_to_restart = NULL;
+	impl.m_sourceManager.skip_input_data   = skip_input_data;
+	impl.m_sourceManager.term_source       = term_source;
+	impl.m_sourceManager.next_input_byte   = reinterpret_cast<uint8_t*>( compressedData.get() );
+	impl.m_sourceManager.bytes_in_buffer   = compressedData.size();
+
+	impl.m_decode.src = &impl.m_sourceManager;
+
+	if( setjmp( clientData.m_jmpBuf ) )
+	{
+		return Result::INVALID_HEADER;
+	}
+
+	unsigned channels = 0;
+	// jpeg files can contain multiple Start of Image tags, usually because the first is a thumbnail
+	// not sure of the best way to handle this yet.
+	int result = jpeg_read_header( &impl.m_decode, false );
+	if( result == JPEG_HEADER_OK ) 
+	{
+		uint32_t height = impl.m_decode.image_height;
+		uint32_t width = impl.m_decode.image_width;
+		channels = impl.m_decode.num_components;
+		bitmap.Create( width, height, 1, Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM );
+	} 
+	else 
+	{
+		return Result::INVALID_HEADER;
+	}
+
+	if( metadata )
+	{
+		metadata->cutout = Cutout();
+	}
+	
+	auto r = ::ReadImage( bitmap, channels, clientData, impl );
+	if( !r )
+	{
+		bitmap.Destroy();
+		return r;
+	}
+	return Result::OK;
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Checks if saving an image into JPEG format is supported.
+// Arguments:
+//   dimensions - Image dimensions/type/format
+// Return Value:
+//   Result of the operation (OK if image saving is supported)
+// --------------------------------------------------------------------------------------
+Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 {
 	if( bd.GetType() != TEX_TYPE_2D )
 	{
-		CCP_LOGWARN( "Tr2JpgHandler::Save does not support this texture tyep: %d", bd.GetType() );
-		return false;
+		return Result::SAVE_NOT_SUPPORTED;
 	}
 
 	if( bd.GetFormat() != PIXEL_FORMAT_B8G8R8X8_UNORM		&&
@@ -368,27 +393,34 @@ bool Tr2JpgHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
 		bd.GetFormat() != PIXEL_FORMAT_R10G10B10A2_UNORM	&&
 		bd.GetFormat() != PIXEL_FORMAT_R10G10B10A2_TYPELESS )
 	{
-		CCP_LOGWARN( "Tr2JpgHandler::Save does not support this image format: %d", bd.GetFormat() );
-		return false;
+		return Result::SAVE_NOT_SUPPORTED;
 	}
 
-	return true;
+	return Result::OK;
 }
 
-bool Tr2JpgHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
+// --------------------------------------------------------------------------------------
+// Description:
+//   Saves a bitmap to JPEG file.
+// Arguments:
+//   image - Bitmap to save
+//   output - Destination stream
+// Return Value:
+//   Result of the operation
+// --------------------------------------------------------------------------------------
+Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
 {	
-	CCP_ASSERT( output );
-	CCP_ASSERT( image.IsValid() );
+	if( !image.IsValid() )
+	{
+		return Result::INVALID_BITMAP;
+	}
 
 	using namespace Tr2RenderContextEnum;
 
-	if( !IsSaveSupported( image ) )
-	{		
-		return false;
-	}
+	IMAGE_IO_CR_RETURN_RESULT( IsSaveSupported( image ) );
 
 	TSaveData saveData;
-	saveData.output = output;
+	saveData.output = &output;
 	saveData.buffer.resize( 65536 );
 
 
@@ -480,5 +512,8 @@ bool Tr2JpgHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 	jpeg_finish_compress( &cinfo );
 	jpeg_destroy_compress( &cinfo );
 
-	return true;
+	return Result::OK;
+}
+
+}
 }

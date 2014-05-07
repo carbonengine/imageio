@@ -293,6 +293,7 @@
   <ItemGroup>
     <ClInclude Include="autoversion.h"/>
     <ClInclude Include="HostBitmap.h"/>
+    <ClInclude Include="ImageIOResult.h"/>
     <ClInclude Include="PsdHandler.h"/>
     <ClInclude Include="StdAfx.h"/>
     <ClInclude Include="Tr2BmpHandler.h"/>
@@ -304,6 +305,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HostBitmap.cpp"/>
+    <ClCompile Include="ImageIOResult.cpp"/>
     <ClCompile Include="PsdHandler.cpp"/>
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

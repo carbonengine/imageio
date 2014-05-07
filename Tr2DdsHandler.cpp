@@ -3,6 +3,12 @@
 #include "Tr2DdsHandler.h"
 #include "HostBitmap.h"
 
+#ifndef MAKEFOURCC
+#define MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
+	((uint32_t)(uint8_t)(ch0) | ((uint32_t)(uint8_t)(ch1) << 8) |       \
+	((uint32_t)(uint8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(ch3) << 24 ))
+#endif /* defined(MAKEFOURCC) */
+
 #define DDS_FOURCC	0x00000004 // DDPF_FOURCC
 #define DDS_INDEXED 0x00000020 // DDPF_INDEXED
 #define DDS_RGB     0x00000040 // DDPF_RGB
@@ -39,320 +45,415 @@ extern bool g_convertA8L8FormatToB8G8R8A8;
 namespace
 {
 
-	const unsigned int FOURCC_DDS = MAKEFOURCC('D', 'D', 'S', ' ');
-	const unsigned int FOURCC_DXT1 = MAKEFOURCC('D', 'X', 'T', '1');
-	const unsigned int FOURCC_DXT2 = MAKEFOURCC('D', 'X', 'T', '2');
-	const unsigned int FOURCC_DXT3 = MAKEFOURCC('D', 'X', 'T', '3');
-	const unsigned int FOURCC_DXT4 = MAKEFOURCC('D', 'X', 'T', '4');
-	const unsigned int FOURCC_DXT5 = MAKEFOURCC('D', 'X', 'T', '5');
-	const unsigned int FOURCC_RXGB = MAKEFOURCC('R', 'X', 'G', 'B');
-	const unsigned int FOURCC_ATI1 = MAKEFOURCC('A', 'T', 'I', '1');
-	const unsigned int FOURCC_ATI2 = MAKEFOURCC('A', 'T', 'I', '2');
+const unsigned int FOURCC_DDS = MAKEFOURCC('D', 'D', 'S', ' ');
+const unsigned int FOURCC_DXT1 = MAKEFOURCC('D', 'X', 'T', '1');
+const unsigned int FOURCC_DXT2 = MAKEFOURCC('D', 'X', 'T', '2');
+const unsigned int FOURCC_DXT3 = MAKEFOURCC('D', 'X', 'T', '3');
+const unsigned int FOURCC_DXT4 = MAKEFOURCC('D', 'X', 'T', '4');
+const unsigned int FOURCC_DXT5 = MAKEFOURCC('D', 'X', 'T', '5');
+const unsigned int FOURCC_RXGB = MAKEFOURCC('R', 'X', 'G', 'B');
+const unsigned int FOURCC_ATI1 = MAKEFOURCC('A', 'T', 'I', '1');
+const unsigned int FOURCC_ATI2 = MAKEFOURCC('A', 'T', 'I', '2');
 
-	struct FormatDescriptor
+struct DDS_PIXELFORMAT
+{
+	uint32_t dwSize;			// 4
+	uint32_t dwFlags;
+	uint32_t dwFourCC;
+	uint32_t dwRGBBitCount;	// 16
+	uint32_t dwRBitMask;
+	uint32_t dwGBitMask;
+	uint32_t dwBBitMask;
+	uint32_t dwABitMask;		// 32
+};
+
+struct DDS_HEADER
+{
+	uint32_t dwFourCC;				// 4
+	uint32_t dwSize;
+	uint32_t dwHeaderFlags;
+	uint32_t dwHeight;				// 16
+	uint32_t dwWidth;
+	uint32_t dwPitchOrLinearSize;
+	uint32_t dwDepth;				// only if DDS_HEADER_FLAGS_VOLUME is set in dwHeaderFlags
+	uint32_t dwMipMapCount;		// 32
+	uint32_t dwReserved1[11];		// 76
+	DDS_PIXELFORMAT ddspf;		// 108
+	uint32_t dwSurfaceFlags;
+	uint32_t dwCubemapFlags;		// 116
+	uint32_t dwReserved2[3];		// 128
+};
+
+struct FormatDescriptor
+{
+	int32_t format;
+	unsigned int bitcount;
+	unsigned int rmask;
+	unsigned int gmask;
+	unsigned int bmask;
+	unsigned int amask;
+	unsigned int fourCC;
+
+	PixelFormat	pixelFormat;
+};
+
+#define DDS_MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
+            ((uint32_t)(uint8_t)(ch0) | ((uint32_t)(uint8_t)(ch1) << 8) |			\
+            ((uint32_t)(uint8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(ch3) << 24 ))
+
+
+const int32_t DDSFMT_UNKNOWN              =  0;
+const int32_t DDSFMT_R8G8B8               = 20;
+const int32_t DDSFMT_A8R8G8B8             = 21;
+const int32_t DDSFMT_X8R8G8B8             = 22;
+const int32_t DDSFMT_R5G6B5               = 23;
+const int32_t DDSFMT_X1R5G5B5             = 24;
+const int32_t DDSFMT_A1R5G5B5             = 25;
+const int32_t DDSFMT_A4R4G4B4             = 26;
+const int32_t DDSFMT_R3G3B2               = 27;
+const int32_t DDSFMT_A8                   = 28;
+const int32_t DDSFMT_A8R3G3B2             = 29;
+const int32_t DDSFMT_X4R4G4B4             = 30;
+const int32_t DDSFMT_A2B10G10R10          = 31;
+const int32_t DDSFMT_A8B8G8R8             = 32;
+const int32_t DDSFMT_X8B8G8R8             = 33;
+const int32_t DDSFMT_G16R16               = 34;
+const int32_t DDSFMT_A2R10G10B10          = 35;
+const int32_t DDSFMT_A16B16G16R16         = 36;
+const int32_t DDSFMT_A8P8                 = 40;
+const int32_t DDSFMT_P8                   = 41;
+const int32_t DDSFMT_L8                   = 50;
+const int32_t DDSFMT_A8L8                 = 51;
+const int32_t DDSFMT_A4L4                 = 52;
+const int32_t DDSFMT_V8U8                 = 60;
+const int32_t DDSFMT_L6V5U5               = 61;
+const int32_t DDSFMT_X8L8V8U8             = 62;
+const int32_t DDSFMT_Q8W8V8U8             = 63;
+const int32_t DDSFMT_V16U16               = 64;
+const int32_t DDSFMT_A2W10V10U10          = 67;
+const int32_t DDSFMT_UYVY                 = DDS_MAKEFOURCC('U', 'Y', 'V', 'Y');
+const int32_t DDSFMT_R8G8_B8G8            = DDS_MAKEFOURCC('R', 'G', 'B', 'G');
+const int32_t DDSFMT_YUY2                 = DDS_MAKEFOURCC('Y', 'U', 'Y', '2');
+const int32_t DDSFMT_G8R8_G8B8            = DDS_MAKEFOURCC('G', 'R', 'G', 'B');
+const int32_t DDSFMT_DXT1                 = DDS_MAKEFOURCC('D', 'X', 'T', '1');
+const int32_t DDSFMT_DXT2                 = DDS_MAKEFOURCC('D', 'X', 'T', '2');
+const int32_t DDSFMT_DXT3                 = DDS_MAKEFOURCC('D', 'X', 'T', '3');
+const int32_t DDSFMT_DXT4                 = DDS_MAKEFOURCC('D', 'X', 'T', '4');
+const int32_t DDSFMT_DXT5                 = DDS_MAKEFOURCC('D', 'X', 'T', '5');
+const int32_t DDSFMT_D16_LOCKABLE         = 70;
+const int32_t DDSFMT_D32                  = 71;
+const int32_t DDSFMT_D15S1                = 73;
+const int32_t DDSFMT_D24S8                = 75;
+const int32_t DDSFMT_D24X8                = 77;
+const int32_t DDSFMT_D24X4S4              = 79;
+const int32_t DDSFMT_D16                  = 80;
+const int32_t DDSFMT_D32F_LOCKABLE        = 82;
+const int32_t DDSFMT_D24FS8               = 83;
+const int32_t DDSFMT_D32_LOCKABLE         = 84;
+const int32_t DDSFMT_S8_LOCKABLE          = 85;
+const int32_t DDSFMT_L16                  = 81;
+const int32_t DDSFMT_VERTEXDATA           =100;
+const int32_t DDSFMT_INDEX16              =101;
+const int32_t DDSFMT_INDEX32              =102;
+const int32_t DDSFMT_Q16W16V16U16         =110;
+const int32_t DDSFMT_MULTI2_ARGB8         = DDS_MAKEFOURCC('M','E','T','1');
+const int32_t DDSFMT_R16F                 = 111;
+const int32_t DDSFMT_G16R16F              = 112;
+const int32_t DDSFMT_A16B16G16R16F        = 113;
+const int32_t DDSFMT_R32F                 = 114;
+const int32_t DDSFMT_G32R32F              = 115;
+const int32_t DDSFMT_A32B32G32R32F        = 116;
+const int32_t DDSFMT_CxV8U8               = 117;
+
+const int32_t DDSFMT_A1                   = 118;
+const int32_t DDSFMT_A2B10G10R10_XR_BIAS  = 119;
+const int32_t DDSFMT_BINARYBUFFER         = 199;
+
+FormatDescriptor s_ddsFormats[] =
+{
+	{ DDSFMT_R8G8B8,		24, 0xFF0000,   0xFF00,	    0xFF,       0,				0, PIXEL_FORMAT_B8G8R8X8_UNORM	},
+	{ DDSFMT_A8R8G8B8,		32, 0xFF0000,   0xFF00,     0xFF,       0xFF000000,		0, PIXEL_FORMAT_B8G8R8A8_UNORM	},  
+	{ DDSFMT_X8R8G8B8,		32, 0xFF0000,   0xFF00,     0xFF,       0,				0, PIXEL_FORMAT_B8G8R8X8_UNORM	},           
+	{ DDSFMT_R5G6B5,		16,	0xF800,     0x7E0,      0x1F,       0,				0, PIXEL_FORMAT_B5G6R5_UNORM	},
+	{ DDSFMT_X1R5G5B5,		16, 0x7C00,     0x3E0,      0x1F,       0,				0, PIXEL_FORMAT_B5G5R5A1_UNORM	},
+	{ DDSFMT_A1R5G5B5,		16, 0x7C00,     0x3E0,      0x1F,       0x8000,			0, PIXEL_FORMAT_B5G5R5A1_UNORM	},
+	{ DDSFMT_A4R4G4B4,		16, 0xF00,      0xF0,       0xF,        0xF000,			0, PIXEL_FORMAT_UNKNOWN			},
+	{ DDSFMT_R3G3B2,		8,  0xE0,       0x1C,       0x3,	    0,				0, PIXEL_FORMAT_UNKNOWN			},
+	{ DDSFMT_A8,			8,  0,          0,          0,		    0xff,			0, PIXEL_FORMAT_A8_UNORM		},
+	{ DDSFMT_A8R3G3B2,		16, 0xE0,       0x1C,       0x3,        0xFF00,			0, PIXEL_FORMAT_UNKNOWN			},
+	{ DDSFMT_X4R4G4B4,		16, 0xF00,      0xF0,       0xF,        0,				0, PIXEL_FORMAT_UNKNOWN			},
+	{ DDSFMT_A2B10G10R10,	32, 0x3FF,      0xFFC00,    0x3FF00000, 0xC0000000,		0, PIXEL_FORMAT_R10G10B10A2_UNORM },  
+	{ DDSFMT_A8B8G8R8,		32, 0xFF,       0xFF00,     0xFF0000,   0xFF000000,		0, PIXEL_FORMAT_R8G8B8A8_UNORM	},  
+	{ DDSFMT_X8B8G8R8,		32, 0xFF,       0xFF00,     0xFF0000,   0,				0, PIXEL_FORMAT_R8G8B8A8_UNORM	}, // no such thing as R8G8B8X8?
+	{ DDSFMT_G16R16,		32, 0xFFFF,     0xFFFF0000, 0,          0,				0, PIXEL_FORMAT_R16G16_UNORM	},
+	{ DDSFMT_A2R10G10B10,	32, 0x3FF00000, 0xFFC00,    0x3FF,      0xC0000000,		0, PIXEL_FORMAT_UNKNOWN			},
+
+	{ DDSFMT_L8,			8,  0xff,       0,          0,          0,				0, PIXEL_FORMAT_R8_UNORM		},
+	{ DDSFMT_L16,			16, 0xff,       0,          0,          0,				0, PIXEL_FORMAT_R16_UNORM		},
+
+	{ DDSFMT_P8,			8,  0,          0,          0,          0,				0, PIXEL_FORMAT_UNKNOWN			},
+	{ DDSFMT_A8L8,			16, 0xff,       0,          0,          0xff00,			0, PIXEL_FORMAT_R8G8_UNORM		},	// hack
+
+	{ DDSFMT_A16B16G16R16,	64, 0,          0,          0,          0,				36,  PIXEL_FORMAT_R16G16B16A16_UNORM },
+	{ DDSFMT_A16B16G16R16F, 64, 0,          0,          0,          0,				113, PIXEL_FORMAT_R16G16B16A16_FLOAT },
+	{ DDSFMT_A32B32G32R32F, 128,0,          0,          0,          0,				116, PIXEL_FORMAT_R32G32B32A32_FLOAT },
+
+	{ DDSFMT_UNKNOWN,		0,	0,			0,			0,			0,				0, PIXEL_FORMAT_UNKNOWN }
+};
+
+std::set<int32_t> s_supportedFormats;
+
+typedef std::map<int32_t, const char*> FormatNameMap;
+FormatNameMap s_formatNames;
+
+#define ADD_NAMED_FORMAT( x ) s_formatNames[x] = #x
+
+
+void CacheSupportedFormats()
+{
+	s_supportedFormats.clear();
+
+	// TODO: Get this from the device
+	s_supportedFormats.insert( DDSFMT_DXT1 );
+	s_supportedFormats.insert( DDSFMT_DXT2 );
+	s_supportedFormats.insert( DDSFMT_DXT3 );
+	s_supportedFormats.insert( DDSFMT_DXT4 );
+	s_supportedFormats.insert( DDSFMT_DXT5 );
+	s_supportedFormats.insert( DDSFMT_X8R8G8B8 );
+	s_supportedFormats.insert( DDSFMT_A8R8G8B8 );
+	s_supportedFormats.insert( DDSFMT_R5G6B5 );
+	s_supportedFormats.insert( DDSFMT_X1R5G5B5 );
+	s_supportedFormats.insert( DDSFMT_A1R5G5B5 );
+	s_supportedFormats.insert( DDSFMT_A4R4G4B4 );
+	s_supportedFormats.insert( DDSFMT_A8 );
+	s_supportedFormats.insert( DDSFMT_A8L8 );
+	s_supportedFormats.insert( DDSFMT_L8 );
+	s_supportedFormats.insert( DDSFMT_G16R16 );
+	s_supportedFormats.insert( DDSFMT_A16B16G16R16 );
+	s_supportedFormats.insert( DDSFMT_A16B16G16R16F );
+	s_supportedFormats.insert( DDSFMT_A32B32G32R32F );
+
+	// Not supported by device but conversion done at load time (on background thread)
+	s_supportedFormats.insert( DDSFMT_R8G8B8 );
+
+}
+
+class Initializer
+{
+public:
+	Initializer()
 	{
-		int32_t format;
-		unsigned int bitcount;
-		unsigned int rmask;
-		unsigned int gmask;
-		unsigned int bmask;
-		unsigned int amask;
-		unsigned int fourCC;
+		CacheSupportedFormats();
 
-		PixelFormat	pixelFormat;
-	};
+		ADD_NAMED_FORMAT( DDSFMT_UNKNOWN             );
+		ADD_NAMED_FORMAT( DDSFMT_R8G8B8              );
+		ADD_NAMED_FORMAT( DDSFMT_A8R8G8B8            );
+		ADD_NAMED_FORMAT( DDSFMT_X8R8G8B8            );
+		ADD_NAMED_FORMAT( DDSFMT_R5G6B5              );
+		ADD_NAMED_FORMAT( DDSFMT_X1R5G5B5            );
+		ADD_NAMED_FORMAT( DDSFMT_A1R5G5B5            );
+		ADD_NAMED_FORMAT( DDSFMT_A4R4G4B4            );
+		ADD_NAMED_FORMAT( DDSFMT_R3G3B2              );
+		ADD_NAMED_FORMAT( DDSFMT_A8                  );
+		ADD_NAMED_FORMAT( DDSFMT_A8R3G3B2            );
+		ADD_NAMED_FORMAT( DDSFMT_X4R4G4B4            );
+		ADD_NAMED_FORMAT( DDSFMT_A2B10G10R10         );
+		ADD_NAMED_FORMAT( DDSFMT_A8B8G8R8            );
+		ADD_NAMED_FORMAT( DDSFMT_X8B8G8R8            );
+		ADD_NAMED_FORMAT( DDSFMT_G16R16              );
+		ADD_NAMED_FORMAT( DDSFMT_A2R10G10B10         );
+		ADD_NAMED_FORMAT( DDSFMT_A16B16G16R16        );
+		ADD_NAMED_FORMAT( DDSFMT_A8P8                );
+		ADD_NAMED_FORMAT( DDSFMT_P8                  );
+		ADD_NAMED_FORMAT( DDSFMT_L8                  );
+		ADD_NAMED_FORMAT( DDSFMT_A8L8                );
+		ADD_NAMED_FORMAT( DDSFMT_A4L4                );
+		ADD_NAMED_FORMAT( DDSFMT_V8U8                );
+		ADD_NAMED_FORMAT( DDSFMT_L6V5U5              );
+		ADD_NAMED_FORMAT( DDSFMT_X8L8V8U8            );
+		ADD_NAMED_FORMAT( DDSFMT_Q8W8V8U8            );
+		ADD_NAMED_FORMAT( DDSFMT_V16U16              );
+		ADD_NAMED_FORMAT( DDSFMT_A2W10V10U10         );
+		ADD_NAMED_FORMAT( DDSFMT_UYVY                );
+		ADD_NAMED_FORMAT( DDSFMT_R8G8_B8G8           );
+		ADD_NAMED_FORMAT( DDSFMT_YUY2                );
+		ADD_NAMED_FORMAT( DDSFMT_G8R8_G8B8           );
+		ADD_NAMED_FORMAT( DDSFMT_DXT1                );
+		ADD_NAMED_FORMAT( DDSFMT_DXT2                );
+		ADD_NAMED_FORMAT( DDSFMT_DXT3                );
+		ADD_NAMED_FORMAT( DDSFMT_DXT4                );
+		ADD_NAMED_FORMAT( DDSFMT_DXT5                );
+		ADD_NAMED_FORMAT( DDSFMT_D16_LOCKABLE        );
+		ADD_NAMED_FORMAT( DDSFMT_D32                 );
+		ADD_NAMED_FORMAT( DDSFMT_D15S1               );
+		ADD_NAMED_FORMAT( DDSFMT_D24S8               );
+		ADD_NAMED_FORMAT( DDSFMT_D24X8               );
+		ADD_NAMED_FORMAT( DDSFMT_D24X4S4             );
+		ADD_NAMED_FORMAT( DDSFMT_D16                 );
+		ADD_NAMED_FORMAT( DDSFMT_D32F_LOCKABLE       );
+		ADD_NAMED_FORMAT( DDSFMT_D24FS8              );
+		ADD_NAMED_FORMAT( DDSFMT_D32_LOCKABLE        );
+		ADD_NAMED_FORMAT( DDSFMT_S8_LOCKABLE         );
+		ADD_NAMED_FORMAT( DDSFMT_L16                 );
+		ADD_NAMED_FORMAT( DDSFMT_VERTEXDATA          );
+		ADD_NAMED_FORMAT( DDSFMT_INDEX16             );
+		ADD_NAMED_FORMAT( DDSFMT_INDEX32             );
+		ADD_NAMED_FORMAT( DDSFMT_Q16W16V16U16        );
+		ADD_NAMED_FORMAT( DDSFMT_MULTI2_ARGB8        );
+		ADD_NAMED_FORMAT( DDSFMT_R16F                );
+		ADD_NAMED_FORMAT( DDSFMT_G16R16F             );
+		ADD_NAMED_FORMAT( DDSFMT_A16B16G16R16F       );
+		ADD_NAMED_FORMAT( DDSFMT_R32F                );
+		ADD_NAMED_FORMAT( DDSFMT_G32R32F             );
+		ADD_NAMED_FORMAT( DDSFMT_A32B32G32R32F       );
+		ADD_NAMED_FORMAT( DDSFMT_CxV8U8              );
+		ADD_NAMED_FORMAT( DDSFMT_A1                  );
+		ADD_NAMED_FORMAT( DDSFMT_BINARYBUFFER        );
+	}
+};
 
-    #define DDS_MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
-                ((uint32_t)(uint8_t)(ch0) | ((uint32_t)(uint8_t)(ch1) << 8) |			\
-                ((uint32_t)(uint8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(ch3) << 24 ))
+Initializer s_initSupportedFormats;
 
-
-    const int32_t DDSFMT_UNKNOWN              =  0;
-    const int32_t DDSFMT_R8G8B8               = 20;
-    const int32_t DDSFMT_A8R8G8B8             = 21;
-    const int32_t DDSFMT_X8R8G8B8             = 22;
-    const int32_t DDSFMT_R5G6B5               = 23;
-    const int32_t DDSFMT_X1R5G5B5             = 24;
-    const int32_t DDSFMT_A1R5G5B5             = 25;
-    const int32_t DDSFMT_A4R4G4B4             = 26;
-    const int32_t DDSFMT_R3G3B2               = 27;
-    const int32_t DDSFMT_A8                   = 28;
-    const int32_t DDSFMT_A8R3G3B2             = 29;
-    const int32_t DDSFMT_X4R4G4B4             = 30;
-    const int32_t DDSFMT_A2B10G10R10          = 31;
-    const int32_t DDSFMT_A8B8G8R8             = 32;
-    const int32_t DDSFMT_X8B8G8R8             = 33;
-    const int32_t DDSFMT_G16R16               = 34;
-    const int32_t DDSFMT_A2R10G10B10          = 35;
-    const int32_t DDSFMT_A16B16G16R16         = 36;
-    const int32_t DDSFMT_A8P8                 = 40;
-    const int32_t DDSFMT_P8                   = 41;
-    const int32_t DDSFMT_L8                   = 50;
-    const int32_t DDSFMT_A8L8                 = 51;
-    const int32_t DDSFMT_A4L4                 = 52;
-    const int32_t DDSFMT_V8U8                 = 60;
-    const int32_t DDSFMT_L6V5U5               = 61;
-    const int32_t DDSFMT_X8L8V8U8             = 62;
-    const int32_t DDSFMT_Q8W8V8U8             = 63;
-    const int32_t DDSFMT_V16U16               = 64;
-    const int32_t DDSFMT_A2W10V10U10          = 67;
-    const int32_t DDSFMT_UYVY                 = DDS_MAKEFOURCC('U', 'Y', 'V', 'Y');
-    const int32_t DDSFMT_R8G8_B8G8            = DDS_MAKEFOURCC('R', 'G', 'B', 'G');
-    const int32_t DDSFMT_YUY2                 = DDS_MAKEFOURCC('Y', 'U', 'Y', '2');
-    const int32_t DDSFMT_G8R8_G8B8            = DDS_MAKEFOURCC('G', 'R', 'G', 'B');
-    const int32_t DDSFMT_DXT1                 = DDS_MAKEFOURCC('D', 'X', 'T', '1');
-    const int32_t DDSFMT_DXT2                 = DDS_MAKEFOURCC('D', 'X', 'T', '2');
-    const int32_t DDSFMT_DXT3                 = DDS_MAKEFOURCC('D', 'X', 'T', '3');
-    const int32_t DDSFMT_DXT4                 = DDS_MAKEFOURCC('D', 'X', 'T', '4');
-    const int32_t DDSFMT_DXT5                 = DDS_MAKEFOURCC('D', 'X', 'T', '5');
-    const int32_t DDSFMT_D16_LOCKABLE         = 70;
-    const int32_t DDSFMT_D32                  = 71;
-    const int32_t DDSFMT_D15S1                = 73;
-    const int32_t DDSFMT_D24S8                = 75;
-    const int32_t DDSFMT_D24X8                = 77;
-    const int32_t DDSFMT_D24X4S4              = 79;
-    const int32_t DDSFMT_D16                  = 80;
-    const int32_t DDSFMT_D32F_LOCKABLE        = 82;
-    const int32_t DDSFMT_D24FS8               = 83;
-    const int32_t DDSFMT_D32_LOCKABLE         = 84;
-    const int32_t DDSFMT_S8_LOCKABLE          = 85;
-    const int32_t DDSFMT_L16                  = 81;
-    const int32_t DDSFMT_VERTEXDATA           =100;
-    const int32_t DDSFMT_INDEX16              =101;
-    const int32_t DDSFMT_INDEX32              =102;
-    const int32_t DDSFMT_Q16W16V16U16         =110;
-    const int32_t DDSFMT_MULTI2_ARGB8         = DDS_MAKEFOURCC('M','E','T','1');
-    const int32_t DDSFMT_R16F                 = 111;
-    const int32_t DDSFMT_G16R16F              = 112;
-    const int32_t DDSFMT_A16B16G16R16F        = 113;
-    const int32_t DDSFMT_R32F                 = 114;
-    const int32_t DDSFMT_G32R32F              = 115;
-    const int32_t DDSFMT_A32B32G32R32F        = 116;
-    const int32_t DDSFMT_CxV8U8               = 117;
-
-    const int32_t DDSFMT_A1                   = 118;
-    const int32_t DDSFMT_A2B10G10R10_XR_BIAS  = 119;
-    const int32_t DDSFMT_BINARYBUFFER         = 199;
-
-	FormatDescriptor s_ddsFormats[] =
-	{
-		{ DDSFMT_R8G8B8,		24, 0xFF0000,   0xFF00,	    0xFF,       0,				0, PIXEL_FORMAT_UNKNOWN			},
-		{ DDSFMT_A8R8G8B8,		32, 0xFF0000,   0xFF00,     0xFF,       0xFF000000,		0, PIXEL_FORMAT_B8G8R8A8_UNORM	},  
-		{ DDSFMT_X8R8G8B8,		32, 0xFF0000,   0xFF00,     0xFF,       0,				0, PIXEL_FORMAT_B8G8R8X8_UNORM	},           
-		{ DDSFMT_R5G6B5,		16,	0xF800,     0x7E0,      0x1F,       0,				0, PIXEL_FORMAT_B5G6R5_UNORM	},
-		{ DDSFMT_X1R5G5B5,		16, 0x7C00,     0x3E0,      0x1F,       0,				0, PIXEL_FORMAT_B5G5R5A1_UNORM	},
-		{ DDSFMT_A1R5G5B5,		16, 0x7C00,     0x3E0,      0x1F,       0x8000,			0, PIXEL_FORMAT_B5G5R5A1_UNORM	},
-		{ DDSFMT_A4R4G4B4,		16, 0xF00,      0xF0,       0xF,        0xF000,			0, PIXEL_FORMAT_UNKNOWN			},
-		{ DDSFMT_R3G3B2,		8,  0xE0,       0x1C,       0x3,	    0,				0, PIXEL_FORMAT_UNKNOWN			},
-		{ DDSFMT_A8,			8,  0,          0,          0,		    0xff,			0, PIXEL_FORMAT_A8_UNORM		},
-		{ DDSFMT_A8R3G3B2,		16, 0xE0,       0x1C,       0x3,        0xFF00,			0, PIXEL_FORMAT_UNKNOWN			},
-		{ DDSFMT_X4R4G4B4,		16, 0xF00,      0xF0,       0xF,        0,				0, PIXEL_FORMAT_UNKNOWN			},
-		{ DDSFMT_A2B10G10R10,	32, 0x3FF,      0xFFC00,    0x3FF00000, 0xC0000000,		0, PIXEL_FORMAT_R10G10B10A2_UNORM },  
-		{ DDSFMT_A8B8G8R8,		32, 0xFF,       0xFF00,     0xFF0000,   0xFF000000,		0, PIXEL_FORMAT_R8G8B8A8_UNORM	},  
-		{ DDSFMT_X8B8G8R8,		32, 0xFF,       0xFF00,     0xFF0000,   0,				0, PIXEL_FORMAT_R8G8B8A8_UNORM	}, // no such thing as R8G8B8X8?
-		{ DDSFMT_G16R16,		32, 0xFFFF,     0xFFFF0000, 0,          0,				0, PIXEL_FORMAT_R16G16_UNORM	},
-		{ DDSFMT_A2R10G10B10,	32, 0x3FF00000, 0xFFC00,    0x3FF,      0xC0000000,		0, PIXEL_FORMAT_UNKNOWN			},
-
-		{ DDSFMT_L8,			8,  0xff,       0,          0,          0,				0, PIXEL_FORMAT_R8_UNORM		},
-		{ DDSFMT_L16,			16, 0xff,       0,          0,          0,				0, PIXEL_FORMAT_R16_UNORM		},
-
-		{ DDSFMT_P8,			8,  0,          0,          0,          0,				0, PIXEL_FORMAT_UNKNOWN			},
-		{ DDSFMT_A8L8,			16, 0xff,       0,          0,          0xff00,			0, PIXEL_FORMAT_R8G8_UNORM		},	// hack
-
-		{ DDSFMT_A16B16G16R16,	64, 0,          0,          0,          0,				36,  PIXEL_FORMAT_R16G16B16A16_UNORM },
-		{ DDSFMT_A16B16G16R16F, 64, 0,          0,          0,          0,				113, PIXEL_FORMAT_R16G16B16A16_FLOAT },
-		{ DDSFMT_A32B32G32R32F, 128,0,          0,          0,          0,				116, PIXEL_FORMAT_R32G32B32A32_FLOAT },
-
-		{ DDSFMT_UNKNOWN,		0,	0,			0,			0,			0,				0, PIXEL_FORMAT_UNKNOWN }
-	};
-
-	std::set<int32_t> s_supportedFormats;
 	
-	typedef std::map<int32_t, const char*> FormatNameMap;
-	FormatNameMap s_formatNames;
+bool IsCubeTexture( const DDS_HEADER& header )
+{
+	return header.dwCubemapFlags & DDS_CUBEMAP_ALLFACES ? true : false;
+}
 
-	#define ADD_NAMED_FORMAT( x ) s_formatNames[x] = #x
+bool IsVolumeTexture( const DDS_HEADER& header )
+{
+	return header.dwHeaderFlags & DDS_HEADER_FLAGS_VOLUME ? true : false;
+}
 
-	class Initializer
+std::pair<int32_t, PixelFormat> FindDdsFormat( const DDS_PIXELFORMAT& pf )
+{
+	if( pf.dwFlags & DDS_FOURCC )
 	{
-	public:
-		Initializer()
+		if( pf.dwFourCC == FOURCC_DXT1 )
 		{
-			Tr2DdsHandler::CacheSupportedFormats();
-
-			ADD_NAMED_FORMAT( DDSFMT_UNKNOWN             );
-			ADD_NAMED_FORMAT( DDSFMT_R8G8B8              );
-			ADD_NAMED_FORMAT( DDSFMT_A8R8G8B8            );
-			ADD_NAMED_FORMAT( DDSFMT_X8R8G8B8            );
-			ADD_NAMED_FORMAT( DDSFMT_R5G6B5              );
-			ADD_NAMED_FORMAT( DDSFMT_X1R5G5B5            );
-			ADD_NAMED_FORMAT( DDSFMT_A1R5G5B5            );
-			ADD_NAMED_FORMAT( DDSFMT_A4R4G4B4            );
-			ADD_NAMED_FORMAT( DDSFMT_R3G3B2              );
-			ADD_NAMED_FORMAT( DDSFMT_A8                  );
-			ADD_NAMED_FORMAT( DDSFMT_A8R3G3B2            );
-			ADD_NAMED_FORMAT( DDSFMT_X4R4G4B4            );
-			ADD_NAMED_FORMAT( DDSFMT_A2B10G10R10         );
-			ADD_NAMED_FORMAT( DDSFMT_A8B8G8R8            );
-			ADD_NAMED_FORMAT( DDSFMT_X8B8G8R8            );
-			ADD_NAMED_FORMAT( DDSFMT_G16R16              );
-			ADD_NAMED_FORMAT( DDSFMT_A2R10G10B10         );
-			ADD_NAMED_FORMAT( DDSFMT_A16B16G16R16        );
-			ADD_NAMED_FORMAT( DDSFMT_A8P8                );
-			ADD_NAMED_FORMAT( DDSFMT_P8                  );
-			ADD_NAMED_FORMAT( DDSFMT_L8                  );
-			ADD_NAMED_FORMAT( DDSFMT_A8L8                );
-			ADD_NAMED_FORMAT( DDSFMT_A4L4                );
-			ADD_NAMED_FORMAT( DDSFMT_V8U8                );
-			ADD_NAMED_FORMAT( DDSFMT_L6V5U5              );
-			ADD_NAMED_FORMAT( DDSFMT_X8L8V8U8            );
-			ADD_NAMED_FORMAT( DDSFMT_Q8W8V8U8            );
-			ADD_NAMED_FORMAT( DDSFMT_V16U16              );
-			ADD_NAMED_FORMAT( DDSFMT_A2W10V10U10         );
-			ADD_NAMED_FORMAT( DDSFMT_UYVY                );
-			ADD_NAMED_FORMAT( DDSFMT_R8G8_B8G8           );
-			ADD_NAMED_FORMAT( DDSFMT_YUY2                );
-			ADD_NAMED_FORMAT( DDSFMT_G8R8_G8B8           );
-			ADD_NAMED_FORMAT( DDSFMT_DXT1                );
-			ADD_NAMED_FORMAT( DDSFMT_DXT2                );
-			ADD_NAMED_FORMAT( DDSFMT_DXT3                );
-			ADD_NAMED_FORMAT( DDSFMT_DXT4                );
-			ADD_NAMED_FORMAT( DDSFMT_DXT5                );
-			ADD_NAMED_FORMAT( DDSFMT_D16_LOCKABLE        );
-			ADD_NAMED_FORMAT( DDSFMT_D32                 );
-			ADD_NAMED_FORMAT( DDSFMT_D15S1               );
-			ADD_NAMED_FORMAT( DDSFMT_D24S8               );
-			ADD_NAMED_FORMAT( DDSFMT_D24X8               );
-			ADD_NAMED_FORMAT( DDSFMT_D24X4S4             );
-			ADD_NAMED_FORMAT( DDSFMT_D16                 );
-			ADD_NAMED_FORMAT( DDSFMT_D32F_LOCKABLE       );
-			ADD_NAMED_FORMAT( DDSFMT_D24FS8              );
-			ADD_NAMED_FORMAT( DDSFMT_D32_LOCKABLE        );
-			ADD_NAMED_FORMAT( DDSFMT_S8_LOCKABLE         );
-			ADD_NAMED_FORMAT( DDSFMT_L16                 );
-			ADD_NAMED_FORMAT( DDSFMT_VERTEXDATA          );
-			ADD_NAMED_FORMAT( DDSFMT_INDEX16             );
-			ADD_NAMED_FORMAT( DDSFMT_INDEX32             );
-			ADD_NAMED_FORMAT( DDSFMT_Q16W16V16U16        );
-			ADD_NAMED_FORMAT( DDSFMT_MULTI2_ARGB8        );
-			ADD_NAMED_FORMAT( DDSFMT_R16F                );
-			ADD_NAMED_FORMAT( DDSFMT_G16R16F             );
-			ADD_NAMED_FORMAT( DDSFMT_A16B16G16R16F       );
-			ADD_NAMED_FORMAT( DDSFMT_R32F                );
-			ADD_NAMED_FORMAT( DDSFMT_G32R32F             );
-			ADD_NAMED_FORMAT( DDSFMT_A32B32G32R32F       );
-			ADD_NAMED_FORMAT( DDSFMT_CxV8U8              );
-			ADD_NAMED_FORMAT( DDSFMT_A1                  );
-			ADD_NAMED_FORMAT( DDSFMT_BINARYBUFFER        );
+			return std::make_pair( (int32_t)pf.dwFourCC, PIXEL_FORMAT_BC1_UNORM );
 		}
-	};
-
-	Initializer s_initSupportedFormats;
-
-}
-
-Tr2DdsHandler::Tr2DdsHandler( const wchar_t* sourceName ) 
-	: Tr2ImageHandler( sourceName )
-	, m_fullMipSize( 0 )
-	, m_format( PIXEL_FORMAT_UNKNOWN )
-{
-	memset( &m_header, 0, sizeof( m_header ) );
-}
-
-Tr2DdsHandler::~Tr2DdsHandler()
-{
-}
-
-bool Tr2DdsHandler::ReadHeader( ICcpStream* stream )
-{
-	if( !stream || stream->Read( &m_header, sizeof( m_header ) ) == -1 )
+		if( pf.dwFourCC == FOURCC_DXT2 || pf.dwFourCC == FOURCC_DXT3 )
+		{
+			return std::make_pair( (int32_t)pf.dwFourCC, PIXEL_FORMAT_BC2_UNORM );
+		}
+		if( pf.dwFourCC == FOURCC_DXT4 || pf.dwFourCC == FOURCC_DXT5 )
+		{
+			return std::make_pair( (int32_t)pf.dwFourCC, PIXEL_FORMAT_BC3_UNORM );
+		}
+	}
+	else if( pf.dwFlags & DDS_INDEXED )
 	{
-		return false;
+		return std::make_pair( DDSFMT_P8, PIXEL_FORMAT_UNKNOWN );
+	}
+
+	for (int i = 0; s_ddsFormats[i].format != DDSFMT_UNKNOWN; i++)
+	{
+		// Match by either FOURCC for "fat" formats or by bit mask/count
+		if ( ( pf.dwFourCC && s_ddsFormats[i].fourCC == pf.dwFourCC ) || 
+			( !pf.dwFourCC && 
+			s_ddsFormats[i].bitcount == pf.dwRGBBitCount &&
+			s_ddsFormats[i].rmask == pf.dwRBitMask &&
+			s_ddsFormats[i].gmask == pf.dwGBitMask &&
+			s_ddsFormats[i].bmask == pf.dwBBitMask &&
+			s_ddsFormats[i].amask == pf.dwABitMask ) )
+		{
+			return std::make_pair( s_ddsFormats[i].format, s_ddsFormats[i].pixelFormat );
+		}
+	}
+
+	return std::make_pair( DDSFMT_UNKNOWN, PIXEL_FORMAT_UNKNOWN );
+}
+
+ImageIO::Result CheckSupportedFormat( const DDS_HEADER& header, const ImageIO::LoadParameters& loadParameters )
+{
+	int32_t fmt = FindDdsFormat( header.ddspf ).first;
+	if( s_supportedFormats.find( fmt ) != s_supportedFormats.end() )
+	{
+		return ImageIO::Result::OK;
+	}
+	else
+	{
+		const char* fmtName = "<unknown>";
+		FormatNameMap::iterator it = s_formatNames.find( fmt );
+		if( it != s_formatNames.end() )
+		{
+			fmtName = it->second;
+		}
+		return ImageIO::Result( ImageIO::Result::HEADER_NOT_SUPPORTED, "unsupported DDS format %s", fmtName );
+	}
+
+}
+
+void CopyHeaderValuesToMembers( const DDS_HEADER& header, Tr2BitmapDimensions& dimensions )
+{
+	Tr2RenderContextEnum::PixelFormat format = FindDdsFormat( header.ddspf ).second;
+	uint32_t width = header.dwWidth;
+	uint32_t height = header.dwHeight;
+	uint32_t mipLevelCount = std::max( header.dwMipMapCount, 1u );
+
+	if( IsCubeTexture( header ) )
+	{
+		dimensions = Tr2BitmapDimensions( TEX_TYPE_CUBE, format, width, width, 1, mipLevelCount );
+	}
+	else if( IsVolumeTexture( header ) )
+	{
+		uint32_t volumeDepth = header.dwDepth;
+		dimensions = Tr2BitmapDimensions( TEX_TYPE_3D, format, width, height, volumeDepth, mipLevelCount );
+	}
+	else
+	{
+		dimensions = Tr2BitmapDimensions( TEX_TYPE_2D, format, width, height, 1, mipLevelCount );
+	}
+}
+
+ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, Tr2BitmapDimensions& dimensions, DDS_HEADER& header )
+{
+	if( stream.Read( &header, sizeof( header ) ) == -1 )
+	{
+		return ImageIO::Result::READ_FAILURE;
 	}
 
 	// BeResMan->AddTextureDataRead( sizeof( m_header ) );
 
-	if( m_header.dwFourCC != MAKEFOURCC('D', 'D', 'S', ' ') )
+	if( header.dwFourCC != MAKEFOURCC('D', 'D', 'S', ' ') )
 	{
-		return false;
+		return ImageIO::Result::INVALID_HEADER;
 	}
 
 	// Skip ahead in the mip map chain for textures if so instructed.  Note that this
 	// optimization won't work for Cube textures because of their data organization.
-	if( !IsCubeTexture() )
+	if( !IsCubeTexture( header ) )
 	{
 		unsigned int skipCount = 0;
-		unsigned int mipCount = ( m_header.dwHeaderFlags & DDS_HEADER_FLAGS_MIPMAP ) ? m_header.dwMipMapCount : 0;
-		CopyHeaderValuesToMembers();
-		GetMipLevelRange( skipCount, mipCount );
+		unsigned int mipCount = ( header.dwHeaderFlags & DDS_HEADER_FLAGS_MIPMAP ) ? header.dwMipMapCount : 0;
+		CopyHeaderValuesToMembers( header, dimensions );
+		loadParameters.GetMipLevelRange( header.dwWidth, header.dwHeight, skipCount, mipCount );
 		
 		if( skipCount )
 		{
 			// We first skip ahead in the stream to create the illusion of a texture
 			// with fewer mip maps (lower res)
 			unsigned int skipBytes = 0;
-			CopyHeaderValuesToMembers();
 			for( unsigned int i = 0; i < skipCount; ++i )
 			{
-				skipBytes += GetMipLevelSize( i );
+				skipBytes += dimensions.GetMipSize( i );
 			}
-			stream->Seek( skipBytes, ICcpStream::SO_CURRENT );
+			stream.Seek( skipBytes, ICcpStream::SO_CURRENT );
 			
 			// We now fudge the header to comply with these mip map adjustments
-			m_header.dwMipMapCount = mipCount;
-			m_header.dwWidth >>= skipCount;
-			m_header.dwHeight >>= skipCount;
-			
+			header.dwMipMapCount = mipCount;
+			header.dwWidth >>= skipCount;
+			header.dwHeight >>= skipCount;
 		}
 	}
 
-	CopyHeaderValuesToMembers();
-	return true;
+	CopyHeaderValuesToMembers( header, dimensions );
+
+	return ImageIO::Result::OK;
 }
 
-void Tr2DdsHandler::CopyHeaderValuesToMembers()
-{
-	m_format = FindDdsFormat( m_header.ddspf ).second;
-
-	m_width			= m_header.dwWidth;
-	m_height		= m_header.dwHeight;
-
-	// "Fat" formats define themselves as FOURCC so we derive bits per pixel
-	// from format
-	if( ( m_header.ddspf.dwFlags & DDS_FOURCC ) && ( m_header.ddspf.dwFourCC < 256 ) )
-	{
-		if( m_format != PIXEL_FORMAT_UNKNOWN )
-		{
-			m_bitsPerPixel = Tr2RenderContextEnum::GetBytesPerPixel( m_format ) * 8;
-		}
-		else
-		{
-			m_bitsPerPixel = 0;
-		}
-	}
-	else
-	{
-		m_bitsPerPixel	= m_header.ddspf.dwRGBBitCount;
-	}
-	m_mipLevelCount = std::max( m_header.dwMipMapCount, 1u );
-
-	if( m_header.dwHeaderFlags & DDS_HEADER_FLAGS_VOLUME )
-	{
-		m_volumeDepth = m_header.dwDepth;
-	}
-	else
-	{
-		m_volumeDepth = 1;
-	}
-
-	m_fullMipSize = 0;
-	for( unsigned i = 0; i != m_mipLevelCount; ++i )
-	{
-		m_fullMipSize += GetMipLevelSize( i );
-	}
-}
-
-bool Tr2DdsHandler::MakePixelFormat( DDS_PIXELFORMAT &ddspf, const Tr2BitmapDimensions& bd )
+bool MakePixelFormat( DDS_PIXELFORMAT &ddspf, const Tr2BitmapDimensions& bd )
 {
 	const PixelFormat pixelFormat = bd.GetFormat();
 	const bool bCompressed = IsCompressedFormat( pixelFormat );
@@ -366,7 +467,7 @@ bool Tr2DdsHandler::MakePixelFormat( DDS_PIXELFORMAT &ddspf, const Tr2BitmapDime
 		int i = 0;
 		while( s_ddsFormats[i].format != DDSFMT_UNKNOWN )
 		{
-			if( s_ddsFormats[i].pixelFormat == pixelFormat )
+			if( s_ddsFormats[i].pixelFormat == pixelFormat && s_ddsFormats[i].bitcount == GetBytesPerPixel( bd.GetFormat() ) * 8 )
 			{
 				// Set flags
 				if( s_ddsFormats[i].fourCC != 0 )
@@ -485,30 +586,18 @@ bool Tr2DdsHandler::MakePixelFormat( DDS_PIXELFORMAT &ddspf, const Tr2BitmapDime
 	return true;
 }
 
-bool Tr2DdsHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
-{
-	Tr2DdsHandler::DDS_PIXELFORMAT ddspf;
-	if( !Tr2DdsHandler::MakePixelFormat( ddspf, bd ) )		
-	{
-		CCP_LOGERR( "Texture has a unsupported pixelformat %d", bd.GetFormat() );
-		return false;
-	}
-
-	return true;
-}
-
-bool Tr2DdsHandler::BuildHeader( const Tr2BitmapDimensions& bd )
+ImageIO::Result BuildHeader( const Tr2BitmapDimensions& bd, DDS_HEADER& header )
 {
 	unsigned int mips = bd.GetTrueMipCount();
 
 	const bool bCompressed = Tr2RenderContextEnum::IsCompressedFormat( bd.GetFormat() );
 	
-	memset( &m_header, 0, sizeof( m_header ) );
+	memset( &header, 0, sizeof( header ) );
 
 	// Set magic number & mandatory header size. dwFourCC is not part of the stored header size :|
-	m_header.dwFourCC = MAKEFOURCC('D', 'D', 'S', ' ');
-	static_assert( sizeof( m_header ) == 124 + 4, "DDS header size not correct" );
-	m_header.dwSize = sizeof( m_header ) - 4;
+	header.dwFourCC = MAKEFOURCC('D', 'D', 'S', ' ');
+	static_assert( sizeof( header ) == 124 + 4, "DDS header size not correct" );
+	header.dwSize = sizeof( header ) - 4;
 
 	// Set flags for a compressed texture format
 	//
@@ -519,292 +608,246 @@ bool Tr2DdsHandler::BuildHeader( const Tr2BitmapDimensions& bd )
 	//       are in the header.
 	if( bCompressed )
 	{
-		m_header.dwHeaderFlags = DDS_HEADER_FLAGS_TEXTURE | DDS_HEADER_FLAGS_LINEARSIZE;
+		header.dwHeaderFlags = DDS_HEADER_FLAGS_TEXTURE | DDS_HEADER_FLAGS_LINEARSIZE;
 	}
 	// Set flags for an uncompressed texture format
 	else
 	{
-		m_header.dwHeaderFlags = DDS_HEADER_FLAGS_TEXTURE | DDS_HEADER_FLAGS_PITCH;
+		header.dwHeaderFlags = DDS_HEADER_FLAGS_TEXTURE | DDS_HEADER_FLAGS_PITCH;
 	}
 	// Set flags for a texture with mipmaps
 	if( mips > 1 )
 	{
-		m_header.dwHeaderFlags |= DDS_HEADER_FLAGS_MIPMAP;
+		header.dwHeaderFlags |= DDS_HEADER_FLAGS_MIPMAP;
 	}
 
 	// Set texture 
-	m_header.dwWidth		= bd.GetWidth();
-	m_header.dwHeight		= bd.GetHeight();
-	m_header.dwDepth		= 0;
-	m_header.dwMipMapCount	= mips;
+	header.dwWidth		= bd.GetWidth();
+	header.dwHeight		= bd.GetHeight();
+	header.dwDepth		= 0;
+	header.dwMipMapCount	= mips;
 	
 	if( bd.GetType() == TEX_TYPE_CUBE )
 	{
-		m_header.dwCubemapFlags |= DDS_CUBEMAP_ALLFACES;
+		header.dwCubemapFlags |= DDS_CUBEMAP_ALLFACES;
 	}
 	else if( bd.GetType() == TEX_TYPE_3D )
 	{
-		m_header.dwHeaderFlags = DDS_HEADER_FLAGS_TEXTURE | DDS_HEADER_FLAGS_VOLUME;
-		m_header.dwDepth = bd.GetDepth();
+		header.dwHeaderFlags = DDS_HEADER_FLAGS_TEXTURE | DDS_HEADER_FLAGS_VOLUME;
+		header.dwDepth = bd.GetDepth();
 	}
 
-	if( !MakePixelFormat( m_header.ddspf, bd ) )
+	if( !MakePixelFormat( header.ddspf, bd ) )
 	{
-		return false;
+		return ImageIO::Result::SAVE_NOT_SUPPORTED;
 	}
 	
 	// Set the surface flags
-	m_header.dwSurfaceFlags = DDS_SURFACE_FLAGS_TEXTURE;
+	header.dwSurfaceFlags = DDS_SURFACE_FLAGS_TEXTURE;
 	if( mips > 1)
 	{
-		m_header.dwSurfaceFlags |= DDS_SURFACE_FLAGS_MIPMAP;
+		header.dwSurfaceFlags |= DDS_SURFACE_FLAGS_MIPMAP;
 	}
 
 	// Figure out the linear data size (for compressed textures)
 	if( bCompressed )
 	{
-		m_header.dwPitchOrLinearSize = bd.GetMipSize( 0 );
+		header.dwPitchOrLinearSize = bd.GetMipSize( 0 );
 	}
 	// Figure out the pitch (for uncompressed textures)
 	else
 	{
-		m_header.dwPitchOrLinearSize = (m_header.ddspf.dwRGBBitCount * m_header.dwWidth) / 8;
+		header.dwPitchOrLinearSize = (header.ddspf.dwRGBBitCount * header.dwWidth) / 8;
 	}
-
-	CopyHeaderValuesToMembers();
-	return true;
+	return ImageIO::Result::OK;
 }
 
-bool Tr2DdsHandler::ReadImage( ICcpStream* stream )
+void Convert24BitTo32Bit( const uint8_t* rgbData, ImageIO::HostBitmap& bitmap )
 {
-	unsigned int size = GetTotalDataSize();
+	const unsigned newSize = unsigned( bitmap.GetRawDataSize() );
+	const unsigned oldSize = newSize - newSize / 4;
 
-	if( size == 0 || !stream || !IsSupported() )
+	const uint8_t* end = rgbData + oldSize;
+	const uint8_t* src = rgbData;
+	uint8_t* dst = reinterpret_cast<uint8_t*>( bitmap.GetRawData() );
+	uint8_t* dstEnd = dst + newSize;
+	while( src < end )
 	{
-		return false;
-	}
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = 0;
 
-	m_data = (uint8_t*)CCP_MALLOC( "Tr2DdsHandler/m_data", size );
-
-    if( !m_data )
-    {
-		CCP_LOGERR( "Tr2DdsHandler couldn't allocate %d bytes (%S)", size, m_sourceName.c_str() );
-        return false;
-    }
-
-	if( stream->Read( m_data, size ) == -1 )
-	{
-		CCP_LOGERR( "Tr2DdsHandler couldn't read %d bytes (%S)", size, m_sourceName.c_str() );
-		CCP_FREE( m_data );
-		m_data = 0;
-		return false;
-	}
-
-	// BeResMan->AddTextureDataRead( size );
-
-	if( FindDdsFormat( m_header.ddspf ).first == DDSFMT_R8G8B8 )
-	{
-		if( !Convert24BitTo32Bit() )
+		if( (dst >= dstEnd) && (src < end) )
 		{
-			CCP_LOGERR( "Tr2DdsHandler couldn't convert 24bit to 32bit (%S)", m_sourceName.c_str() );
-			return false;
+			break;
 		}
 	}
-
-	if( g_convertA8L8FormatToB8G8R8A8 && FindDdsFormat( m_header.ddspf ).first == DDSFMT_A8L8 )
-	{
-		m_desiredFormat = PIXEL_FORMAT_B8G8R8A8_UNORM;	// decompress on the CPU, L8A8 no longer exists, and can't easily patch shaders to support both
-		if( !ConvertDesiredFormat() )
-		{
-			return false;
-		}
-
-		DDS_PIXELFORMAT& pf = m_header.ddspf;
-		
-		pf.dwRGBBitCount	= 32;
-		pf.dwRBitMask		= 0x00FF0000u;
-		pf.dwGBitMask		= 0x0000FF00u;
-		pf.dwBBitMask		= 0x000000FFu;
-		pf.dwABitMask		= 0xFF000000u;
-		
-		CopyHeaderValuesToMembers();
-	}
-
-	if( (m_desiredFormat != PIXEL_FORMAT_UNKNOWN) && ConvertDesiredFormat() )
-	{
-		m_format = m_desiredFormat;
-	}
-
-	return true;
 }
 
-std::pair<int32_t, PixelFormat> Tr2DdsHandler::FindDdsFormat( const DDS_PIXELFORMAT& pf )
+ImageIO::Result ReadImagePixels( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, const DDS_HEADER& header )
 {
-	if( pf.dwFlags & DDS_FOURCC )
+	unsigned int size = unsigned( bitmap.GetRawDataSize() );
+
+	IMAGE_IO_CR_RETURN_RESULT( CheckSupportedFormat( header, loadParameters ) );
+
+	if( FindDdsFormat( header.ddspf ).first == DDSFMT_R8G8B8 )
 	{
-		if( pf.dwFourCC == FOURCC_DXT1 )
+		unsigned unconvertedBpp = FindDdsFormat( header.ddspf ).first == DDSFMT_R8G8B8 ? 3 : 2;
+
+		unsigned int unconvertedSize = size / 4 * unconvertedBpp;
+		uint8_t* data = (uint8_t*)CCP_MALLOC( "Tr2DdsHandler/m_data", unconvertedSize );
+		ON_BLOCK_EXIT( [&] { CCP_FREE( data ); } );
+
+		if( !data )
 		{
-			return std::make_pair( (int32_t)pf.dwFourCC, PIXEL_FORMAT_BC1_UNORM );
+			return ImageIO::Result( ImageIO::Result::OUT_OF_MEMORY, "couldn't allocate %d bytes", unconvertedSize );
 		}
-		if( pf.dwFourCC == FOURCC_DXT2 || pf.dwFourCC == FOURCC_DXT3 )
+
+		if( stream.Read( data, unconvertedSize ) == -1 )
 		{
-			return std::make_pair( (int32_t)pf.dwFourCC, PIXEL_FORMAT_BC2_UNORM );
+			return ImageIO::Result::READ_FAILURE;
 		}
-		if( pf.dwFourCC == FOURCC_DXT4 || pf.dwFourCC == FOURCC_DXT5 )
+
+		if( FindDdsFormat( header.ddspf ).first == DDSFMT_R8G8B8 )
 		{
-			return std::make_pair( (int32_t)pf.dwFourCC, PIXEL_FORMAT_BC3_UNORM );
+			Convert24BitTo32Bit( data, bitmap );
 		}
-	}
-	else if( pf.dwFlags & DDS_INDEXED )
-	{
-		return std::make_pair( DDSFMT_P8, PIXEL_FORMAT_UNKNOWN );
-	}
-
-	for (int i = 0; s_ddsFormats[i].format != DDSFMT_UNKNOWN; i++)
-	{
-		// Match by either FOURCC for "fat" formats or by bit mask/count
-		if ( ( pf.dwFourCC && s_ddsFormats[i].fourCC == pf.dwFourCC ) || 
-			( !pf.dwFourCC && 
-			s_ddsFormats[i].bitcount == pf.dwRGBBitCount &&
-			s_ddsFormats[i].rmask == pf.dwRBitMask &&
-			s_ddsFormats[i].gmask == pf.dwGBitMask &&
-			s_ddsFormats[i].bmask == pf.dwBBitMask &&
-			s_ddsFormats[i].amask == pf.dwABitMask ) )
-		{
-			return std::make_pair( s_ddsFormats[i].format, s_ddsFormats[i].pixelFormat );
-		}
-	}
-
-	return std::make_pair( DDSFMT_UNKNOWN, PIXEL_FORMAT_UNKNOWN );
-}
-
-unsigned Tr2DdsHandler::GetBlockByteSize() const
-{
-	switch( m_header.ddspf.dwFourCC )
-	{
-		case FOURCC_DXT1:
-		case FOURCC_ATI1:
-			return 8;
-		case FOURCC_DXT2:
-		case FOURCC_DXT3:
-		case FOURCC_DXT4:
-		case FOURCC_DXT5:
-		case FOURCC_RXGB:
-		case FOURCC_ATI2:
-			return 16;
-	};
-
-	// Not a block image.
-	return 0;
-}
-
-bool Tr2DdsHandler::IsCubeTexture() const
-{
-	return m_header.dwCubemapFlags & DDS_CUBEMAP_ALLFACES ? true : false;
-}
-
-bool Tr2DdsHandler::IsVolumeTexture() const
-{
-	return m_header.dwHeaderFlags & DDS_HEADER_FLAGS_VOLUME ? true : false;
-}
-
-bool Tr2DdsHandler::IsSupported() const
-{
-	int32_t fmt = FindDdsFormat( m_header.ddspf ).first;
-	if( s_supportedFormats.find( fmt ) != s_supportedFormats.end() )
-	{
-		return true;
 	}
 	else
 	{
-		const char* fmtName = "<unknown>";
-		FormatNameMap::iterator it = s_formatNames.find( fmt );
-		if( it != s_formatNames.end() )
+		if( stream.Read( bitmap.GetRawData(), size ) == -1 )
 		{
-			fmtName = it->second;
+			return ImageIO::Result::READ_FAILURE;
 		}
-		CCP_LOGWARN( "Tr2DdsHandler: '%S' in unsupported format (%s)\n", m_sourceName.c_str(), fmtName );
-		return false;
+		if( g_convertA8L8FormatToB8G8R8A8 && FindDdsFormat( header.ddspf ).first == DDSFMT_A8L8 )
+		{
+			if( !bitmap.ConvertFormat( PIXEL_FORMAT_B8G8R8A8_UNORM ) )
+			{
+				return ImageIO::Result::ERROR_CONVERTING_FORMAT;
+			}
+		}
 	}
 
+	return ImageIO::Result::OK;
 }
-
-void Tr2DdsHandler::CacheSupportedFormats()
-{
-	s_supportedFormats.clear();
-
-	// TODO: Get this from the device
-	s_supportedFormats.insert( DDSFMT_DXT1 );
-	s_supportedFormats.insert( DDSFMT_DXT2 );
-	s_supportedFormats.insert( DDSFMT_DXT3 );
-	s_supportedFormats.insert( DDSFMT_DXT4 );
-	s_supportedFormats.insert( DDSFMT_DXT5 );
-	s_supportedFormats.insert( DDSFMT_X8R8G8B8 );
-	s_supportedFormats.insert( DDSFMT_A8R8G8B8 );
-	s_supportedFormats.insert( DDSFMT_R5G6B5 );
-	s_supportedFormats.insert( DDSFMT_X1R5G5B5 );
-	s_supportedFormats.insert( DDSFMT_A1R5G5B5 );
-	s_supportedFormats.insert( DDSFMT_A4R4G4B4 );
-	s_supportedFormats.insert( DDSFMT_A8 );
-	s_supportedFormats.insert( DDSFMT_A8L8 );
-	s_supportedFormats.insert( DDSFMT_L8 );
-	s_supportedFormats.insert( DDSFMT_G16R16 );
-	s_supportedFormats.insert( DDSFMT_A16B16G16R16 );
-	s_supportedFormats.insert( DDSFMT_A16B16G16R16F );
-	s_supportedFormats.insert( DDSFMT_A32B32G32R32F );
-
-	// Not supported by device but conversion done at load time (on background thread)
-	s_supportedFormats.insert( DDSFMT_R8G8B8 );
 
 }
 
-Tr2RenderContextEnum::PixelFormat Tr2DdsHandler::GetFormat() const
-{
-	return m_format;
-}
 
-bool Tr2DdsHandler::Convert24BitTo32Bit()
+namespace ImageIO
 {
-	if( !Tr2ImageHandler::Convert24BitTo32Bit() )
+namespace Dds
+{
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Registers DDS handler with ImageIO.
+// --------------------------------------------------------------------------------------
+void RegisterHandler()
+{
+	static bool s_registered = false;
+	if( !s_registered )
 	{
-		return false;
+		ImageFormatFunctions funcs = { &IsDdsExtension, &ReadImage, &IsSaveSupported, &Save };
+		RegisterImageHandler( funcs );
+		s_registered = true;
+	}
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Checks if provided extension (without leading dot) is DDS extension.
+// Arguments:
+//   ext - File extension
+// Return Value:
+//   true If provided extension is DDS extension
+// --------------------------------------------------------------------------------------
+bool IsDdsExtension( const wchar_t* ext )
+{
+	return ( ext[0] == L'd' || ext[0] == L'D' ) &&
+		( ext[1] == L'd' || ext[1] == L'D' ) &&
+		( ext[2] == L's' || ext[2] == L'S' ) &&
+		ext[3] == 0;
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Reads DDS image from the stream.
+// Arguments:
+//   stream - Stream used for reading
+//   loadParameters - various loading parameters
+//   bitmap - (out) Destination bitmap
+//   metadata - (out) Optional image metadata
+// Return Value:
+//   Result of the operation
+// --------------------------------------------------------------------------------------
+Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata )
+{
+	Tr2BitmapDimensions dimensions;
+	DDS_HEADER header;
+	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, loadParameters, dimensions, header ) );
+
+	if( metadata )
+	{
+		metadata->cutout = Cutout();
 	}
 			
-	m_header.ddspf.dwRGBBitCount = 32;
-
-	m_fullMipSize = 0;
-	for( unsigned i = 0; i != m_mipLevelCount; ++i )
+	if( !bitmap.CreateFromBitmapDimensions( dimensions ) )
 	{
-		m_fullMipSize += GetMipLevelSize( i );
+		return Result::ERROR_CREATING_BITMAP;
 	}
-
-	CopyHeaderValuesToMembers();
-	return true;
+	auto r = ReadImagePixels( stream, loadParameters, bitmap, header );
+	if( !r )
+	{
+		bitmap.Destroy();
+		return r;
+	}
+	return Result::OK;
 }
 
-unsigned Tr2DdsHandler::GetOffset( unsigned mipLevel, unsigned face ) const
+// --------------------------------------------------------------------------------------
+// Description:
+//   Checks if saving an image into DDS format is supported.
+// Arguments:
+//   dimensions - Image dimensions/type/format
+// Return Value:
+//   Result of the operation (OK if image saving is supported)
+// --------------------------------------------------------------------------------------
+Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 {
-	unsigned offset = 0;
-	for( unsigned int i = 0; i != mipLevel ; ++i )
+	DDS_PIXELFORMAT ddspf;
+	if( !MakePixelFormat( ddspf, bd ) )		
 	{
-		offset += GetMipLevelSize( i );
+		return Result::SAVE_NOT_SUPPORTED;
 	}
-	offset += m_fullMipSize * face;
-	return offset;
+
+	return Result::OK;
 }
 
-bool Tr2DdsHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
+// --------------------------------------------------------------------------------------
+// Description:
+//   Saves a bitmap to DDS file.
+// Arguments:
+//   image - Bitmap to save
+//   output - Destination stream
+// Return Value:
+//   Result of the operation
+// --------------------------------------------------------------------------------------
+Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
 {
-	CCP_ASSERT( output );
-	CCP_ASSERT( image.IsValid() );
-
-	if( !BuildHeader( image ) )
+	if( !image.IsValid() )
 	{
-		return false;
+		return Result::INVALID_BITMAP;
 	}
 
-	output->Write( &m_header, sizeof( m_header ) );
-	output->Write( image.GetRawData(), image.GetRawDataSize() );
-	return true;
+	DDS_HEADER header;
+	IMAGE_IO_CR_RETURN_RESULT( BuildHeader( image, header ) );
+
+	output.Write( &header, sizeof( header ) );
+	output.Write( image.GetRawData(), image.GetRawDataSize() );
+	return Result::OK;
 }
 
+}
+}

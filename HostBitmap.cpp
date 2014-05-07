@@ -4,6 +4,45 @@
 
 using namespace Tr2RenderContextEnum;
 
+namespace
+{
+
+size_t GetDataSize( const Tr2BitmapDimensions& dim )
+{
+	uint32_t mipCount = dim.GetTrueMipCount();
+	uint32_t width = dim.GetWidth();
+	uint32_t height = dim.GetHeight();
+	uint32_t depth = dim.GetType() == TEX_TYPE_3D ? dim.GetDepth() : 1;
+	size_t size = 0;
+	if( IsCompressedFormat( dim.GetFormat() ) )
+	{
+		while( mipCount-- )
+		{
+			size += width * height * depth * GetBlockByteSize( dim.GetFormat() ) / 16;
+			width  = std::max( width  / 2u, 4u );
+			height = std::max( height / 2u, 4u );			
+			depth = std::max( depth / 2u, 1u );			
+		}
+	}
+	else
+	{
+		while( mipCount-- )
+		{
+			size += width * height * depth * GetBytesPerPixel( dim.GetFormat() );
+			width  = std::max( width  / 2u, 1u );
+			height = std::max( height / 2u, 1u );			
+			depth = std::max( depth / 2u, 1u );			
+		}		
+	}
+	if( dim.GetType() == TEX_TYPE_CUBE )
+	{
+		size *= 6;
+	}
+	return size;
+}
+
+}
+
 namespace ImageIO
 {
 
@@ -42,27 +81,7 @@ bool HostBitmap::Create( unsigned width, unsigned height, unsigned mipCount, Tr2
 	m_mipCount = mipCount;
 	m_type = TEX_TYPE_2D;
 
-	mipCount = GetTrueMipCount();
-
-	size_t size = 0;
-	if( IsCompressedFormat( format ) )
-	{
-		while( mipCount-- )
-		{
-			size += width * height * GetBlockByteSize( format ) / 16;
-			width  = std::max( width  / 2u, 4u );
-			height = std::max( height / 2u, 4u );			
-		}
-	}
-	else
-	{
-		while( mipCount-- )
-		{
-			size += width * height * GetBytesPerPixel( format );
-			width  = std::max( width  / 2u, 1u );
-			height = std::max( height / 2u, 1u );			
-		}		
-	}
+	size_t size = GetDataSize( *this );
 
 	m_data.resize( "HostBitmap::m_data", size );
 	
@@ -100,25 +119,7 @@ bool HostBitmap::CreateCube( unsigned width, unsigned mipCount, Tr2RenderContext
 	m_mipCount = mipCount;
 	m_type = TEX_TYPE_CUBE;
 
-	mipCount = GetTrueMipCount();
-
-	size_t size = 0;
-	if( IsCompressedFormat( format ) )
-	{
-		while( mipCount-- )
-		{
-			size += width * width * GetBlockByteSize( format ) / 16 * 6;
-			width  = std::max( width  / 2u, 4u );
-		}
-	}
-	else
-	{
-		while( mipCount-- )
-		{
-			size += width * width * GetBytesPerPixel( format ) * 6;
-			width  = std::max( width  / 2u, 1u );
-		}		
-	}
+	size_t size = GetDataSize( *this );
 	m_data.resize( "HostBitmap::m_data", size );
 	
 	return true;
@@ -148,85 +149,24 @@ bool HostBitmap::CreateVolume( unsigned width, unsigned height, unsigned depth, 
 	m_mipCount = mipCount;
 	m_type = TEX_TYPE_3D;
 
-	mipCount = GetTrueMipCount();
-
-	size_t size = 0;
-	if( IsCompressedFormat( format ) )
-	{
-		while( mipCount-- )
-		{
-			size += width * height * GetBlockByteSize( format ) / 16;
-			width  = std::max( width  / 2u, 4u );
-		}
-	}
-	else
-	{
-		while( mipCount-- )
-		{
-			size += width * height * depth * GetBytesPerPixel( format );
-			width  = std::max( width  / 2u, 1u );
-			height  = std::max( height  / 2u, 1u );
-			depth  = std::max( depth  / 2u, 1u );
-		}		
-	}
+	size_t size = GetDataSize( *this );
 	m_data.resize( "HostBitmap::m_data", size );
 
 	return true;
 }
 
-bool HostBitmap::CreateFromImageHandler( Tr2ImageHandler* imageHandler )
+bool HostBitmap::CreateFromBitmapDimensions( const Tr2BitmapDimensions& dimensions )
 {
-	unsigned faces = 1;
-
-	if( imageHandler->IsCubeTexture() )
-	{
-		if( !CreateCube( imageHandler->GetWidth(), imageHandler->GetMipLevelCount(), imageHandler->GetFormat() ) )
-		{
-			return false;
-		}
-		m_type = TEX_TYPE_CUBE;
-		faces = 6;
-	}
-	else if( imageHandler->IsVolumeTexture() )
-	{
-		if( !CreateVolume( imageHandler->GetWidth(), imageHandler->GetHeight(), imageHandler->GetDepth(), imageHandler->GetMipLevelCount(), imageHandler->GetFormat() ) )
-		{
-			return false;
-		}
-		m_type = TEX_TYPE_3D;
-		m_volumeDepth = imageHandler->GetDepth();
-	}
-	else
-	{
-		if( !Create( imageHandler->GetWidth(), imageHandler->GetHeight(), imageHandler->GetMipLevelCount(), imageHandler->GetFormat() ) )
-		{
-			return false;
-		}
-		m_type = TEX_TYPE_2D;
-	}
-
-	if( imageHandler->GetTotalDataSize() != m_data.size() )
+	if( dimensions.GetWidth() == 0 || dimensions.GetFormat() == PIXEL_FORMAT_UNKNOWN )
 	{
 		return false;
 	}
-
-	m_width		= imageHandler->GetWidth();
-	m_height	= imageHandler->GetHeight();
-	m_format	= imageHandler->GetFormat();
-	m_mipCount	= imageHandler->GetMipLevelCount();
-
-	size_t ofs = 0;
-	for( unsigned face = 0; face < faces; ++face )
+	static_cast<Tr2BitmapDimensions&>( *this ) = dimensions;
+	m_data.resize( "HostBitmap::m_data", GetDataSize( *this ) );
+	if( !m_data.get() )
 	{
-		for( unsigned mip = 0; mip != m_mipCount; ++mip )
-		{
-			CCP_ASSERT( ofs + imageHandler->GetMipLevelSize( mip ) <= m_data.size() );
-
-			memcpy( m_data.get() + ofs, imageHandler->GetMipBytes( mip, face ), imageHandler->GetMipLevelSize( mip ) );
-			ofs += imageHandler->GetMipLevelSize( mip );
-		}
+		return false;
 	}
-
 	return true;
 }
 

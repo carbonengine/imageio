@@ -17,94 +17,57 @@ namespace
 const unsigned short BMP_SIGNATURE = 0x4D42;
 const unsigned NO_COMPRESSION = 0;
 
-}
+#pragma pack(push)
+#pragma pack(1)
 
-// --------------------------------------------------------------------------------------
-// Description:
-//   Tr2BmpHandler constructor
-// --------------------------------------------------------------------------------------
-Tr2BmpHandler::Tr2BmpHandler( const wchar_t* sourceName )
-	:Tr2ImageHandler( sourceName ),
-	m_fileSize( 0 ),
-	m_imageSize( 0 )
+struct BmpHeader
 {
-}
+	// signature - 'BM'
+	uint16_t type;     
+	// file size in bytes
+	uint32_t size;   
+	// 0
+	uint16_t reserved1;     
+	// 0
+	uint16_t reserved2; 
+	// offset to bitmap
+	uint32_t offBits;  
+};
 
-// --------------------------------------------------------------------------------------
-// Description:
-//   Reads BMP header from the stream and initializes basic variables (width, height, 
-//   etc.).
-// Arguments:
-//   stream - Data stream
-// Return Value:
-//   true If the header was suscessfully read
-//   false If there was an error reading the header or the format is unsupported
-// --------------------------------------------------------------------------------------
-bool Tr2BmpHandler::ReadHeader( ICcpStream* stream )
+struct MinDibHeader
 {
-	m_fileSize = stream->GetSize();
+	// size of this struct (40)
+	uint32_t structSize;
+	// bmap width in pixels
+	uint32_t width; 
+	// bmap height in pixels
+	uint32_t height;    
+	// num planes - always 1
+	uint16_t planes;  
+	// bits per pixel
+	uint16_t bitCount;
+};
 
-	if( stream->Read( &m_bmpHeader, sizeof( BmpHeader ) ) != sizeof( BmpHeader ) )
-	{
-		return false;
-	}
-	if( m_bmpHeader.type != BMP_SIGNATURE )
-	{
-		return false;
-	}
-	if( stream->Read( &m_dibHeader, sizeof( MinDibHeader ) ) != sizeof( MinDibHeader ) )
-	{
-		return false;
-	}
-	if( m_dibHeader.bitCount != 24 && m_dibHeader.bitCount != 32 )
-	{
-		return false;
-	}
-	if( m_dibHeader.structSize >= sizeof( DibHeader ) )
-	{
-		if( stream->Read( reinterpret_cast<char*>( &m_dibHeader ) + sizeof( MinDibHeader ), sizeof( DibHeader ) - sizeof( MinDibHeader ) ) != 
-			sizeof( DibHeader ) - sizeof( MinDibHeader ) )
-		{
-			return false;
-		}
-	}
-	else
-	{
-		m_dibHeader.compression = NO_COMPRESSION;
-		m_dibHeader.sizeImage = m_dibHeader.width * m_dibHeader.height * m_dibHeader.bitCount;
-		m_dibHeader.xPelsPerMeter = 1;
-		m_dibHeader.yPelsPerMeter = 1;
-		m_dibHeader.clrUsed = 0;
-		m_dibHeader.clrImportant = 0;
-	}
-
-	if( m_dibHeader.compression != NO_COMPRESSION )
-	{
-		return false;
-	}
-	
-	m_width = m_dibHeader.width;
-	m_height = m_dibHeader.height;
-	m_bitsPerPixel = 32;
-	m_mipLevelCount = 1;
-	m_imageSize = m_width * m_height * 4;
-
-	stream->Seek( m_bmpHeader.offBits - sizeof( DibHeader ) - sizeof( BmpHeader ), ICcpStream::SO_CURRENT );
-
-	return true;
-}
-
-// --------------------------------------------------------------------------------------
-// Description:
-//   Returns the format of the texture being loaded.
-//   Assumes that header has been successfully read, and determined to be 
-//   valid - only call after ReadHeader returns true.
-// Return Value:
-//   Pixel format for BMP image
-// --------------------------------------------------------------------------------------
-Tr2RenderContextEnum::PixelFormat Tr2BmpHandler::GetFormat() const 
+struct DibHeader: public MinDibHeader
 {
-	if( m_dibHeader.bitCount == 24 )
+	// compression flag
+	uint32_t compression;   
+	// image size in bytes
+	uint32_t sizeImage;     
+	// horz resolution
+	int32_t xPelsPerMeter; 
+	// vert resolution
+	int32_t yPelsPerMeter; 
+	// 0 -> color table size
+	uint32_t clrUsed;
+	// important color count
+	uint32_t clrImportant;  
+};
+#pragma pack(pop)
+
+Tr2RenderContextEnum::PixelFormat GetFormat( DibHeader& dibHeader ) 
+{
+	if( dibHeader.bitCount == 24 )
 	{
 		return Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM;
 	}
@@ -114,42 +77,71 @@ Tr2RenderContextEnum::PixelFormat Tr2BmpHandler::GetFormat() const
 	}
 }
 
-// --------------------------------------------------------------------------------------
-// Description:
-//   Reads image data from the stream.
-// Arguments:
-//   stream - Data stream
-// Return Value:
-//   true If the image was suscessfully read
-//   false If there was an error loading the image
-// --------------------------------------------------------------------------------------
-bool Tr2BmpHandler::ReadImage( ICcpStream* stream )
+ImageIO::Result DoReadHeader( ICcpStream& stream, Tr2BitmapDimensions& dimensions, BmpHeader& bmpHeader, DibHeader& dibHeader )
 {
-	if( m_height > 4096 || m_width > 4096 ) 
+	if( stream.Read( &bmpHeader, sizeof( BmpHeader ) ) != sizeof( BmpHeader ) )
 	{
-		CCP_LOGWARN( "Very large BMP image being loaded: %d x %d", m_width, m_height );
+		return ImageIO::Result::READ_FAILURE;
+	}
+	if( bmpHeader.type != BMP_SIGNATURE )
+	{
+		return ImageIO::Result::INVALID_HEADER;
+	}
+	if( stream.Read( &dibHeader, sizeof( MinDibHeader ) ) != sizeof( MinDibHeader ) )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+	if( dibHeader.bitCount != 24 && dibHeader.bitCount != 32 )
+	{
+		return ImageIO::Result::HEADER_NOT_SUPPORTED;
+	}
+	if( dibHeader.structSize >= sizeof( DibHeader ) )
+	{
+		if( stream.Read( reinterpret_cast<char*>( &dibHeader ) + sizeof( MinDibHeader ), sizeof( DibHeader ) - sizeof( MinDibHeader ) ) != 
+			sizeof( DibHeader ) - sizeof( MinDibHeader ) )
+		{
+			return ImageIO::Result::READ_FAILURE;
+		}
+	}
+	else
+	{
+		dibHeader.compression = NO_COMPRESSION;
+		dibHeader.sizeImage = dibHeader.width * dibHeader.height * dibHeader.bitCount;
+		dibHeader.xPelsPerMeter = 1;
+		dibHeader.yPelsPerMeter = 1;
+		dibHeader.clrUsed = 0;
+		dibHeader.clrImportant = 0;
 	}
 
-	CCP_FREE( m_data );
-	m_dataSize = GetTotalDataSize();
-	m_data = (uint8_t*)CCP_MALLOC( "Tr2BmpHandler/m_data", GetTotalDataSize() );
-	if( !m_data )
+	if( dibHeader.compression != NO_COMPRESSION )
 	{
-		CCP_LOGERR( "Tr2BmpHandler couldn't allocate %d bytes (%S)", GetTotalDataSize(), m_sourceName.c_str() );
-		m_dataSize = 0;
-		return false;
+		return ImageIO::Result::HEADER_NOT_SUPPORTED;
 	}
+	
+	uint32_t width = dibHeader.width;
+	uint32_t height = dibHeader.height;
 
-	unsigned bpp = m_dibHeader.bitCount / 8;
-	unsigned stride = ( ( m_dibHeader.bitCount * m_dibHeader.width + 31 ) / 32 ) * 4;
+	dimensions = Tr2BitmapDimensions( width, height, 1, GetFormat( dibHeader ) );
+	return ImageIO::Result::OK;
+}
+
+ImageIO::Result ReadImagePixels( ICcpStream& stream, ImageIO::HostBitmap& bitmap, const DibHeader& dibHeader )
+{
+	unsigned bpp = dibHeader.bitCount / 8;
+	unsigned stride = ( ( dibHeader.bitCount * dibHeader.width + 31 ) / 32 ) * 4;
+	unsigned outputStride = bitmap.GetWidth() * 4;
 	if( bpp != 3 )
 	{
-		uint8_t* data = m_data + stride * ( m_height - 1 );
-		for( unsigned i = 0; i < m_height; ++i )
+		uint8_t* data = reinterpret_cast<uint8_t*>( bitmap.GetRawData() ) + stride * ( bitmap.GetHeight() - 1 );
+		for( unsigned i = 0; i < bitmap.GetHeight(); ++i )
 		{
-			if( stream->Read( data, stride ) != ptrdiff_t( stride ) )
+			if( stream.Read( data, stride ) != ptrdiff_t( stride ) )
 			{
-				return false;
+				return ImageIO::Result::READ_FAILURE;
+			}
+			if( stride != outputStride )
+			{
+				stream.Seek( stride - outputStride, ICcpStream::SO_CURRENT );
 			}
 			data -= stride;
 		}
@@ -159,17 +151,17 @@ bool Tr2BmpHandler::ReadImage( ICcpStream* stream )
 		uint8_t* row = new uint8_t[stride];
 		ON_BLOCK_EXIT( [&] { delete[] row; } );
 
-		unsigned outputStride = m_width * 4;
-		uint8_t* data = m_data + outputStride * ( m_height - 1 );
-		for( unsigned i = 0; i < m_height; ++i )
+		unsigned outputStride = bitmap.GetWidth() * 4;
+		uint8_t* data = reinterpret_cast<uint8_t*>( bitmap.GetRawData() ) + outputStride * ( bitmap.GetHeight() - 1 );
+		for( unsigned i = 0; i < bitmap.GetHeight(); ++i )
 		{
-			if( stream->Read( row, stride ) != ptrdiff_t( stride ) )
+			if( stream.Read( row, stride ) != ptrdiff_t( stride ) )
 			{
-				return false;
+				return ImageIO::Result::READ_FAILURE;
 			}
 			unsigned inputIndex = 0;
 			unsigned outputIndex = 0;
-			for( unsigned j = 0; j < m_width; ++j )
+			for( unsigned j = 0; j < bitmap.GetWidth(); ++j )
 			{
 				data[outputIndex++] = row[inputIndex++];
 				data[outputIndex++] = row[inputIndex++];
@@ -180,50 +172,106 @@ bool Tr2BmpHandler::ReadImage( ICcpStream* stream )
 		}
 	}
 
-	return true;
+	return ImageIO::Result::OK;
 }
 
-// --------------------------------------------------------------------------------------
-// Description:
-//   Return the dds block size, or 0 if there's no compression
-// Return Value:
-//   0 always
-// --------------------------------------------------------------------------------------
-unsigned Tr2BmpHandler::GetBlockByteSize() const
-{
-	return 0;
 }
 
+namespace ImageIO
+{
+namespace Bmp
+{
+	
 // --------------------------------------------------------------------------------------
 // Description:
-//   Return the offset where this face and miplevel would be, relative to the start of m_data.
-//   This does not include the size of the header, ie. we're dealing strictly with texels.
-// Arguments:
-//   mipLevel - Mip level
-//   face - Cubemap face (unused: BMPs don't support cube maps)
-// Return Value:
-//   Offset of specified mip level.
+//   Registers BMP handler with ImageIO.
 // --------------------------------------------------------------------------------------
-unsigned Tr2BmpHandler::GetOffset( unsigned mipLevel, unsigned ) const
+void RegisterHandler()
 {
-	unsigned offset = 0;
-	for( unsigned int i = 0; i != mipLevel ; ++i )
+	static bool s_registered = false;
+	if( !s_registered )
 	{
-		offset += GetMipLevelSize( i );
+		ImageFormatFunctions funcs = { &IsBmpExtension, &ReadImage, &IsSaveSupported, &Save };
+		RegisterImageHandler( funcs );
+		s_registered = true;
 	}
-	return offset;
 }
 
-bool Tr2BmpHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
+// --------------------------------------------------------------------------------------
+// Description:
+//   Checks if provided extension (without leading dot) is BMP extension.
+// Arguments:
+//   ext - File extension
+// Return Value:
+//   true If provided extension is BMP extension
+// --------------------------------------------------------------------------------------
+bool IsBmpExtension( const wchar_t* ext )
+{
+	return ( ext[0] == L'b' || ext[0] == L'B' ) &&
+		( ext[1] == L'm' || ext[1] == L'M' ) &&
+		( ext[2] == L'p' || ext[2] == L'P' ) &&
+		ext[3] == 0;
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Reads BMP image from the stream.
+// Arguments:
+//   stream - Stream used for reading
+//   loadParameters - various loading parameters
+//   bitmap - (out) Destination bitmap
+//   metadata - (out) Optional image metadata
+// Return Value:
+//   Result of the operation
+// --------------------------------------------------------------------------------------
+Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters&, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata )
+{
+	Tr2BitmapDimensions dimensions;
+	BmpHeader bmpHeader;
+	DibHeader dibHeader;
+	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, dimensions, bmpHeader, dibHeader ) );
+
+	stream.Seek( bmpHeader.offBits - sizeof( DibHeader ) - sizeof( BmpHeader ), ICcpStream::SO_CURRENT );
+
+	if( metadata )
+	{
+		metadata->cutout = Cutout();
+	}
+	
+	uint32_t width = dibHeader.width;
+	uint32_t height = dibHeader.height;
+
+	if( !bitmap.CreateFromBitmapDimensions( dimensions ) )
+	{
+		return Result::ERROR_CREATING_BITMAP;
+	}
+	auto r = ReadImagePixels( stream, bitmap, dibHeader );
+	if( !r )
+	{
+		bitmap.Destroy();
+		return r;
+	}
+	return Result::OK;
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Checks if saving an image into BMP format is supported.
+// Arguments:
+//   dimensions - Image dimensions/type/format
+// Return Value:
+//   Result of the operation (OK if image saving is supported)
+// --------------------------------------------------------------------------------------
+Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 {
 	if( bd.GetType() != TEX_TYPE_2D || 
 		( bd.GetFormat() != PIXEL_FORMAT_B8G8R8X8_UNORM &&
 		bd.GetFormat() != PIXEL_FORMAT_B8G8R8A8_UNORM ) )
 	{
-		return false;
+		return Result::SAVE_NOT_SUPPORTED;
 	}
 
-	return true;
+	return Result::OK;
 }
 
 // --------------------------------------------------------------------------------------
@@ -231,23 +279,20 @@ bool Tr2BmpHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
 //   Saves a bitmap to BMP file.
 // Arguments:
 //   image - Bitmap to save
-//   output - Stream to save image to
+//   output - Destination stream
 // Return Value:
-//   true If the image was saved
-//   false Otherwise
+//   Result of the operation
 // --------------------------------------------------------------------------------------
-bool Tr2BmpHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
+Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
 {
 	if( !image.IsValid() )
 	{
-		CCP_LOGWARN( "Tr2BmpHandler::Save input image isn't valid" );
-		return false;
+		return Result::INVALID_BITMAP;
 	}
 
 	if( !IsSaveSupported( image ) )
 	{
-		CCP_LOGWARN( "Tr2BmpHandler::Save does not support this image format" );
-		return false;
+		return Result::SAVE_NOT_SUPPORTED;
 	}
 
 	DibHeader dibHeader;
@@ -274,16 +319,14 @@ bool Tr2BmpHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 	bmpHeader.reserved2 = 0;
 	bmpHeader.offBits = sizeof( BmpHeader ) + sizeof( DibHeader );
 
-	if( output->Write( &bmpHeader, sizeof( BmpHeader ) ) != sizeof( BmpHeader ) )
+	if( output.Write( &bmpHeader, sizeof( BmpHeader ) ) != sizeof( BmpHeader ) )
 	{
-		CCP_LOGWARN( "Tr2BmpHandler::Save failed to write header(1)" );
-		return false;
+		return Result::WRITE_FAILURE;
 	}
 
-	if( output->Write( &dibHeader, sizeof( DibHeader ) ) != sizeof( DibHeader ) )
+	if( output.Write( &dibHeader, sizeof( DibHeader ) ) != sizeof( DibHeader ) )
 	{
-		CCP_LOGWARN( "Tr2BmpHandler::Save failed to write header(2)" );
-		return false;
+		return Result::WRITE_FAILURE;
 	}
 
 	unsigned srcStride = image.GetWidth() * 4;
@@ -293,18 +336,16 @@ bool Tr2BmpHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 	{
 		for( unsigned j = 0; j < image.GetHeight(); ++j )
 		{
-			if( output->Write( row, srcStride ) != ptrdiff_t( srcStride ) )
+			if( output.Write( row, srcStride ) != ptrdiff_t( srcStride ) )
 			{
-				CCP_LOGWARN( "Tr2BmpHandler::Save failed to write datachunk(1)" );
-				return false;
+				return Result::WRITE_FAILURE;
 			}
 			if( padding )
 			{
 				unsigned zero = 0;
-				if( output->Write( &zero, padding ) != ptrdiff_t( padding ) )
+				if( output.Write( &zero, padding ) != ptrdiff_t( padding ) )
 				{
-					CCP_LOGWARN( "Tr2BmpHandler::Save failed to write datachunk(2)" );
-					return false;
+					return Result::WRITE_FAILURE;
 				}
 			}
 			row -= srcStride;
@@ -326,23 +367,24 @@ bool Tr2BmpHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 				*dest++ = *current++;
 				current++;
 			}
-			if( output->Write( destRow, destStride ) != ptrdiff_t( destStride ) )
+			if( output.Write( destRow, destStride ) != ptrdiff_t( destStride ) )
 			{
-				CCP_LOGWARN( "Tr2BmpHandler::Save failed to write datachunk(3)" );
-				return false;
+				return Result::WRITE_FAILURE;
 			}
 			if( padding )
 			{
 				unsigned zero = 0;
-				if( output->Write( &zero, padding ) != ptrdiff_t( padding ) )
+				if( output.Write( &zero, padding ) != ptrdiff_t( padding ) )
 				{
-					CCP_LOGWARN( "Tr2BmpHandler::Save failed to write datachunk(4)" );
-					return false;
+					return Result::WRITE_FAILURE;
 				}
 			}
 			row -= srcStride;
 		}
 	}
 
-	return true;
+	return Result::OK;
+}
+
+}
 }

@@ -19,7 +19,7 @@ public:
 	bool Create( unsigned width, unsigned height, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format );
 	bool CreateCube( unsigned width, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format );
 	bool CreateVolume( unsigned width, unsigned height, unsigned depth, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format );
-	bool CreateFromImageHandler( Tr2ImageHandler* imageHandler );
+	bool CreateFromBitmapDimensions( const Tr2BitmapDimensions& dimensions );
 
 	unsigned GetPitch() const;
 

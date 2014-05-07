@@ -137,9 +137,6 @@
     <ClCompile Include="TestHostBitmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestImageHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestJpgHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

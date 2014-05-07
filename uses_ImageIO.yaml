@@ -23,3 +23,8 @@ Configurations:
     Link:
       AdditionalDependencies:
       - ImageIO.lib
+  
+  Release_Coverage|Any:
+    Link:
+      AdditionalDependencies:
+      - ImageIO_cc.lib

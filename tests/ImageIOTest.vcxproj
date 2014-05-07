@@ -301,7 +301,6 @@
     <ClCompile Include="TestDdsHandler.cpp"/>
     <ClCompile Include="TestHelpers.cpp"/>
     <ClCompile Include="TestHostBitmap.cpp"/>
-    <ClCompile Include="TestImageHandler.cpp"/>
     <ClCompile Include="TestJpgHandler.cpp"/>
     <ClCompile Include="TestPngHandler.cpp"/>
     <ClCompile Include="TestPsdHandler.cpp"/>

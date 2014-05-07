@@ -7,6 +7,21 @@ using namespace Tr2RenderContextEnum;
 namespace
 {
 
+#pragma pack(push)
+#pragma pack(1)
+struct Header
+{
+    uint32_t signature;
+    uint16_t version;
+    uint8_t reserved[6];
+    uint16_t channelCount;
+    uint32_t height;
+    uint32_t width;
+    uint16_t depth;
+    uint16_t colorMode;
+};
+#pragma pack(pop)
+
 const uint32_t PSD_SIGNATURE = 0x53504238;
 const uint16_t PSD_COLOR_MODE_GRAYSCALE = 1;
 const uint16_t PSD_COLOR_MODE_RGB = 3;
@@ -38,100 +53,19 @@ bool SkipBlock( ICcpStream* stream )
 	return true;
 }
 
-bool WriteZeroLengthBlock( ICcpStream* stream )
+ImageIO::Result WriteZeroLengthBlock( ICcpStream& stream )
 {
 	uint32_t tmp = 0;
-	if( stream->Write( &tmp, sizeof( tmp ) ) != sizeof( tmp ) )
+	if( stream.Write( &tmp, sizeof( tmp ) ) != sizeof( tmp ) )
 	{
-		CCP_LOGWARN( "PsdHandler::Save failed to write header" );
-		return false;
+		return ImageIO::Result::WRITE_FAILURE;
 	}
-	return true;
+	return ImageIO::Result::OK;
 }
 
-}
-
-namespace ImageIO
+Tr2RenderContextEnum::PixelFormat GetFormat( Header& header ) 
 {
-
-
-// --------------------------------------------------------------------------------------
-// Description:
-//   PsdHandler constructor
-// --------------------------------------------------------------------------------------
-PsdHandler::PsdHandler( const wchar_t* sourceName )
-	:Tr2ImageHandler( sourceName ),
-	m_compression( 0 )
-{
-}
-
-// --------------------------------------------------------------------------------------
-// Description:
-//   Reads PSD header from the stream and initializes basic variables (width, height, 
-//   etc.).
-// Arguments:
-//   stream - Data stream
-// Return Value:
-//   true If the header was suscessfully read
-//   false If there was an error reading the header or the format is unsupported
-// --------------------------------------------------------------------------------------
-bool PsdHandler::ReadHeader( ICcpStream* stream )
-{
-	if( stream->Read( &m_header, sizeof( Header ) ) != sizeof( Header ) )
-	{
-		return false;
-	}
-	m_header.width = SwitchEndian( m_header.width );
-	m_header.height = SwitchEndian( m_header.height );
-	m_header.version = SwitchEndian( m_header.version );
-	m_header.channelCount = SwitchEndian( m_header.channelCount );
-	m_header.depth = SwitchEndian( m_header.depth );
-	m_header.colorMode = SwitchEndian( m_header.colorMode );
-
-	if( m_header.signature != PSD_SIGNATURE || m_header.version != 1 || m_header.channelCount > 4 || 
-		m_header.depth != 8 || ( m_header.colorMode != PSD_COLOR_MODE_RGB && m_header.colorMode != PSD_COLOR_MODE_GRAYSCALE ) )
-	{
-		return false;
-	}
-
-	SkipBlock( stream );
-	SkipBlock( stream );
-	SkipBlock( stream );
-
-    // Find out if the data is compressed.
-    // Known values:
-    //   0: no compression
-    //   1: RLE compressed
- 	if( stream->Read( &m_compression, sizeof( m_compression ) ) != sizeof( m_compression ) )
-	{
-		return false;
-	}
-	m_compression = SwitchEndian( m_compression );
-    if( m_compression > 1 )
-	{
-        // Unknown compression type.
-        return false;
-    }
-
-	m_width = m_header.width;
-	m_height = m_header.height;
-	m_bitsPerPixel = m_header.channelCount == 3 ? 32 : m_header.channelCount * 8;
-	m_mipLevelCount = 1;
-
-	return true;
-}
-
-// --------------------------------------------------------------------------------------
-// Description:
-//   Returns the format of the texture being loaded.
-//   Assumes that header has been successfully read, and determined to be 
-//   valid - only call after ReadHeader returns true.
-// Return Value:
-//   Pixel format for PSD image
-// --------------------------------------------------------------------------------------
-Tr2RenderContextEnum::PixelFormat PsdHandler::GetFormat() const 
-{
-	switch( m_header.channelCount )
+	switch( header.channelCount )
 	{
 	case 1:
 		return Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM;
@@ -144,33 +78,80 @@ Tr2RenderContextEnum::PixelFormat PsdHandler::GetFormat() const
 	}
 }
 
-bool PsdHandler::ReadRleData( ICcpStream* stream )
+ImageIO::Result DoReadHeader( ICcpStream& stream, Tr2BitmapDimensions& dimensions, Header& header, uint16_t& compression )
+{
+	if( stream.Read( &header, sizeof( Header ) ) != sizeof( Header ) )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+	header.width = SwitchEndian( header.width );
+	header.height = SwitchEndian( header.height );
+	header.version = SwitchEndian( header.version );
+	header.channelCount = SwitchEndian( header.channelCount );
+	header.depth = SwitchEndian( header.depth );
+	header.colorMode = SwitchEndian( header.colorMode );
+
+	if( header.signature != PSD_SIGNATURE )
+	{
+		return ImageIO::Result::INVALID_HEADER;
+	}
+
+	if( header.version != 1 || header.channelCount > 4 || 
+		header.depth != 8 || ( header.colorMode != PSD_COLOR_MODE_RGB && header.colorMode != PSD_COLOR_MODE_GRAYSCALE ) )
+	{
+		return ImageIO::Result::HEADER_NOT_SUPPORTED;
+	}
+
+	SkipBlock( &stream );
+	SkipBlock( &stream );
+	SkipBlock( &stream );
+
+    // Find out if the data is compressed.
+    // Known values:
+    //   0: no compression
+    //   1: RLE compressed
+ 	if( stream.Read( &compression, sizeof( compression ) ) != sizeof( compression ) )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+	compression = SwitchEndian( compression );
+    if( compression > 1 )
+	{
+        // Unknown compression type.
+        return ImageIO::Result::HEADER_NOT_SUPPORTED;
+    }
+	dimensions = Tr2BitmapDimensions( header.width, header.height, 1, GetFormat( header ) );
+
+	return ImageIO::Result::OK;
+}
+
+ImageIO::Result ReadRleData( ICcpStream& stream, const Header& header, ImageIO::HostBitmap& bitmap )
 {
 	const uint32_t componentsBgra[] = { 2, 1, 0, 3 };
 	const uint32_t componentsR[] = { 0, };
-	const uint32_t* components = m_header.colorMode == PSD_COLOR_MODE_GRAYSCALE ? componentsR : componentsBgra;
-	const uint32_t bpp = m_header.colorMode == PSD_COLOR_MODE_GRAYSCALE ? 1 : 4;
-	size_t channelSize = m_header.width * m_header.height;
+	const uint32_t* components = header.colorMode == PSD_COLOR_MODE_GRAYSCALE ? componentsR : componentsBgra;
+	const uint32_t bpp = header.colorMode == PSD_COLOR_MODE_GRAYSCALE ? 1 : 4;
+	size_t channelSize = header.width * header.height;
 
-	stream->Seek( m_header.height * m_header.channelCount * sizeof( uint16_t ), ICcpStream::SO_CURRENT );
-	CcpMallocBuffer compressedData( "PsdHandler::ReadImage/compressedData", stream->GetSize() - stream->GetPosition() );
-	if( stream->Read( compressedData.get(), compressedData.size() ) != compressedData.size() )
+	stream.Seek( header.height * header.channelCount * sizeof( uint16_t ), ICcpStream::SO_CURRENT );
+	CcpMallocBuffer compressedData( "PsdHandler::ReadImage/compressedData", stream.GetSize() - stream.GetPosition() );
+	if( stream.Read( compressedData.get(), compressedData.size() ) != compressedData.size() )
 	{
-		return false;
+		return ImageIO::Result::READ_FAILURE;
 	}
 	size_t compressedIndex = 0;
 
     // Read RLE data.
-    for( uint32_t channel = 0; channel < m_header.channelCount; channel++ )
+    for( uint32_t channel = 0; channel < header.channelCount; channel++ )
     {
-        uint8_t* ptr = m_data + components[channel];
+		uint8_t* ptr = reinterpret_cast<uint8_t*>( bitmap.GetRawData() ) + components[channel];
 
         uint32_t count = 0;
         while( count < channelSize )
         {
 			if( compressedIndex >= compressedData.size() )
 			{
-				return false;
+				return ImageIO::Result::INVALID_DATA;
 			}
 
 			uint8_t c = reinterpret_cast<uint8_t*>( compressedData.get() )[compressedIndex++];
@@ -183,7 +164,7 @@ bool PsdHandler::ReadRleData( ICcpStream* stream )
                 count += len;
                 if( count > channelSize )
 				{
-					return false;
+					return ImageIO::Result::INVALID_DATA;
 				}
 
                 while (len != 0)
@@ -202,7 +183,7 @@ bool PsdHandler::ReadRleData( ICcpStream* stream )
                 count += len;
                 if( compressedIndex >= compressedData.size() || count > channelSize ) 
 				{
-					return false;
+					return ImageIO::Result::INVALID_DATA;
 				}
 
                 uint8_t val = reinterpret_cast<uint8_t*>( compressedData.get() )[compressedIndex++];
@@ -218,110 +199,137 @@ bool PsdHandler::ReadRleData( ICcpStream* stream )
             }
         }
     }
-	return true;
+	return ImageIO::Result::OK;
 }
 
-bool PsdHandler::ReadUncompressedData( ICcpStream* stream )
+ImageIO::Result ReadUncompressedData( ICcpStream& stream, const Header& header, ImageIO::HostBitmap& bitmap )
 {
 	const uint32_t componentsBgra[] = { 2, 1, 0, 3 };
 	const uint32_t componentsR[] = { 0, 1, };
-	const uint32_t* components = m_header.channelCount < 3 ? componentsR : componentsBgra;
-	const uint32_t bpp = m_header.channelCount == 3 ? 4 : m_header.channelCount;
-	size_t channelSize = m_header.width * m_header.height;
+	const uint32_t* components = header.channelCount < 3 ? componentsR : componentsBgra;
+	const uint32_t bpp = header.channelCount == 3 ? 4 : header.channelCount;
+	size_t channelSize = header.width * header.height;
 
 	CcpMallocBuffer channel( "PsdHandler::ReadImage/channel", channelSize );
-	for( uint32_t component = 0; component < m_header.channelCount; ++component )
+	for( uint32_t component = 0; component < header.channelCount; ++component )
 	{
-		if( stream->Read( channel.get(), channelSize ) != ptrdiff_t( channelSize ) )
+		if( stream.Read( channel.get(), channelSize ) != ptrdiff_t( channelSize ) )
 		{
-			return false;
+			return ImageIO::Result::READ_FAILURE;
 		}
 		for( size_t i = 0; i < channelSize; ++i )
 		{
-			m_data[i * bpp + components[component]] = reinterpret_cast<const uint8_t*>( channel.get() )[i];
+			reinterpret_cast<uint8_t*>( bitmap.GetRawData() )[i * bpp + components[component]] = reinterpret_cast<const uint8_t*>( channel.get() )[i];
 		}
 	}
-	return true;
+	return ImageIO::Result::OK;
 }
 
-// --------------------------------------------------------------------------------------
-// Description:
-//   Reads image data from the stream.
-// Arguments:
-//   stream - Data stream
-// Return Value:
-//   true If the image was suscessfully read
-//   false If there was an error loading the image
-// --------------------------------------------------------------------------------------
-bool PsdHandler::ReadImage( ICcpStream* stream )
+ImageIO::Result ReadImagePixels( ICcpStream& stream, ImageIO::HostBitmap& bitmap, const Header& header, uint16_t compression )
 {
-	CCP_FREE( m_data );
-	m_dataSize = GetTotalDataSize();
-	m_data = (uint8_t*)CCP_MALLOC( "PsdHandler/m_data", GetTotalDataSize() );
-	if( !m_data )
+	if( compression == 1 )
 	{
-		CCP_LOGERR( "PsdHandler couldn't allocate %d bytes (%S)", GetTotalDataSize(), m_sourceName.c_str() );
-		m_dataSize = 0;
-		return false;
-	}
-
-	if( m_compression == 1 )
-	{
-		if( !ReadRleData( stream ) )
-		{
-			return false;
-		}
+		IMAGE_IO_CR_RETURN_RESULT( ReadRleData( stream, header, bitmap ) );
 	}
 	else
 	{
-		if( !ReadUncompressedData( stream ) )
-		{
-			return false;
-		}
+		IMAGE_IO_CR_RETURN_RESULT( ReadUncompressedData( stream, header, bitmap ) );
 	}
-	if( m_header.channelCount == 3 )
+	if( header.channelCount == 3 )
 	{
-		for( size_t i = 0; i < GetWidth() * GetHeight(); ++i )
+		for( size_t i = 0; i < bitmap.GetWidth() * bitmap.GetHeight(); ++i )
 		{
-			m_data[i * 4 + 3] = 0xff;
+			reinterpret_cast<uint8_t*>( bitmap.GetRawData() )[i * 4 + 3] = 0xff;
 		}
 	}
 
-	return true;
+	return ImageIO::Result::OK;
 }
 
-// --------------------------------------------------------------------------------------
-// Description:
-//   Return the dds block size, or 0 if there's no compression
-// Return Value:
-//   0 always
-// --------------------------------------------------------------------------------------
-unsigned PsdHandler::GetBlockByteSize() const
+}
+
+namespace ImageIO
 {
-	return 0;
+
+namespace Psd
+{
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Registers PSD handler with ImageIO.
+// --------------------------------------------------------------------------------------
+void RegisterHandler()
+{
+	static bool s_registered = false;
+	if( !s_registered )
+	{
+		ImageFormatFunctions funcs = { &IsPsdExtension, &ReadImage, &IsSaveSupported, &Save };
+		RegisterImageHandler( funcs );
+		s_registered = true;
+	}
 }
 
 // --------------------------------------------------------------------------------------
 // Description:
-//   Return the offset where this face and miplevel would be, relative to the start of m_data.
-//   This does not include the size of the header, ie. we're dealing strictly with texels.
+//   Checks if provided extension (without leading dot) is PSD extension.
 // Arguments:
-//   mipLevel - Mip level
-//   face - Cubemap face (unused: PSDs don't support cube maps)
+//   ext - File extension
 // Return Value:
-//   Offset of specified mip level.
+//   true If provided extension is PSD extension
 // --------------------------------------------------------------------------------------
-unsigned PsdHandler::GetOffset( unsigned mipLevel, unsigned ) const
+bool IsPsdExtension( const wchar_t* ext )
 {
-	unsigned offset = 0;
-	for( unsigned int i = 0; i != mipLevel ; ++i )
-	{
-		offset += GetMipLevelSize( i );
-	}
-	return offset;
+	return ( ext[0] == L'p' || ext[0] == L'P' ) &&
+		( ext[1] == L's' || ext[1] == L'S' ) &&
+		( ext[2] == L'd' || ext[2] == L'D' ) &&
+		ext[3] == 0;
 }
 
-bool PsdHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
+// --------------------------------------------------------------------------------------
+// Description:
+//   Reads PSD image from the stream.
+// Arguments:
+//   stream - Stream used for reading
+//   loadParameters - various loading parameters
+//   bitmap - (out) Destination bitmap
+//   metadata - (out) Optional image metadata
+// Return Value:
+//   Result of the operation
+// --------------------------------------------------------------------------------------
+Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata )
+{
+	Tr2BitmapDimensions dimensions;
+	Header header;
+	uint16_t compression;
+	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, dimensions, header, compression ) );
+
+	if( metadata )
+	{
+		metadata->cutout = Cutout();
+	}
+
+	if( !bitmap.Create( header.width, header.height, 1, GetFormat( header ) ) )
+	{
+		return Result::ERROR_CREATING_BITMAP;
+	}
+	auto r = ReadImagePixels( stream, bitmap, header, compression );
+	if( !r )
+	{
+		bitmap.Destroy();
+		return r;
+	}
+	return Result::OK;
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Checks if saving an image into PSD format is supported.
+// Arguments:
+//   dimensions - Image dimensions/type/format
+// Return Value:
+//   Result of the operation (OK if image saving is supported)
+// --------------------------------------------------------------------------------------
+Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 {
 	if( bd.GetType() != TEX_TYPE_2D || 
 		( bd.GetFormat() != PIXEL_FORMAT_R8_UNORM &&
@@ -329,10 +337,10 @@ bool PsdHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
 		bd.GetFormat() != PIXEL_FORMAT_B8G8R8X8_UNORM &&
 		bd.GetFormat() != PIXEL_FORMAT_B8G8R8A8_UNORM ) )
 	{
-		return false;
+		return Result::SAVE_NOT_SUPPORTED;
 	}
 
-	return true;
+	return Result::OK;
 }
 
 // --------------------------------------------------------------------------------------
@@ -340,23 +348,20 @@ bool PsdHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
 //   Saves a bitmap to PSD file.
 // Arguments:
 //   image - Bitmap to save
-//   output - Stream to save image to
+//   output - Destination stream
 // Return Value:
-//   true If the image was saved
-//   false Otherwise
+//   Result of the operation
 // --------------------------------------------------------------------------------------
-bool PsdHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
+Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
 {
 	if( !image.IsValid() )
 	{
-		CCP_LOGWARN( "PsdHandler::Save input image isn't valid" );
-		return false;
+		return Result::INVALID_BITMAP;
 	}
 
 	if( !IsSaveSupported( image ) )
 	{
-		CCP_LOGWARN( "PsdHandler::Save does not support this image format" );
-		return false;
+		return Result::SAVE_NOT_SUPPORTED;
 	}
 
 	const uint32_t bpp = GetBytesPerPixel( image.GetFormat() );
@@ -377,21 +382,19 @@ bool PsdHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 	header.depth = SwitchEndian( uint16_t( 8 ) );
 	header.colorMode = SwitchEndian( channelCount > 2 ? PSD_COLOR_MODE_RGB : PSD_COLOR_MODE_GRAYSCALE );
 
-	if( output->Write( &header, sizeof( Header ) ) != sizeof( Header ) )
+	if( output.Write( &header, sizeof( Header ) ) != sizeof( Header ) )
 	{
-		CCP_LOGWARN( "PsdHandler::Save failed to write header" );
-		return false;
+		return Result::WRITE_FAILURE;
 	}
 
-	WriteZeroLengthBlock( output );
-	WriteZeroLengthBlock( output );
-	WriteZeroLengthBlock( output );
+	IMAGE_IO_CR_RETURN_RESULT( WriteZeroLengthBlock( output ) );
+	IMAGE_IO_CR_RETURN_RESULT( WriteZeroLengthBlock( output ) );
+	IMAGE_IO_CR_RETURN_RESULT( WriteZeroLengthBlock( output ) );
 
 	uint16_t compression = 0;
-	if( output->Write( &compression, sizeof( compression ) ) != sizeof( compression ) )
+	if( output.Write( &compression, sizeof( compression ) ) != sizeof( compression ) )
 	{
-		CCP_LOGWARN( "PsdHandler::Save failed to write header" );
-		return false;
+		return Result::WRITE_FAILURE;
 	}
 
 	const uint32_t componentsBgra[] = { 2, 1, 0, 3 };
@@ -405,14 +408,14 @@ bool PsdHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 		{
 			channel.get()[i] = image.GetRawData()[i * bpp + components[component]];
 		}
-		if( output->Write( channel.get(), channelSize ) != channelSize )
+		if( output.Write( channel.get(), channelSize ) != channelSize )
 		{
-			CCP_LOGWARN( "PsdHandler::Save failed to write image data" );
-			return false;
+			return Result::WRITE_FAILURE;
 		}
 	}
-	return true;
+	return Result::OK;
 }
 
+}
 
 }

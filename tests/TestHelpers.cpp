@@ -5,55 +5,30 @@
 namespace
 {
 
-void AssertBitmapDimensionsEqual( Tr2ImageHandler* handler, const Tr2BitmapDimensions& dimensions )
+void AssertBitmapDimensionsEqual( const Tr2BitmapDimensions& actualDimensions, const Tr2BitmapDimensions& expectedDimensions )
 {
-	EXPECT_EQ( dimensions.GetWidth(), handler->GetWidth() );
-	EXPECT_EQ( dimensions.GetHeight(), handler->GetHeight() );
-	EXPECT_EQ( dimensions.GetDepth(), handler->GetDepth() );
-	EXPECT_EQ( dimensions.GetFormat(), handler->GetFormat() );
-	switch( dimensions.GetType() )
-	{
-	case Tr2RenderContextEnum::TEX_TYPE_2D:
-		EXPECT_FALSE( handler->IsCubeTexture() );
-		EXPECT_FALSE( handler->IsVolumeTexture() );
-		break;
-	case Tr2RenderContextEnum::TEX_TYPE_3D:
-		EXPECT_FALSE( handler->IsCubeTexture() );
-		EXPECT_TRUE( handler->IsVolumeTexture() );
-		break;
-	case Tr2RenderContextEnum::TEX_TYPE_CUBE:
-		EXPECT_TRUE( handler->IsCubeTexture() );
-		EXPECT_FALSE( handler->IsVolumeTexture() );
-		break;
-	}
-	EXPECT_FALSE( handler->IsCompressed() );
-	EXPECT_EQ( 0, handler->GetBlockByteSize() );
+	EXPECT_EQ( expectedDimensions.GetWidth(), actualDimensions.GetWidth() );
+	EXPECT_EQ( expectedDimensions.GetHeight(), actualDimensions.GetHeight() );
+	EXPECT_EQ( expectedDimensions.GetDepth(), actualDimensions.GetDepth() );
+	EXPECT_EQ( expectedDimensions.GetFormat(), actualDimensions.GetFormat() );
+	EXPECT_EQ( expectedDimensions.GetType(), actualDimensions.GetType() );
+	EXPECT_FALSE( Tr2RenderContextEnum::IsCompressedFormat( actualDimensions.GetFormat() ) );
 }
 
 void SaveAndLoadImage( const TestImage& image, ImageIO::HostBitmap& loaded, ImageIO::HostBitmap& loadedFromSaved )
 {
 	ReadMemoryStream stream( image.data, image.dataSize );
-	std::unique_ptr<Tr2ImageHandler> handler( CreateImageHandler( image.fileNameWide ) );
-	ASSERT_TRUE( handler->ReadHeader( &stream ) );
-	ASSERT_TRUE( handler->ReadImage( &stream ) );
-
-	ASSERT_TRUE( loaded.CreateFromImageHandler( handler.get() ) );
+	ImageIO::HostBitmap bitmap;
+	ASSERT_TRUE( ImageIO::ReadImage( stream, ImageIO::LoadParameters( image.fileNameWide ), loaded ) );
+	ASSERT_TRUE( loaded.IsValid() );
 
 	WriteMemoryStream outStream;
-	std::unique_ptr<Tr2ImageHandler> outHandler( CreateImageHandler( image.fileNameWide ) );
-	ASSERT_TRUE( outHandler->Save( loaded, &outStream ) );
+	ASSERT_TRUE( ImageIO::SaveImage( image.fileNameWide, loaded, outStream ) );
 
 	ReadMemoryStream stream2( outStream.GetData(), outStream.GetDataSize() );
-	std::unique_ptr<Tr2ImageHandler> handler2( CreateImageHandler( image.fileNameWide ) );
-	ASSERT_TRUE( handler2->ReadHeader( &stream2 ) );
-	ASSERT_TRUE( handler2->ReadImage( &stream2 ) );
-	AssertBitmapDimensionsEqual( handler2.get(), image.dimensions );
-	if( ::testing::Test::HasFatalFailure() )
-	{
-		return;
-	}
-
-	ASSERT_TRUE( loadedFromSaved.CreateFromImageHandler( handler2.get() ) );
+	ASSERT_TRUE( ImageIO::ReadImage( stream2, ImageIO::LoadParameters( image.fileNameWide ), loadedFromSaved ) );
+	ASSERT_TRUE( loadedFromSaved.IsValid() );
+	AssertBitmapDimensionsEqual( loadedFromSaved, image.dimensions );
 }
 
 }
@@ -61,10 +36,10 @@ void SaveAndLoadImage( const TestImage& image, ImageIO::HostBitmap& loaded, Imag
 void TestReadImage( const TestImage& image )
 {
 	ReadMemoryStream stream( image.data, image.dataSize );
-	std::unique_ptr<Tr2ImageHandler> handler( CreateImageHandler( image.fileNameWide ) );
-	ASSERT_TRUE( handler->ReadHeader( &stream ) );
-	ASSERT_TRUE( handler->ReadImage( &stream ) );
-	AssertBitmapDimensionsEqual( handler.get(), image.dimensions );
+	ImageIO::HostBitmap loaded;
+	ASSERT_TRUE( ImageIO::ReadImage( stream, ImageIO::LoadParameters( image.fileNameWide ), loaded ) );
+	ASSERT_TRUE( loaded.IsValid() );
+	AssertBitmapDimensionsEqual( loaded, image.dimensions );
 	if( ::testing::Test::HasFatalFailure() )
 	{
 		return;
@@ -75,30 +50,24 @@ void TestReadImage( const TestImage& image )
 		{
 			break;
 		}
-		( *image.imageChecks[i] )( *handler, image.dimensions );
+		( *image.imageChecks[i] )( loaded, image.dimensions );
 	}
 }
 
 void AssertReadTruncatedImageFails( const TestImage& image, size_t truncateSize )
 {
 	ReadMemoryStream stream( image.data, truncateSize );
-	std::unique_ptr<Tr2ImageHandler> handler( CreateImageHandler( image.fileNameWide ) );
-	if( !handler->ReadHeader( &stream ) )
-	{
-		return;
-	}
-	ASSERT_FALSE( handler->ReadImage( &stream ) );
+	ImageIO::HostBitmap loaded;
+	ASSERT_FALSE( ImageIO::ReadImage( stream, ImageIO::LoadParameters( image.fileNameWide ), loaded ) );
+	ASSERT_FALSE( loaded.IsValid() );
 }
 
 void AssertReadImageFails( const TestImage& image )
 {
 	ReadMemoryStream stream( image.data, image.dataSize );
-	std::unique_ptr<Tr2ImageHandler> handler( CreateImageHandler( image.fileNameWide ) );
-	if( !handler->ReadHeader( &stream ) )
-	{
-		return;
-	}
-	ASSERT_FALSE( handler->ReadImage( &stream ) );
+	ImageIO::HostBitmap loaded;
+	ASSERT_FALSE( ImageIO::ReadImage( stream, ImageIO::LoadParameters( image.fileNameWide ), loaded ) );
+	ASSERT_FALSE( loaded.IsValid() );
 }
 
 void AssertCanSaveImage( const TestImage& image )

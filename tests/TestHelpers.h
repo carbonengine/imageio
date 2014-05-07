@@ -9,45 +9,45 @@
 	CCP_CONCATENATE( CCP_CONCATENATE( CCP_CONCATENATE( s_, name ), _ ), extension ),			\
 	sizeof( CCP_CONCATENATE( CCP_CONCATENATE( CCP_CONCATENATE( s_, name ), _ ), extension ) )
 
-typedef void (*GetPixelDataFunction)( Tr2ImageHandler&, const Tr2BitmapDimensions& dimensions );
+typedef void (*GetPixelDataFunction)( ImageIO::HostBitmap&, const Tr2BitmapDimensions& dimensions );
 
 template <typename PixelType, PixelType pixelValue>
-void CheckTopLeftPixel( Tr2ImageHandler& handler, const Tr2BitmapDimensions& dimensions )
+void CheckTopLeftPixel( ImageIO::HostBitmap& bitmap, const Tr2BitmapDimensions& dimensions )
 {
-	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( handler.GetMipBytes( 0 ) )[0] );
+	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( bitmap.GetRawData() )[0] );
 }
 
 template <typename PixelType, PixelType pixelValue>
-void CheckBottomRightPixel( Tr2ImageHandler& handler, const Tr2BitmapDimensions& dimensions )
+void CheckBottomRightPixel( ImageIO::HostBitmap& bitmap, const Tr2BitmapDimensions& dimensions )
 {
 	size_t offset = ( dimensions.GetWidth() * dimensions.GetHeight() * dimensions.GetDepth() ) * GetBytesPerPixel( dimensions.GetFormat() ) - sizeof( PixelType );
-	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( handler.GetMipBytes( 0 ) + offset )[0] );
+	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( bitmap.GetRawData() + offset )[0] );
 }
 
 template <Tr2RenderContextEnum::CubemapFace face, typename PixelType, PixelType pixelValue>
-void CheckFaceTopLeftPixel( Tr2ImageHandler& handler, const Tr2BitmapDimensions& dimensions )
+void CheckFaceTopLeftPixel( ImageIO::HostBitmap& bitmap, const Tr2BitmapDimensions& dimensions )
 {
-	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( handler.GetMipBytes( 0, face ) )[0] );
+	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( bitmap.GetMipRawData( 0, face ) )[0] );
 }
 
 template <Tr2RenderContextEnum::CubemapFace face, typename PixelType, PixelType pixelValue>
-void CheckFaceBottomRightPixel( Tr2ImageHandler& handler, const Tr2BitmapDimensions& dimensions )
+void CheckFaceBottomRightPixel( ImageIO::HostBitmap& bitmap, const Tr2BitmapDimensions& dimensions )
 {
 	size_t offset = ( dimensions.GetWidth() * dimensions.GetHeight() ) * GetBytesPerPixel( dimensions.GetFormat() ) - sizeof( PixelType );
-	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( handler.GetMipBytes( 0, face ) + offset )[0] );
+	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( bitmap.GetMipRawData( 0, face ) + offset )[0] );
 }
 
 template <uint32_t mip, typename PixelType, PixelType pixelValue>
-void CheckMipTopLeftPixel( Tr2ImageHandler& handler, const Tr2BitmapDimensions& dimensions )
+void CheckMipTopLeftPixel( ImageIO::HostBitmap& bitmap, const Tr2BitmapDimensions& dimensions )
 {
-	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( handler.GetMipBytes( mip ) )[0] );
+	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( bitmap.GetMipRawData( mip ) )[0] );
 }
 
 template <uint32_t mip, typename PixelType, PixelType pixelValue>
-void CheckMipBottomRightPixel( Tr2ImageHandler& handler, const Tr2BitmapDimensions& dimensions )
+void CheckMipBottomRightPixel( ImageIO::HostBitmap& bitmap, const Tr2BitmapDimensions& dimensions )
 {
-	size_t offset = ( handler.GetMipLevelWidth( mip ) * dimensions.GetMipHeight( mip ) * dimensions.GetMipDepth( mip ) ) * GetBytesPerPixel( dimensions.GetFormat() ) - sizeof( PixelType );
-	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( handler.GetMipBytes( mip ) + offset )[0] );
+	size_t offset = ( bitmap.GetMipWidth( mip ) * dimensions.GetMipHeight( mip ) * dimensions.GetMipDepth( mip ) ) * GetBytesPerPixel( dimensions.GetFormat() ) - sizeof( PixelType );
+	EXPECT_EQ( pixelValue, reinterpret_cast<const PixelType*>( bitmap.GetMipRawData( mip ) + offset )[0] );
 }
 
 struct TestImage

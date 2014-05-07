@@ -2,6 +2,7 @@
 
 #include "Tr2PngHandler.h"
 #include "HostBitmap.h"
+#include "png.h"
 
 using namespace Tr2RenderContextEnum;
 
@@ -9,249 +10,116 @@ extern bool g_isR10G10B10FormatInverted;
 
 namespace
 {
-	struct HandlerAndStream
-	{
-		Tr2PngHandler* handler;
-		ICcpStream* stream;
-	};
-}
 
-Tr2PngHandler::Tr2PngHandler( const wchar_t* sourceName )
-: Tr2ImageHandler( sourceName )
-, m_png ( NULL )
-, m_info( NULL )
-, m_channels( 0 )
-, m_haveError( false )
-{}
-
-Tr2PngHandler::~Tr2PngHandler()
+class PngCallbacks
 {
-	png_destroy_read_struct( &m_png, &m_info, 0 );	
-}
+public:
+	enum ReadWrite
+	{
+		READ,
+		WRITE,
+	};
+	PngCallbacks( ReadWrite readWrite, png_structp png, ICcpStream& stream )
+		:m_png( png ),
+		m_stream( stream ),
+		m_hasIoErrors( false )
+	{
+		if( readWrite == READ )
+		{
+			png_set_read_fn( png, this, &ReadData );
+		}
+		else
+		{
+			png_set_write_fn( png, this, &WriteData, &FlushData );
+		}
+		png_set_error_fn( png, this, &UserError, &UserWarning );
+	}
+	~PngCallbacks()
+	{
+		png_set_read_fn( m_png, nullptr, nullptr );
+		png_set_error_fn( m_png, nullptr, nullptr, nullptr );
+	}
 
-bool Tr2PngHandler::IsValid() const
-{ 
-	return m_png != NULL && m_info != NULL && !m_haveError; 
-}
+	jmp_buf& GetJumpBuffer()
+	{
+		return m_jmpBuf;
+	}
 
-png_voidp Tr2PngHandler::MemoryAlloc( png_structp, png_alloc_size_t size )
+	bool IoFailed() const
+	{
+		return m_hasIoErrors;
+	}
+
+private:
+	static void UserError( png_structp pngPtr, png_const_charp errorMsg)
+	{
+		if( !pngPtr || !png_get_io_ptr( pngPtr ) )
+		{
+			return;
+		}
+
+		PngCallbacks* self = static_cast<PngCallbacks*>( png_get_error_ptr( pngPtr ) );
+		longjmp( self->m_jmpBuf, 1 );
+	}
+
+	static void UserWarning( png_structp pngPtr, png_const_charp warningMsg)
+	{
+	}
+
+	static void ReadData(png_structp pngPtr, png_bytep data, png_size_t length)
+	{
+		if( !pngPtr || !png_get_io_ptr( pngPtr ) )
+		{
+			return;
+		}
+
+		PngCallbacks* self = static_cast<PngCallbacks*>( png_get_error_ptr( pngPtr ) );
+		self->m_hasIoErrors = ( self->m_stream.Read( data, length ) == -1 );
+	}
+
+	static void WriteData( png_structp png, png_bytep data, png_size_t length )
+	{
+		PngCallbacks* self = static_cast<PngCallbacks*>( png_get_error_ptr( png ) );
+		self->m_hasIoErrors = ( self->m_stream.Write( data, length ) == -1 );
+	}
+
+	static void FlushData( png_structp )
+	{
+	}
+
+	png_structp m_png;
+	ICcpStream& m_stream;
+	bool m_hasIoErrors;
+	jmp_buf m_jmpBuf;
+};
+
+png_voidp MemoryAlloc( png_structp, png_alloc_size_t size )
 {
 	return CCP_MALLOC( "Tr2PngHandler", size );
 }
 	
-void Tr2PngHandler::MemoryFree( png_structp, png_voidp p )
+void MemoryFree( png_structp, png_voidp p )
 {
 	return CCP_FREE( p );
 }
 
-void Tr2PngHandler::ReadData( ICcpStream* stream, png_bytep data, png_size_t length )
+bool DoReadHeader( PngCallbacks& cbs, png_structp png, png_infop info )
 {
-	if( stream )
-	{
-		m_haveError = ( stream->Read( data, length ) == -1 );
-	}
-}
-
-void Tr2PngHandler::ReadData_thunk(png_structp pngPtr, png_bytep data, png_size_t length)
-{
-	if( !pngPtr || !png_get_io_ptr( pngPtr ) )
-	{
-		return;
-	}
-
-	auto handlerAndStream = static_cast<HandlerAndStream*>( png_get_io_ptr( pngPtr ) );
-	handlerAndStream->handler->ReadData( handlerAndStream->stream, data, length );
-}
-
-void Tr2PngHandler::UserError( png_const_charp errorMsg)
-{
-	CCP_LOGERR( "PNG error: %s (%S)", errorMsg ? errorMsg : "(unknown error)", m_sourceName.empty() ? L"(unknown file)" : m_sourceName.c_str() );
-
-	m_haveError = true;
-	m_width = m_height = m_bitsPerPixel = 0;
-
-	longjmp( m_jmpBuf, 1 );
-}
-
-void Tr2PngHandler::UserWarning( png_const_charp warningMsg)
-{
-	CCP_LOGWARN( "PNG warning: %s (%S)", warningMsg ? warningMsg : "(unknown warning)", m_sourceName.empty() ? L"(unknown file)" : m_sourceName.c_str() );
-}
-
-void Tr2PngHandler::UserError_thunk( png_structp pngPtr, png_const_charp errorMsg)
-{
-	if( !pngPtr || !png_get_io_ptr( pngPtr ) )
-	{
-		return;
-	}
-
-	static_cast<Tr2PngHandler*>( png_get_error_ptr( pngPtr ) )->UserError( errorMsg );
-}
-
-void Tr2PngHandler::UserWarning_thunk( png_structp pngPtr, png_const_charp warningMsg)
-{
-	if( !pngPtr || !png_get_io_ptr( pngPtr ) )
-	{
-		return;
-	}
-
-	static_cast<Tr2PngHandler*>( png_get_error_ptr( pngPtr ) )->UserWarning( warningMsg );
-}
-
-// --------------------------------------------------------------------------------------
-// Description:
-//   Helper function that reads header information from PNG. It is a separate function so
-//   that long jumps have minimal interference with C++.
-// Return Value:
-//   true If header was read
-//   false On error
-// --------------------------------------------------------------------------------------
-bool Tr2PngHandler::DoReadHeader()
-{
-	if( setjmp( m_jmpBuf ) )
+	if( setjmp( cbs.GetJumpBuffer() ) )
 	{
 		return false;
 	}
 
-    png_read_info( m_png, m_info );
+    png_read_info( png, info );
 	return true;
 }
 
-bool Tr2PngHandler::ReadHeader( ICcpStream* stream )
+Tr2RenderContextEnum::PixelFormat GetFormat( uint32_t channels, uint32_t bitsPerPixel )
 {
-	png_byte pngsig[ 8 ];
-	if( !stream || stream->Read( pngsig, sizeof( pngsig ) ) == -1 )
-	{
-		return false;
-	}
-
-	if( png_sig_cmp( pngsig, 0, sizeof( pngsig) ) )
-	{
-		return false;
-	}
-
-	m_png  = png_create_read_struct_2( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL, NULL, MemoryAlloc, MemoryFree );
-	m_info = png_create_info_struct( m_png );
-
-	if( !m_png || !m_info )
-	{
-		return false;
-	}
-
-	HandlerAndStream* handlerAndStream = CCP_NEW( "Tr2PngHandler::HandlerAndStream" ) HandlerAndStream;
-	handlerAndStream->handler = this;
-	handlerAndStream->stream = stream;
-
-	png_set_read_fn ( m_png, handlerAndStream, &Tr2PngHandler::ReadData_thunk );
-	png_set_error_fn( m_png, this, &Tr2PngHandler::UserError_thunk, &Tr2PngHandler::UserWarning_thunk );
-
-	if( !m_png || !m_info )
-	{
-		// SetStream wasn't called, or failed.
-		return false;
-	}
-
-	png_set_sig_bytes( m_png, 8 );
-
-	if( !DoReadHeader() )
-	{
-		return false;
-	}
-
-	// ask libpng to convert on the fly to something we like
-	bool isPalette     = false;
-	bool isAlphaExpand = false;
-	switch( GetColorType() )
-	{
-		case PNG_COLOR_TYPE_PALETTE:
-			png_set_palette_to_rgb ( m_png );
-			isPalette = true;
-			break;
-
-		case PNG_COLOR_TYPE_GRAY:
-			/*
-			if( m_info->bit_depth < 8 )
-			{
-				png_set_expand_gray_1_2_4_to_8( m_png );
-			}
-			*/
-			break;
-	}
-
-	// if the image has a transperancy set.. convert it to a full Alpha channel..
-	if( png_get_valid( m_png, m_info, PNG_INFO_tRNS ) )
-	{
-		isAlphaExpand = true;
-		png_set_tRNS_to_alpha( m_png );
-	}
-    
-	m_channels = IsValid() ? png_get_channels    ( m_png, m_info ) : 0;
-
-	if( !isPalette && ( m_channels < 1 || m_channels > 4 ) )
-	{
-		return false;
-	}
-
-	m_width    = IsValid() ? png_get_image_width ( m_png, m_info ) : 0;
-	m_height   = IsValid() ? png_get_image_height( m_png, m_info ) : 0;
-	
-	if( isPalette )
-	{
-		// auto expanded palette, possibly also alpha
-		m_channels     = isAlphaExpand ? 4 : 3;
-		m_bitsPerPixel = m_channels * 8;
-	}
-	else
-	{
-		m_bitsPerPixel = IsValid() ? png_get_bit_depth( m_png, m_info ) * m_channels : 0;
-	}
-	if( png_get_bit_depth( m_png, m_info ) > 8 )
-	{
-		png_set_swap( m_png );
-	}
-
-	const float pngUnitScale = 1.0f / 1000000.0f;
-	png_int_32 x, y, unit;
-	if( png_get_oFFs( m_png, m_info, &x, &y, &unit ) == PNG_INFO_oFFs && x >= 0 && y >= 0)
-	{
-		m_cutoutX = x * pngUnitScale;
-		m_cutoutY = y * pngUnitScale;
-	}
-	png_uint_32 resx, resy;
-	if( png_get_pHYs( m_png, m_info, &resx, &resy, &unit ) == PNG_INFO_pHYs )
-	{
-		m_cutoutWidth  = resx * pngUnitScale;
-		m_cutoutHeight = resy * pngUnitScale;
-	}
-
-	return !m_haveError;
-}
-
-bool Tr2PngHandler::IsSupported() const
-{
-	if(	m_bitsPerPixel == 8  ||
-		m_bitsPerPixel == 16 ||
-		m_bitsPerPixel == 24 ||
-		m_bitsPerPixel == 32 ||
-		m_bitsPerPixel == 48 ||
-		m_bitsPerPixel == 64 )
-	{
-		return true;
-	}
-
-	CCP_LOGWARN(	"Tr2PngHandler: '%S' has unsupported bitsPerPixel %d", 
-					m_sourceName.c_str(), 
-					m_bitsPerPixel );
-
-	return false;
-}
-
-Tr2RenderContextEnum::PixelFormat Tr2PngHandler::GetFormat() const
-{
-	switch( m_channels )
+	switch( channels )
 	{
 	case 1:
-		switch( m_bitsPerPixel )
+		switch( bitsPerPixel )
 		{
 		case 8:
 			return PIXEL_FORMAT_R8_UNORM;
@@ -259,7 +127,7 @@ Tr2RenderContextEnum::PixelFormat Tr2PngHandler::GetFormat() const
 			return PIXEL_FORMAT_R16_UNORM;
 		}
 	case 2:
-		switch( m_bitsPerPixel )
+		switch( bitsPerPixel )
 		{
 		case 16:
 			return PIXEL_FORMAT_R8G8_UNORM;
@@ -267,7 +135,7 @@ Tr2RenderContextEnum::PixelFormat Tr2PngHandler::GetFormat() const
 			return PIXEL_FORMAT_R16G16_UNORM;
 		}
 	case 3:
-		switch( m_bitsPerPixel )
+		switch( bitsPerPixel )
 		{
 		case 24:
 		case 32:
@@ -276,14 +144,14 @@ Tr2RenderContextEnum::PixelFormat Tr2PngHandler::GetFormat() const
 			return PIXEL_FORMAT_R16G16B16A16_UNORM;
 		}
 	}
-	switch( m_bitsPerPixel )
+	switch( bitsPerPixel )
 	{
 	case 32:
 		return PIXEL_FORMAT_B8G8R8A8_UNORM;
 	case 64:
 		return PIXEL_FORMAT_R16G16B16A16_UNORM;
 	}
-	if( m_channels == 3 )
+	if( channels == 3 )
 	{
 		return PIXEL_FORMAT_B8G8R8X8_UNORM;
 	}
@@ -293,195 +161,310 @@ Tr2RenderContextEnum::PixelFormat Tr2PngHandler::GetFormat() const
 	}
 }
 
-// --------------------------------------------------------------------------------------
-// Description:
-//   Helper function that reads image pixels from PNG. It is a separate function so
-//   that long jumps have minimal interference with C++.
-// Arguments:
-//   rowPtrs - array of pointers to rows of pixels to store image data
-// Return Value:
-//   true If image was read
-//   false On error
-// --------------------------------------------------------------------------------------
-bool Tr2PngHandler::DoReadImage( png_bytep* rowPtrs )
+ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, Tr2BitmapDimensions& dimensions, ImageIO::Metadata* metadata, png_structp png, png_infop info, uint32_t& channels, uint32_t& bitsPerPixel )
 {
-	if( setjmp( m_jmpBuf ) )
+	png_byte pngsig[ 8 ];
+	if( stream.Read( pngsig, sizeof( pngsig ) ) == -1 )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+
+	if( png_sig_cmp( pngsig, 0, sizeof( pngsig) ) )
+	{
+		return ImageIO::Result::INVALID_HEADER;
+	}
+
+	PngCallbacks cbs( PngCallbacks::READ, png, stream );
+
+	png_set_sig_bytes( png, 8 );
+
+	if( !DoReadHeader( cbs, png, info ) || cbs.IoFailed() )
+	{
+		return ImageIO::Result::INVALID_HEADER;
+	}
+
+	// ask libpng to convert on the fly to something we like
+	bool isPalette     = false;
+	bool isAlphaExpand = false;
+	uint32_t colorType = png_get_color_type( png, info );
+	if( colorType == PNG_COLOR_TYPE_PALETTE )
+	{
+		png_set_palette_to_rgb ( png );
+		isPalette = true;
+	}
+
+	// if the image has a transperancy set.. convert it to a full Alpha channel..
+	if( png_get_valid( png, info, PNG_INFO_tRNS ) )
+	{
+		isAlphaExpand = true;
+		png_set_tRNS_to_alpha( png );
+	}
+    
+	channels = png_get_channels( png, info );
+
+	if( !isPalette && ( channels < 1 || channels > 4 ) )
+	{
+		return ImageIO::Result::HEADER_NOT_SUPPORTED;
+	}
+
+	uint32_t width = png_get_image_width( png, info );
+	uint32_t height = png_get_image_height( png, info );
+
+	if( isPalette )
+	{
+		// auto expanded palette, possibly also alpha
+		channels     = isAlphaExpand ? 4 : 3;
+		bitsPerPixel = channels * 8;
+	}
+	else
+	{
+		bitsPerPixel = png_get_bit_depth( png, info ) * channels;
+	}
+	if( png_get_bit_depth( png, info ) > 8 )
+	{
+		png_set_swap( png );
+	}
+
+	if( metadata )
+	{
+		metadata->cutout = ImageIO::Cutout();
+
+		const float pngUnitScale = 1.0f / 1000000.0f;
+		png_int_32 x, y, unit;
+		if( png_get_oFFs( png, info, &x, &y, &unit ) == PNG_INFO_oFFs && x >= 0 && y >= 0)
+		{
+			metadata->cutout.x = x * pngUnitScale;
+			metadata->cutout.y = y * pngUnitScale;
+		}
+		png_uint_32 resx, resy;
+		if( png_get_pHYs( png, info, &resx, &resy, &unit ) == PNG_INFO_pHYs )
+		{
+			metadata->cutout.width  = resx * pngUnitScale;
+			metadata->cutout.height = resy * pngUnitScale;
+		}
+	}
+	auto format = GetFormat( channels, bitsPerPixel );
+	if( format == PIXEL_FORMAT_UNKNOWN )
+	{
+		return ImageIO::Result::HEADER_NOT_SUPPORTED;
+	}
+	dimensions = Tr2BitmapDimensions( width, height, 1, format );
+
+	return ImageIO::Result::OK;
+}
+
+bool DoReadImage( PngCallbacks& cbs, png_bytep* rowPtrs, png_structp png )
+{
+	if( setjmp( cbs.GetJumpBuffer() ) )
 	{
 		return false;
 	}
 
-	png_read_image( m_png, rowPtrs );
+	png_read_image( png, rowPtrs );
 	return true;
 }
 
-bool Tr2PngHandler::ReadImage( ICcpStream* stream )
+ImageIO::Result ReadImagePixels( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, png_structp png, uint32_t channels, uint32_t bitsPerPixel, ImageIO::HostBitmap& bitmap )
 {
-	if( !IsValid() || !IsSupported() )
+	const size_t stride = bitmap.GetWidth() * bitsPerPixel / 8;
+	const size_t size   = stride * bitmap.GetHeight();
+
+	PngCallbacks cbs( PngCallbacks::READ, png, stream );
+
+	if( channels == 3 )
 	{
-		return false;
-	}
-
-	const size_t stride = GetWidth() * m_bitsPerPixel / 8;
-	const size_t size   = stride * GetHeight();
-
-	m_data = (uint8_t*)CCP_MALLOC( "Tr2PngHandler/m_data", size );
-	if( !m_data )
-    {
-		CCP_LOGERR( "TriPNGHandler couldn't allocate %d bytes (%S)", size, m_sourceName.c_str() );
-        return false;
-    }
-
-	png_bytep* rowPtrs = CCP_NEW( "Tr2PngHandler/rowPtrs") png_bytep[ GetHeight() ];
-	for( unsigned i = 0; i != GetHeight(); ++i )
-	{
-		rowPtrs[i] = m_data + i * stride;
-	}
-
-	if( !DoReadImage( rowPtrs ) )
-	{
-		CCP_DELETE [] rowPtrs;
-		return false;
-	}
-
-	CCP_DELETE [] rowPtrs;
-
-	if( !m_haveError && m_channels == 3 )
-	{
-		// upsample from RGB to D3DFMT_X8R8G8B8
-		// upsample from RGB to D3DFMT_X8R8G8B8
-		if( m_bitsPerPixel == 48 )
+		uint8_t* data = (uint8_t*)CCP_MALLOC( "Tr2PngHandler/m_data", size );
+		if( !data )
 		{
-			unsigned newDataSize = GetWidth() * GetHeight() * 8;
-			uint8_t* newData = (uint8_t*)CCP_MALLOC( "Tr2PngHandler/newData", newDataSize );
+			return ImageIO::Result( ImageIO::Result::OUT_OF_MEMORY, "couldn't allocate " CCP_SIZET_FORMAT " bytes", size );
+		}
 
-			if( !newData )
+		png_bytep* rowPtrs = CCP_NEW( "Tr2PngHandler/rowPtrs") png_bytep[ bitmap.GetHeight() ];
+		for( unsigned i = 0; i != bitmap.GetHeight(); ++i )
+		{
+			rowPtrs[i] = data + i * stride;
+		}
+
+		if( !DoReadImage( cbs, rowPtrs, png ) || cbs.IoFailed() )
+		{
+			CCP_FREE( data );
+			CCP_DELETE [] rowPtrs;
+			return ImageIO::Result::INVALID_DATA;
+		}
+
+		CCP_DELETE [] rowPtrs;
+
+		if( bitsPerPixel == 48 )
+		{
+			// upsample from RGB16 to R16G16B16A16
+			uint16_t* in = reinterpret_cast<uint16_t*>( data );
+			uint16_t* out = reinterpret_cast<uint16_t*>( bitmap.GetRawData() );
+			unsigned count = bitmap.GetWidth() * bitmap.GetHeight();
+			while( count-- )
 			{
-				CCP_LOGERR( "Tr2PngHandler/newData - out of memory!" );
-				m_haveError = true;
-
-				CCP_FREE( m_data );
-
-				m_dataSize		= 0;
-				m_data			= NULL;
-				m_bitsPerPixel	= 0;
-				m_channels		= 0;
-			}
-			else
-			{
-				uint16_t* in = reinterpret_cast<uint16_t*>( m_data );
-				uint16_t* out = reinterpret_cast<uint16_t*>( newData );
-				unsigned count = GetWidth() * GetHeight();
-				while( count-- )
-				{
-					*out++ = *in++;
-					*out++ = *in++;
-					*out++ = *in++;
-					*out++ = 0xFFFF;
-				}
-				CCP_FREE( m_data );
-
-				m_dataSize = newDataSize;
-				m_data = newData;
-				m_bitsPerPixel = 64;
-				m_channels = 4;
+				*out++ = *in++;
+				*out++ = *in++;
+				*out++ = *in++;
+				*out++ = 0xFFFF;
 			}
 		}
 		else
 		{
-			unsigned newDataSize = GetWidth() * GetHeight() * 4;
-			uint8_t* newData = (uint8_t*)CCP_MALLOC( "Tr2PngHandler/newData", newDataSize );
-
-			if( !newData )
+			// upsample from RGB to D3DFMT_X8R8G8B8
+			uint8_t* in = data;
+			uint8_t* out = reinterpret_cast<uint8_t*>( bitmap.GetRawData() );
+			unsigned count = bitmap.GetWidth() * bitmap.GetHeight();
+			while( count-- )
 			{
-				CCP_LOGERR( "Tr2PngHandler/newData - out of memory!" );
-				m_haveError = true;
-
-				CCP_FREE( m_data );
-
-				m_dataSize		= 0;
-				m_data			= NULL;
-				m_bitsPerPixel	= 0;
-				m_channels		= 0;
-			}
-			else
-			{
-				uint8_t* in = m_data;
-				uint8_t* out = newData;
-				unsigned count = GetWidth() * GetHeight();
-				while( count-- )
-				{
-					*out++ = in[2];
-					*out++ = in[1];
-					*out++ = in[0];
-					*out++ = 0xFF;
-					in += 3;
-				}
-				CCP_FREE( m_data );
-
-				m_dataSize		= newDataSize;
-				m_data			= newData;
-				m_bitsPerPixel	= 32;
+				*out++ = in[2];
+				*out++ = in[1];
+				*out++ = in[0];
+				*out++ = 0xFF;
+				in += 3;
 			}
 		}
+		CCP_FREE( data );
 	}
-	else if( !m_haveError && m_channels > 2 && m_bitsPerPixel == 32 )
+	else
 	{
-		const unsigned bytes = m_bitsPerPixel / 8;
-
-		for( unsigned j = 0; j != GetHeight(); ++j )
+		png_bytep* rowPtrs = CCP_NEW( "Tr2PngHandler/rowPtrs") png_bytep[ bitmap.GetHeight() ];
+		for( unsigned i = 0; i != bitmap.GetHeight(); ++i )
 		{
-			unsigned char* RGBA = m_data + j * stride;
-			for( unsigned px = 0; px != GetWidth(); ++px, RGBA += bytes )
+			rowPtrs[i] = reinterpret_cast<png_bytep>( bitmap.GetRawData() ) + i * stride;
+		}
+
+		if( !DoReadImage( cbs, rowPtrs, png ) || cbs.IoFailed() )
+		{
+			CCP_DELETE [] rowPtrs;
+			return ImageIO::Result::INVALID_DATA;
+		}
+
+		CCP_DELETE [] rowPtrs;
+
+		if( channels > 2 && bitsPerPixel == 32 )
+		{
+			const unsigned bytes = bitsPerPixel / 8;
+
+			for( unsigned j = 0; j != bitmap.GetHeight(); ++j )
 			{
-				std::swap( RGBA[0], RGBA[2] );
+				char* RGBA = bitmap.GetRawData() + j * stride;
+				for( unsigned px = 0; px != bitmap.GetWidth(); ++px, RGBA += bytes )
+				{
+					std::swap( RGBA[0], RGBA[2] );
+				}
 			}
 		}
 	}
-        
 
+	return ImageIO::Result::OK;
+}
 
-	if( m_haveError )
+bool DoSaveImage( PngCallbacks& cbs, png_structp png, png_infop info, int transforms )
+{
+	if( setjmp( cbs.GetJumpBuffer() ) )
 	{
 		return false;
 	}
-
-	if( !ConvertDesiredFormat() )
-	{
-		return false;
-	}
-
+	png_write_png( png, info, transforms, nullptr );
+	png_write_info( png, info );
 	return true;
 }
 
-unsigned int Tr2PngHandler::GetBlockByteSize() const
-{
-	// Not a block image.
-	return 0;
+
 }
 
-unsigned Tr2PngHandler::GetOffset( unsigned mipLevel, unsigned face ) const
+
+namespace ImageIO
 {
-	CCP_ASSERT( mipLevel == 0 && face == 0 );
-	return 0;
+namespace Png
+{
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Registers PNG handler with ImageIO.
+// --------------------------------------------------------------------------------------
+void RegisterHandler()
+{
+	static bool s_registered = false;
+	if( !s_registered )
+	{
+		ImageFormatFunctions funcs = { &IsPngExtension, &ReadImage, &IsSaveSupported, &Save };
+		RegisterImageHandler( funcs );
+		s_registered = true;
+	}
 }
 
 // --------------------------------------------------------------------------------------
 // Description:
-//   Examines bitmap information to see if the image can be saved to PNG format. 
-//   We only support 1D/2D images with pixel formats B8G8R8A8, B8G8R8X8 or R8.
+//   Checks if provided extension (without leading dot) is PNG extension.
 // Arguments:
-//   bd - Bitmap information
+//   ext - File extension
 // Return Value:
-//   true If saving of such image is supported
-//   false Otherwise
+//   true If provided extension is BMP extension
 // --------------------------------------------------------------------------------------
-bool Tr2PngHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
+bool IsPngExtension( const wchar_t* ext )
+{
+	return ( ext[0] == L'p' || ext[0] == L'P' ) &&
+		( ext[1] == L'n' || ext[1] == L'N' ) &&
+		( ext[2] == L'g' || ext[2] == L'G' ) &&
+		ext[3] == 0;
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Reads PNG image from the stream.
+// Arguments:
+//   stream - Stream used for reading
+//   loadParameters - various loading parameters
+//   bitmap - (out) Destination bitmap
+//   metadata - (out) Optional image metadata
+// Return Value:
+//   Result of the operation
+// --------------------------------------------------------------------------------------
+Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata )
+{
+	png_structp png = png_create_read_struct_2( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL, NULL, MemoryAlloc, MemoryFree );
+	png_infop info = png_create_info_struct( png );
+
+	if( !png || !info )
+	{
+		return Result::OUT_OF_MEMORY;
+	}
+
+	ON_BLOCK_EXIT( [&] { png_destroy_read_struct( &png, &info, 0 ); } );
+
+	Tr2BitmapDimensions dimensions;
+	uint32_t channels, bitsPerPixel;
+	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, loadParameters, dimensions, metadata, png, info, channels, bitsPerPixel ) );
+
+	if( !bitmap.CreateFromBitmapDimensions( dimensions ) )
+	{
+		return Result::ERROR_CREATING_BITMAP;
+	}
+
+	auto r = ReadImagePixels( stream, loadParameters, png, channels, bitsPerPixel, bitmap );
+	if( !r )
+	{
+		bitmap.Destroy();
+		return r;
+	}
+	return Result::OK;
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Checks if saving an image into PNG format is supported.
+// Arguments:
+//   dimensions - Image dimensions/type/format
+// Return Value:
+//   Result of the operation (OK if image saving is supported)
+// --------------------------------------------------------------------------------------
+Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 {
 	if( bd.GetType() != Tr2RenderContextEnum::TEX_TYPE_1D &&
 		bd.GetType() != Tr2RenderContextEnum::TEX_TYPE_2D )
 	{
-		CCP_LOGWARN( "Tr2PngHandler::Save does not support this texture type: %d", bd.GetType() );
-		return false;
+		return Result::SAVE_NOT_SUPPORTED;
 	}
 
 	if( bd.GetFormat() != PIXEL_FORMAT_B8G8R8X8_UNORM		&&
@@ -492,85 +475,31 @@ bool Tr2PngHandler::IsSaveSupported( const Tr2BitmapDimensions& bd )
 		bd.GetFormat() != PIXEL_FORMAT_R10G10B10A2_UNORM	&&
 		bd.GetFormat() != PIXEL_FORMAT_R10G10B10A2_TYPELESS )
 	{
-		CCP_LOGWARN( "Tr2JpgHandler::Save does not support this image format: %d", bd.GetFormat() );
-		return false;
+		return Result::SAVE_NOT_SUPPORTED;
 	}
 
-	return true;
+	return Result::OK;
 }
 
 // --------------------------------------------------------------------------------------
 // Description:
-//   Utility function to write thunk of PNG encoded data to file.
-// Arguments:
-//   png - PNG object
-//   data - Pointer to data to write
-//   length - Size of data
-// See Also:
-//   Tr2PngHandler::Save
-// --------------------------------------------------------------------------------------
-static void WriteDataThunk( png_structp png, png_bytep data, png_size_t length )
-{
-	ICcpStream* output = reinterpret_cast<ICcpStream*>( png_get_io_ptr( png ) );
-	output->Write( data, length );
-}
-
-// --------------------------------------------------------------------------------------
-// Description:
-//   Utility function that is supposed to flush written file. Does nothing.
-// Arguments:
-//   png - PNG object
-// See Also:
-//   Tr2PngHandler::Save
-// --------------------------------------------------------------------------------------
-static void FlushData( png_structp )
-{
-}
-
-// --------------------------------------------------------------------------------------
-// Description:
-//   Helper function that saves image to PNG. It is a separate function so
-//   that long jumps have minimal interference with C++.
-// Arguments:
-//   png - PNG object
-//   info - PNG info object
-// Return Value:
-//   true If image was saved
-//   false On error
-// --------------------------------------------------------------------------------------
-bool Tr2PngHandler::DoSaveImage( png_structp png, png_infop info, int transforms )
-{
-	if( setjmp( png_jmpbuf( png ) ) )
-	{
-		return false;
-	}
-	png_write_png( png, info, transforms, nullptr );
-	png_write_info( png, info );
-	return true;
-}
-
-// --------------------------------------------------------------------------------------
-// Description:
-//   Saves provided bitmap as a PNG image to the stream.
+//   Saves a bitmap to BMP file.
 // Arguments:
 //   image - Bitmap to save
-//   output - Output stream
+//   output - Destination stream
 // Return Value:
-//   true If saving was successful
-//   false Otherwise
+//   Result of the operation
 // --------------------------------------------------------------------------------------
-bool Tr2PngHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
+Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
 {
 	if( !image.IsValid() )
 	{
-		CCP_LOGWARN( "Tr2PngHandler::Save input image isn't valid" );
-		return false;
+		return Result::INVALID_BITMAP;
 	}
 
 	if( !IsSaveSupported( image ) )
 	{
-		CCP_LOGWARN( "Tr2PngHandler::Save does not support this image format %d", image.GetFormat() );
-		return false;
+		return Result::SAVE_NOT_SUPPORTED;
 	}
 
 	png_structp png = png_create_write_struct_2( PNG_LIBPNG_VER_STRING, 
@@ -583,19 +512,18 @@ bool Tr2PngHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 
 	if( !png )
 	{
-		CCP_LOGERR( "TriPNGHandler couldn't create write structure (%S)", m_sourceName.c_str() );
-		return false;
+		return Result::OUT_OF_MEMORY;
 	}
-
-	png_set_write_fn( png, output, &WriteDataThunk, &FlushData );
-	png_set_error_fn( png, this, &Tr2PngHandler::UserError_thunk, &Tr2PngHandler::UserWarning_thunk );
 
 	png_infop info = png_create_info_struct( png );
 	if( !info )
 	{
-		CCP_LOGERR( "TriPNGHandler couldn't create info structure (%S)", m_sourceName.c_str() );
-		return false;
+		return Result::OUT_OF_MEMORY;
 	}
+
+	Result result = Result::OK;
+	{
+	PngCallbacks cbs( PngCallbacks::WRITE, png, output );
 
 	int colorType;
 	int bitDepth = 8;
@@ -614,13 +542,15 @@ bool Tr2PngHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 	default:
 		colorType = PNG_COLOR_TYPE_RGB_ALPHA;
 	}
-	switch( image.GetFormat() ) 
+	switch( image.GetFormat() )
 	{
 	case PIXEL_FORMAT_R16_UNORM:
 	case PIXEL_FORMAT_R16G16B16A16_UNORM:
 		bitDepth = 16;
 		transforms = PNG_TRANSFORM_SWAP_ENDIAN;
 		break;
+    default:
+        break;
 	}
 	//PNG_COLOR_TYPE_GRAY
 	png_set_IHDR( 
@@ -687,12 +617,9 @@ bool Tr2PngHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 
 	png_set_rows( png, info, rows );
 
-	bool result = true;
-
-	if( !DoSaveImage( png, info, transforms ) )
+	if( !DoSaveImage( cbs, png, info, transforms ) )
 	{
-		CCP_LOGERR( "TriPNGHandler couldn't write PNG (%S)", m_sourceName.c_str() );
-		result = false;
+		result = Result::WRITE_FAILURE;
 	}
 
 	if( colorType == PNG_COLOR_TYPE_RGB )
@@ -703,7 +630,10 @@ bool Tr2PngHandler::Save( const ImageIO::HostBitmap& image, ICcpStream* output )
 		}
 	}
 	CCP_DELETE[] rows;
-
+	}
 	png_destroy_write_struct( &png, &info );
 	return result;
+}
+
+}
 }
