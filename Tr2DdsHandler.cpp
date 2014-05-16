@@ -435,9 +435,19 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters&
 			// We first skip ahead in the stream to create the illusion of a texture
 			// with fewer mip maps (lower res)
 			unsigned int skipBytes = 0;
-			for( unsigned int i = 0; i < skipCount; ++i )
+			if( FindDdsFormat( header.ddspf ).first == DDSFMT_R8G8B8 )
 			{
-				skipBytes += dimensions.GetMipSize( i );
+				for( unsigned int i = 0; i < skipCount; ++i )
+				{
+					skipBytes += dimensions.GetMipWidth( i ) * dimensions.GetMipHeight( i ) * dimensions.GetMipDepth( i ) * 3;
+				}
+			}
+			else
+			{
+				for( unsigned int i = 0; i < skipCount; ++i )
+				{
+					skipBytes += dimensions.GetMipSize( i );
+				}
 			}
 			stream.Seek( skipBytes, ICcpStream::SO_CURRENT );
 			
