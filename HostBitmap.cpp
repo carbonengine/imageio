@@ -18,9 +18,9 @@ size_t GetDataSize( const Tr2BitmapDimensions& dim )
 	{
 		while( mipCount-- )
 		{
-			size += width * height * depth * GetBlockByteSize( dim.GetFormat() ) / 16;
-			width  = std::max( width  / 2u, 4u );
-			height = std::max( height / 2u, 4u );			
+			size += std::max( ( width + 3u ) & ~3u, 4u ) * std::max( ( height + 3u ) & ~3u, 4u ) * depth * GetBlockByteSize( dim.GetFormat() ) / 16;
+			width  = std::max( width  / 2u, 1u );
+			height = std::max( height / 2u, 1u );
 			depth = std::max( depth / 2u, 1u );			
 		}
 	}

@@ -633,6 +633,19 @@ TEST( HostBitmap, CanGenerateMipmaps )
 	EXPECT_EQ( 0, memcmp( expectedPixels2, bmp.GetMipRawData( 2 ), sizeof( expectedPixels2 ) ) );
 }
 
+TEST( HostBitmap, BitmapSizeIsSensible )
+{
+	HostBitmap bmp;
+	ASSERT_TRUE( bmp.Create( 1920, 1080, 0, PIXEL_FORMAT_BC1_UNORM ) );
+	size_t size = 0;
+	for( uint32_t i = 0; i < bmp.GetTrueMipCount(); ++i )
+	{
+		size += bmp.GetMipSize( i );
+	}
+	EXPECT_EQ( size, bmp.GetRawDataSize() );
+}
+
+
 INSTANTIATE_TEST_CASE_P( HostBitmap,
                         PixelFormatTest,
 						::testing::Range( int( PIXEL_FORMAT_UNKNOWN + 1 ), int( PIXEL_FORMAT_SENTINEL ) ) );
