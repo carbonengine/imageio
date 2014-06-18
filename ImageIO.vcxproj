@@ -291,6 +291,7 @@
     <ResourceCompile/>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="autoversion.h"/>
     <ClInclude Include="HostBitmap.h"/>
     <ClInclude Include="ImageIOResult.h"/>
     <ClInclude Include="PsdHandler.h"/>
