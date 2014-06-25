@@ -363,6 +363,16 @@ ImageIO::Result ReadRLEData( ICcpStream& stream, const Header& header, unsigned 
 	return ImageIO::Result::OK;
 }
 
+void SwapPixels( uint8_t* pixel0, uint8_t* pixel1, unsigned bpp )
+{
+	for( unsigned i = 0; i < bpp; ++i )
+	{
+		std::swap( *pixel0, *pixel1 );
+		++pixel0;
+		++pixel1;
+	}
+}
+
 // --------------------------------------------------------------------------------------
 // Description:
 //   Reads image data from the stream. Generates mip levels.
@@ -413,7 +423,47 @@ ImageIO::Result ReadImage( ICcpStream& stream, const Header& header, ImageIO::Ho
 		break;
 	default:
 		return ImageIO::Result::HEADER_NOT_SUPPORTED;
-	}	
+	}
+	if( header.imageDescriptor & 0x10 )
+	{
+		// Filp horizontally
+		unsigned bpp = Tr2RenderContextEnum::GetBytesPerPixel( bitmap.GetFormat() );
+		uint32_t width = bitmap.GetWidth();
+		uint32_t height = bitmap.GetHeight();
+		uint32_t pitch = bitmap.GetPitch();
+
+		uint8_t* row = reinterpret_cast<uint8_t*>( bitmap.GetRawData() );
+		for( uint32_t j = 0; j < height; ++j )
+		{
+			uint8_t* start = row;
+			uint8_t* end = row + ( width - 1 ) * bpp;
+			while( start < end )
+			{
+				SwapPixels( start, end, bpp );
+			}
+			row += pitch;
+		}
+	}
+	if( header.imageDescriptor & 0x20 )
+	{
+		// Filp vertically
+		unsigned bpp = Tr2RenderContextEnum::GetBytesPerPixel( bitmap.GetFormat() );
+		uint32_t width = bitmap.GetWidth();
+		uint32_t height = bitmap.GetHeight();
+		uint32_t pitch = bitmap.GetPitch();
+
+		uint8_t* start = reinterpret_cast<uint8_t*>( bitmap.GetRawData() );
+		uint8_t* end = start + ( height - 1 ) * pitch;
+		while( start < end )
+		{
+			for( uint32_t i = 0; i < width; ++i )
+			{
+				SwapPixels( start + i * bpp, end + i * bpp, bpp );
+			}
+			start += pitch;
+			end -= pitch;
+		}
+	}
 	return ImageIO::Result::OK;
 }
 
