@@ -54,6 +54,18 @@ ImageIO::Result::Result( Code code, const char* format, ... )
 	message = buffer.get();
 }
 
+ImageIO::Result ImageIO::Result::FormatVAList( Code code, const char* format, va_list args )
+{
+	size_t size = size_t( _vscprintf( format, args ) );
+	std::unique_ptr<char[]> buffer( CCP_NEW( "ImageIO::Result::buffer" ) char[size + 1] );
+	vsprintf_s( buffer.get(), size, format, args );
+
+	Result result;
+	result.code = code;
+	result.message = buffer.get();
+	return result;
+}
+
 std::string ImageIO::Result::GetErrorMessage() const
 {
 	std::string result = GetResultErrorMessage( code );

@@ -145,6 +145,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
+      <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
       <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0n\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib_d.lib;zlib_d.lib;CcpCore_d.lib;telemetry32.link.lib;libpng_d.lib;jpeg_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -172,6 +173,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
+      <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
       <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0n\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib_d.lib;zlib_d.lib;CcpCore_d.lib;telemetry64.link.lib;libpng_d.lib;jpeg_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -199,6 +201,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
+      <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
       <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0n\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;CcpCore.lib;telemetry32.link.lib;libpng.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -226,6 +229,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
+      <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
       <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0n\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>zlib.lib;zlib.lib;CcpCore.lib;telemetry64.link.lib;libpng.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -253,10 +257,11 @@
       <RuntimeTypeInfo>True</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>True</GenerateDebugInformation>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0n\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>True</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalDependencies>zlib.lib;zlib.lib;CcpCore.lib;telemetry64.link.lib;libpng.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile/>
@@ -282,10 +287,11 @@
       <RuntimeTypeInfo>True</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>True</GenerateDebugInformation>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalLibraryDirectories>$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)\zlib\1.2.3\lib\vc100.sp1\$(Platform);$(CcpSdkPath)/libpng/1.4.0/lib/vc100.sp1/$(Platform);$(CcpSdkPath)\telemetry\2.0n\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;$(CcpSdkPath)/libjpg/jpeg-8c/lib/$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>True</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalDependencies>zlib.lib;zlib.lib;CcpCore.lib;telemetry32.link.lib;libpng.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile/>

@@ -122,7 +122,7 @@ Result IsSaveSupported( const wchar_t* filename, Tr2BitmapDimensions& dimensions
 	{
 		return Result::UNRECOGNIZED_IMAGE_TYPE;
 	}
-	if( !handler->readImage )
+	if( !handler->isSaveSupported )
 	{
 		return Result::METHOD_NOT_SUPPORTED;
 	}
@@ -146,7 +146,7 @@ Result SaveImage( const wchar_t* filename, const HostBitmap& bitmap, ICcpStream&
 	{
 		return Result::UNRECOGNIZED_IMAGE_TYPE;
 	}
-	if( !handler->readImage )
+	if( !handler->save )
 	{
 		return Result::METHOD_NOT_SUPPORTED;
 	}

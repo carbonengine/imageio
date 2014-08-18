@@ -40,6 +40,7 @@ struct Result
 	}
 
 	Result( Code code, const char* format, ... );
+	static Result FormatVAList( Code code, const char* format, va_list );
 
 	operator bool() const
 	{
