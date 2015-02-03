@@ -121,7 +121,7 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, Tr2BitmapDimensions& dimension
 	{
 		return ImageIO::Result::HEADER_NOT_SUPPORTED;
 	}
-	if( header.imageDescriptor > 32 )
+	if( header.imageDescriptor > 63 )
 	{
 		return ImageIO::Result::HEADER_NOT_SUPPORTED;
 	}
