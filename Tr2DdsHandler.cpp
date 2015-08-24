@@ -781,7 +781,7 @@ void Convert24BitTo32Bit( const uint8_t* rgbData, ImageIO::HostBitmap& bitmap, s
 
 ImageIO::Result ReadRgb( ICcpStream& stream, ImageIO::HostBitmap& bitmap, size_t elementSkipBytes )
 {
-	unsigned size = elementSkipBytes ? bitmap.GetArrayElementSize() : bitmap.GetRawDataSize();
+	unsigned size = unsigned( elementSkipBytes ? bitmap.GetArrayElementSize() : bitmap.GetRawDataSize() );
 
 	unsigned unconvertedSize = size / 4 * 3;
 	uint8_t* data = (uint8_t*)CCP_MALLOC( "Tr2DdsHandler/m_data", unconvertedSize );
