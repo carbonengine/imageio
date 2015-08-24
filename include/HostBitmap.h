@@ -17,6 +17,7 @@ public:
 	virtual void Destroy();
 
 	bool Create( unsigned width, unsigned height, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format );
+	bool Create2DArray( unsigned width, unsigned height, unsigned mipCount, unsigned arraySize, Tr2RenderContextEnum::PixelFormat format );
 	bool CreateCube( unsigned width, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format );
 	bool CreateVolume( unsigned width, unsigned height, unsigned depth, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format );
 	bool CreateFromBitmapDimensions( const Tr2BitmapDimensions& dimensions );
@@ -28,9 +29,10 @@ public:
 	const char* GetRawData( unsigned x, unsigned y ) const;
 	char* GetRawData( unsigned x, unsigned y );
 	size_t GetRawDataSize() const;
+	size_t GetArrayElementSize() const;
 
-	const char* GetMipRawData( unsigned level, Tr2RenderContextEnum::CubemapFace face = Tr2RenderContextEnum::CUBEMAP_FACE_FIRST ) const;
-	char* GetMipRawData( unsigned level, Tr2RenderContextEnum::CubemapFace face = Tr2RenderContextEnum::CUBEMAP_FACE_FIRST );
+	const char* GetMipRawData( unsigned level, uint32_t arrayIndex = 0 ) const;
+	char* GetMipRawData( unsigned level, uint32_t arrayIndex = 0 );
 
 	bool PopulateMargin( unsigned margin );
 

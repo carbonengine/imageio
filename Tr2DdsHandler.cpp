@@ -388,7 +388,7 @@ std::pair<int32_t, PixelFormat> FindDdsFormat( const DDS_PIXELFORMAT& pf, const 
 	return std::make_pair( DDSFMT_UNKNOWN, PIXEL_FORMAT_UNKNOWN );
 }
 
-ImageIO::Result CheckSupportedFormat( const DDS_HEADER& header,  const DDS_HEADER_DXT10& headerDxt10, const ImageIO::LoadParameters& loadParameters )
+ImageIO::Result CheckSupportedFormat( const DDS_HEADER& header,  const DDS_HEADER_DXT10& headerDxt10 )
 {
 	int32_t fmt = FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first;
 	if( s_supportedFormats.find( fmt ) != s_supportedFormats.end() )
@@ -411,13 +411,16 @@ ImageIO::Result CheckSupportedFormat( const DDS_HEADER& header,  const DDS_HEADE
 void CopyHeaderValuesToMembers( const DDS_HEADER& header, const DDS_HEADER_DXT10& headerDxt10, Tr2BitmapDimensions& dimensions )
 {
 	Tr2RenderContextEnum::PixelFormat format;
+	uint32_t arraySize;
 	if( header.ddspf.dwFourCC == FOURCC_DX10 )
 	{
 		format = headerDxt10.dxgiFormat;
+		arraySize = headerDxt10.arraySize;
 	}
 	else
 	{
 		format = FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).second;
+		arraySize = 1;
 	}
 	uint32_t width = header.dwWidth;
 	uint32_t height = header.dwHeight;
@@ -430,15 +433,15 @@ void CopyHeaderValuesToMembers( const DDS_HEADER& header, const DDS_HEADER_DXT10
 	else if( IsVolumeTexture( header ) )
 	{
 		uint32_t volumeDepth = header.dwDepth;
-		dimensions = Tr2BitmapDimensions( TEX_TYPE_3D, format, width, height, volumeDepth, mipLevelCount );
+		dimensions = Tr2BitmapDimensions( TEX_TYPE_3D, format, width, height, volumeDepth, mipLevelCount, arraySize );
 	}
 	else
 	{
-		dimensions = Tr2BitmapDimensions( TEX_TYPE_2D, format, width, height, 1, mipLevelCount );
+		dimensions = Tr2BitmapDimensions( TEX_TYPE_2D, format, width, height, 1, mipLevelCount, arraySize );
 	}
 }
 
-ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, Tr2BitmapDimensions& dimensions, DDS_HEADER& header, DDS_HEADER_DXT10& headerDxt10 )
+ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, Tr2BitmapDimensions& dimensions, DDS_HEADER& header, DDS_HEADER_DXT10& headerDxt10, size_t& skipBytes )
 {
 	if( stream.Read( &header, sizeof( header ) ) == -1 )
 	{
@@ -452,13 +455,20 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters&
 		return ImageIO::Result::INVALID_HEADER;
 	}
 
+	uint32_t arraySize;
 	if( header.ddspf.dwFourCC == FOURCC_DX10 )
 	{
 		if( stream.Read( &headerDxt10, sizeof( headerDxt10 ) ) == -1 )
 		{
 			return ImageIO::Result::READ_FAILURE;
 		}
+		arraySize = headerDxt10.arraySize;
 	}
+	else
+	{
+		arraySize = 1;
+	}
+	skipBytes = 0;
 
 	// Skip ahead in the mip map chain for textures if so instructed.  Note that this
 	// optimization won't work for Cube textures because of their data organization.
@@ -473,7 +483,6 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters&
 		{
 			// We first skip ahead in the stream to create the illusion of a texture
 			// with fewer mip maps (lower res)
-			unsigned int skipBytes = 0;
 			if( FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_R8G8B8 )
 			{
 				for( unsigned int i = 0; i < skipCount; ++i )
@@ -488,7 +497,6 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters&
 					skipBytes += dimensions.GetMipSize( i );
 				}
 			}
-			stream.Seek( skipBytes, ICcpStream::SO_CURRENT );
 			
 			// We now fudge the header to comply with these mip map adjustments
 			header.dwMipMapCount = mipCount;
@@ -714,11 +722,12 @@ ImageIO::Result BuildHeaders( const Tr2BitmapDimensions& bd, DDS_HEADER& header,
 
 	PixelFormat format = bd.GetFormat();
 
-	if( IsDds10Format( format ) )
+	if( IsDds10Format( format ) || ( bd.GetArraySize() != 1 && bd.GetType() != TEX_TYPE_CUBE ) )
 	{
 		header.ddspf.dwFlags |= DDS_FOURCC;
 		header.ddspf.dwFourCC = FOURCC_DX10;
 		headerDxt10.dxgiFormat = format;
+		headerDxt10.arraySize = bd.GetArraySize();
 
 		TextureType texture_type = bd.GetType();
 		switch(texture_type)
@@ -731,12 +740,10 @@ ImageIO::Result BuildHeaders( const Tr2BitmapDimensions& bd, DDS_HEADER& header,
 				break;
 			case TEX_TYPE_3D:
 				headerDxt10.resourceDimension = D3D10_RESOURCE_DIMENSION_TEXTURE3D;
-				headerDxt10.arraySize = 1;
 				break;
 			case TEX_TYPE_CUBE:
 				headerDxt10.resourceDimension = D3D10_RESOURCE_DIMENSION_TEXTURE2D;
 				headerDxt10.miscFlag |= 0x4;
-				headerDxt10.arraySize = 1;
 				break;
 			case TEX_TYPE_TYPELESS:
 				headerDxt10.resourceDimension = D3D10_RESOURCE_DIMENSION_UNKNOWN;
@@ -749,14 +756,14 @@ ImageIO::Result BuildHeaders( const Tr2BitmapDimensions& bd, DDS_HEADER& header,
 	return ImageIO::Result::OK;
 }
 
-void Convert24BitTo32Bit( const uint8_t* rgbData, ImageIO::HostBitmap& bitmap )
+void Convert24BitTo32Bit( const uint8_t* rgbData, ImageIO::HostBitmap& bitmap, size_t size, size_t offset )
 {
-	const unsigned newSize = unsigned( bitmap.GetRawDataSize() );
+	const unsigned newSize = unsigned( size );
 	const unsigned oldSize = newSize - newSize / 4;
 
 	const uint8_t* end = rgbData + oldSize;
 	const uint8_t* src = rgbData;
-	uint8_t* dst = reinterpret_cast<uint8_t*>( bitmap.GetRawData() );
+	uint8_t* dst = reinterpret_cast<uint8_t*>( bitmap.GetRawData() ) + offset;
 	uint8_t* dstEnd = dst + newSize;
 	while( src < end )
 	{
@@ -772,50 +779,80 @@ void Convert24BitTo32Bit( const uint8_t* rgbData, ImageIO::HostBitmap& bitmap )
 	}
 }
 
-ImageIO::Result ReadImagePixels( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, const DDS_HEADER& header, const DDS_HEADER_DXT10& headerDxt10 )
+ImageIO::Result ReadRgb( ICcpStream& stream, ImageIO::HostBitmap& bitmap, size_t elementSkipBytes )
 {
-	unsigned int size = unsigned( bitmap.GetRawDataSize() );
+	unsigned size = elementSkipBytes ? bitmap.GetArrayElementSize() : bitmap.GetRawDataSize();
 
-	IMAGE_IO_CR_RETURN_RESULT( CheckSupportedFormat( header, headerDxt10, loadParameters ) );
+	unsigned unconvertedSize = size / 4 * 3;
+	uint8_t* data = (uint8_t*)CCP_MALLOC( "Tr2DdsHandler/m_data", unconvertedSize );
+	ON_BLOCK_EXIT( [&] { CCP_FREE( data ); } );
 
-	if( FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_R8G8B8 )
+	if( !data )
 	{
-		unsigned unconvertedBpp = FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_R8G8B8 ? 3 : 2;
+		return ImageIO::Result( ImageIO::Result::OUT_OF_MEMORY, "couldn't allocate %d bytes", unconvertedSize );
+	}
 
-		unsigned int unconvertedSize = size / 4 * unconvertedBpp;
-		uint8_t* data = (uint8_t*)CCP_MALLOC( "Tr2DdsHandler/m_data", unconvertedSize );
-		ON_BLOCK_EXIT( [&] { CCP_FREE( data ); } );
-
-		if( !data )
+	if( elementSkipBytes )
+	{
+		for( uint32_t i = 0; i < bitmap.GetArraySize(); ++i )
 		{
-			return ImageIO::Result( ImageIO::Result::OUT_OF_MEMORY, "couldn't allocate %d bytes", unconvertedSize );
-		}
+			stream.Seek( elementSkipBytes, ICcpStream::SO_CURRENT );
+			if( stream.Read( data, unconvertedSize ) == -1 )
+			{
+				return ImageIO::Result::READ_FAILURE;
+			}
 
+			Convert24BitTo32Bit( data, bitmap, size, i * size );
+		}
+	}
+	else
+	{
 		if( stream.Read( data, unconvertedSize ) == -1 )
 		{
 			return ImageIO::Result::READ_FAILURE;
 		}
 
-		if( FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_R8G8B8 )
+		Convert24BitTo32Bit( data, bitmap, size, 0 );
+	}
+	return ImageIO::Result::OK;
+}
+
+ImageIO::Result ReadImagePixels( ICcpStream& stream, size_t elementSkipBytes, ImageIO::HostBitmap& bitmap, const DDS_HEADER& header, const DDS_HEADER_DXT10& headerDxt10 )
+{
+	unsigned int size = unsigned( bitmap.GetRawDataSize() );
+
+	IMAGE_IO_CR_RETURN_RESULT( CheckSupportedFormat( header, headerDxt10 ) );
+
+	if( FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_R8G8B8 )
+	{
+		return ReadRgb( stream, bitmap, elementSkipBytes );
+	}
+
+	if( elementSkipBytes )
+	{
+		for( uint32_t i = 0; i < bitmap.GetArraySize(); ++i )
 		{
-			Convert24BitTo32Bit( data, bitmap );
+			stream.Seek( elementSkipBytes, ICcpStream::SO_CURRENT );
+			if( stream.Read( bitmap.GetRawData() + i * bitmap.GetArrayElementSize(), bitmap.GetArrayElementSize() ) == -1 )
+			{
+				return ImageIO::Result::READ_FAILURE;
+			}
 		}
 	}
 	else
 	{
-		if( stream.Read( bitmap.GetRawData(), size ) == -1 )
+		if( stream.Read( bitmap.GetRawData(), bitmap.GetRawDataSize() ) == -1 )
 		{
 			return ImageIO::Result::READ_FAILURE;
 		}
-		if( g_convertA8L8FormatToB8G8R8A8 && FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_A8L8 )
+	}
+	if( g_convertA8L8FormatToB8G8R8A8 && FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_A8L8 )
+	{
+		if( !bitmap.ConvertFormat( PIXEL_FORMAT_B8G8R8A8_UNORM ) )
 		{
-			if( !bitmap.ConvertFormat( PIXEL_FORMAT_B8G8R8A8_UNORM ) )
-			{
-				return ImageIO::Result::ERROR_CONVERTING_FORMAT;
-			}
+			return ImageIO::Result::ERROR_CONVERTING_FORMAT;
 		}
 	}
-
 	return ImageIO::Result::OK;
 }
 
@@ -874,7 +911,8 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParamet
 	Tr2BitmapDimensions dimensions;
 	DDS_HEADER header;
 	DDS_HEADER_DXT10 headerDxt10;
-	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, loadParameters, dimensions, header, headerDxt10 ) );
+	size_t skipBytes;
+	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, loadParameters, dimensions, header, headerDxt10, skipBytes ) );
 
 	if( metadata )
 	{
@@ -885,7 +923,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParamet
 	{
 		return Result::ERROR_CREATING_BITMAP;
 	}
-	auto r = ReadImagePixels( stream, loadParameters, bitmap, header, headerDxt10 );
+	auto r = ReadImagePixels( stream, skipBytes, bitmap, header, headerDxt10 );
 	if( !r )
 	{
 		bitmap.Destroy();

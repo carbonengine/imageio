@@ -551,7 +551,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters&, ImageIO::H
 // --------------------------------------------------------------------------------------
 Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 {
-	return bd.GetType() != TEX_TYPE_2D ? Result( Result::SAVE_NOT_SUPPORTED ) : IsSaveSupported( bd.GetFormat() );
+	return bd.GetType() != TEX_TYPE_2D || bd.GetArraySize() != 1 ? Result( Result::SAVE_NOT_SUPPORTED ) : IsSaveSupported( bd.GetFormat() );
 }
 
 // --------------------------------------------------------------------------------------

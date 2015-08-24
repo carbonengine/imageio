@@ -34,10 +34,7 @@ size_t GetDataSize( const Tr2BitmapDimensions& dim )
 			depth = std::max( depth / 2u, 1u );			
 		}		
 	}
-	if( dim.GetType() == TEX_TYPE_CUBE )
-	{
-		size *= 6;
-	}
+	size *= dim.GetArraySize();
 	return size;
 }
 
@@ -79,6 +76,48 @@ bool HostBitmap::Create( unsigned width, unsigned height, unsigned mipCount, Tr2
 	m_volumeDepth = 1;
 	m_format = format;
 	m_mipCount = mipCount;
+	m_arraySize = 1;
+	m_type = TEX_TYPE_2D;
+
+	size_t size = GetDataSize( *this );
+
+	m_data.resize( "HostBitmap::m_data", size );
+	
+	if( !m_data )
+	{
+		CCP_LOGWARN( "HostBitmap::Create failed to allocated %d bytes", size );
+		Destroy();
+		return false;
+	}
+
+	return true;
+}
+
+bool HostBitmap::Create2DArray( unsigned width, unsigned height, unsigned mipCount, unsigned arraySize, Tr2RenderContextEnum::PixelFormat format )
+{
+	Destroy();
+
+	if( !width || !height || !arraySize || format >= PIXEL_FORMAT_SENTINEL )
+	{
+		CCP_LOGWARN( "HostBitmap::Create2DArray invalid parameters: %d x %d, %d mips, %d array elements, format %d", width, height, mipCount, arraySize, format );
+		return false;
+	}
+
+	if( IsCompressedFormat( format ) )
+	{
+		if( ( width % 4 ) != 0 || ( height % 4 ) != 0 )
+		{
+			CCP_LOGWARN( "HostBitmap::Create invalid compressed size: %d x %d", width, height );
+			return false;
+		}
+	}
+
+	m_width  = width;
+	m_height = height;
+	m_volumeDepth = 1;
+	m_format = format;
+	m_mipCount = mipCount;
+	m_arraySize = arraySize;
 	m_type = TEX_TYPE_2D;
 
 	size_t size = GetDataSize( *this );
@@ -118,6 +157,7 @@ bool HostBitmap::CreateCube( unsigned width, unsigned mipCount, Tr2RenderContext
 	m_format = format;
 	m_mipCount = mipCount;
 	m_type = TEX_TYPE_CUBE;
+	m_arraySize = 6;
 
 	size_t size = GetDataSize( *this );
 	m_data.resize( "HostBitmap::m_data", size );
@@ -148,6 +188,7 @@ bool HostBitmap::CreateVolume( unsigned width, unsigned height, unsigned depth, 
 	m_format = format;
 	m_mipCount = mipCount;
 	m_type = TEX_TYPE_3D;
+	m_arraySize = 1;
 
 	size_t size = GetDataSize( *this );
 	m_data.resize( "HostBitmap::m_data", size );
@@ -344,14 +385,13 @@ bool HostBitmap::CheckForMatch( const Tr2BitmapDimensions& bd, bool checkDimensi
 	return true;
 }
 
-const char* HostBitmap::GetMipRawData( unsigned level, Tr2RenderContextEnum::CubemapFace face ) const
+const char* HostBitmap::GetMipRawData( unsigned level, uint32_t arrayIndex ) const
 {
 	if( !IsValid() || level >= GetTrueMipCount() )
 	{
 		return nullptr;
 	}
-	if( ( face != Tr2RenderContextEnum::CUBEMAP_FACE_FIRST && GetType() != TEX_TYPE_CUBE ) ||
-		face >= Tr2RenderContextEnum::CUBEMAP_FACE_COUNT )
+	if( arrayIndex >= GetArraySize() )
 	{
 		return nullptr;
 	}
@@ -371,18 +411,18 @@ const char* HostBitmap::GetMipRawData( unsigned level, Tr2RenderContextEnum::Cub
 		}
 	}
 
-	if( face > Tr2RenderContextEnum::CUBEMAP_FACE_FIRST )
+	if( arrayIndex > 0 )
 	{
-		unsigned faceSize = (unsigned int)m_data.size() / 6; // is it safe to assume this?
-		offset += faceSize * face;
+		unsigned faceSize = (unsigned int)m_data.size() / GetArraySize(); // is it safe to assume this?
+		offset += faceSize * arrayIndex;
 	}
 
 	return GetRawData() + offset;
 }
 
-char* HostBitmap::GetMipRawData( unsigned level, Tr2RenderContextEnum::CubemapFace face )
+char* HostBitmap::GetMipRawData( unsigned level, uint32_t arrayIndex )
 {
-	return const_cast<char*>( const_cast<const HostBitmap*>(this)->GetMipRawData( level, face ) );	
+	return const_cast<char*>( const_cast<const HostBitmap*>(this)->GetMipRawData( level, arrayIndex ) );	
 }
 
 unsigned HostBitmap::GetPitch() const
@@ -437,6 +477,11 @@ size_t HostBitmap::GetRawDataSize() const
 	return m_data.size();
 }
 
+size_t HostBitmap::GetArrayElementSize() const
+{
+	return m_data.size() / m_arraySize;
+}
+
 /// --------------------------------------------------
 /// Description:
 ///   Take the pixels in the sub-block (margin, margin)...(width-margin,height-margin) and copy their
@@ -444,7 +489,7 @@ size_t HostBitmap::GetRawDataSize() const
 /// --------------------------------------------------
 bool HostBitmap::PopulateMargin( unsigned margin )
 {
-	if( !IsValid() || IsCompressed() || m_mipCount != 1 || 2 * margin >= GetWidth() || 2 * margin >= GetHeight() || GetType() != TEX_TYPE_2D )
+	if( !IsValid() || IsCompressed() || m_mipCount != 1 || 2 * margin >= GetWidth() || 2 * margin >= GetHeight() || GetType() != TEX_TYPE_2D || m_arraySize > 1 )
 	{
 		return false;
 	}
@@ -502,7 +547,7 @@ bool HostBitmap::PopulateMargin( unsigned margin )
 
 bool HostBitmap::Downsample2x2()
 {
-	if( !IsValid() || ( m_width & 1 ) || ( m_height & 1 ) || m_mipCount != 1 || m_type != TEX_TYPE_2D )
+	if( !IsValid() || ( m_width & 1 ) || ( m_height & 1 ) || m_mipCount != 1 || m_type != TEX_TYPE_2D || m_arraySize > 1 )
 	{
 		CCP_LOGWARN( "Downsample2x2 only works with valid, even sized, single miplevel bitmaps" );
 		return false;
@@ -551,7 +596,7 @@ bool HostBitmap::Downsample2x2()
 
 bool HostBitmap::Crop( unsigned left, unsigned top, unsigned right, unsigned bottom )
 {
-	if( !IsValid() || m_mipCount != 1 || m_type != TEX_TYPE_2D || IsCompressedFormat( m_format ) )
+	if( !IsValid() || m_mipCount != 1 || m_type != TEX_TYPE_2D || m_arraySize > 1 || IsCompressedFormat( m_format ) )
 	{
 		CCP_LOGWARN( "Crop only works with valid, single miplevel 2D bitmaps in uncompressed format" );
 		return false;
@@ -599,7 +644,7 @@ bool HostBitmap::ConvertToVolume()
 		return false;
 	}
 
-	if( GetType() != TEX_TYPE_2D )
+	if( GetType() != TEX_TYPE_2D || m_arraySize > 1 )
 	{
 		CCP_LOGERR( "HostBitmap.ConvertToVolume requires 2D bitmap" );
 		return false;
@@ -665,7 +710,7 @@ bool HostBitmap::ConvertToVolume()
 // --------------------------------------------------------------------------------------
 bool HostBitmap::GenerateMipMaps()
 {
-	if( m_type != TEX_TYPE_2D )
+	if( m_type != TEX_TYPE_2D || m_arraySize > 1 )
 	{
 		return false;
 	}
@@ -715,19 +760,22 @@ bool HostBitmap::GenerateMipMaps()
 		height = std::max( height / 2u, 1u );			
 	}		
 
-	m_data.resize( "HostBitmap::m_data", size );
+	m_data.resize( "HostBitmap::m_data", size * GetArraySize() );
 
-	width = m_width;
-	height = m_height;
-	for( unsigned i = 0; i + 1 < GetTrueMipCount(); ++i )
+	for( uint32_t j = 0; j < GetArraySize(); ++j )
 	{
-		if( !GenerateMipLevel( reinterpret_cast<uint8_t*>( GetMipRawData( i ) ), width, height, reinterpret_cast<uint8_t*>( GetMipRawData( i + 1 ) ) ) )
+		width = m_width;
+		height = m_height;
+		for( unsigned i = 0; i + 1 < GetTrueMipCount(); ++i )
 		{
-			m_mipCount = bkMipCount;
-			return false;
+			if( !GenerateMipLevel( reinterpret_cast<uint8_t*>( GetMipRawData( i, j ) ), width, height, reinterpret_cast<uint8_t*>( GetMipRawData( i + 1, j ) ) ) )
+			{
+				m_mipCount = bkMipCount;
+				return false;
+			}
+			width = std::max( width / 2, 1u );
+			height = std::max( height / 2, 1u );
 		}
-		width = std::max( width / 2, 1u );
-		height = std::max( height / 2, 1u );
 	}
 	return true;
 }

@@ -23,6 +23,22 @@ TEST( HostBitmap, CanCreate2DBitmap )
 	EXPECT_EQ( bmp.GetMipRawData( 0 ), bmp.GetRawData() );
 }
 
+TEST( HostBitmap, CanCreate2DBitmapArray )
+{
+	HostBitmap bmp;
+	ASSERT_TRUE( bmp.Create2DArray( 32, 16, 1, 3, PIXEL_FORMAT_A8_UNORM ) );
+	EXPECT_EQ( TEX_TYPE_2D, bmp.GetType() );
+	EXPECT_EQ( 32, bmp.GetWidth() );
+	EXPECT_EQ( 16, bmp.GetHeight() );
+	EXPECT_EQ( 1, bmp.GetDepth() );
+	EXPECT_EQ( 1, bmp.GetMipCount() );
+	EXPECT_EQ( 3, bmp.GetArraySize() );
+	EXPECT_EQ( 32 * 16 * 3, bmp.GetRawDataSize() );
+	EXPECT_EQ( 32 * 16, bmp.GetArrayElementSize() );
+	EXPECT_NE( nullptr, bmp.GetRawData() );
+	EXPECT_EQ( bmp.GetMipRawData( 0 ), bmp.GetRawData() );
+}
+
 TEST( HostBitmap, BitmapIsInvalidAfterDestruction )
 {
 	HostBitmap bmp;
