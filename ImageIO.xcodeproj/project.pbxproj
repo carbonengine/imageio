@@ -1,0 +1,594 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+		};
+	objects = {
+		000000130000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000140000724654f8ee59;
+			};
+		000000390000724654f8ee59 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/telemetry/2.1A3/include",
+					"../../../../../../sdk/libpng/1.4.0/include",
+					"../../../../../../sdk/libjpg/jpeg-8c",
+					..,
+					);
+				CLANG_WARN_INT_CONVERSION = YES;
+				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				PRODUCT_NAME = ImageIO_cc;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"../../../../../../sdk/libpng/1.4.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/telemetry/2.1A3/lib",
+					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					);
+				SYMROOT = "../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2";
+				OBJROOT = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				CONFIGURATION_TEMP_DIR = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					"$(inherited)",
+					);
+				COPY_PHASE_STRIP = NO;
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PREFIX_HEADER = StdAfx.h;
+				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				SDKROOT = macosx;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				};
+			name = Release;
+			};
+		0000002E0000724654f8ee59 = {
+			isa = PBXGroup;
+			children = (
+				000000290000724654f8ee59,
+				0000002A0000724654f8ee59,
+				);
+			sourceTree = "<group>";
+			};
+		000000200000724654f8ee59 = {
+			name = Tr2DdsHandler.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = Tr2DdsHandler.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000F0000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000100000724654f8ee59;
+			};
+		0000001D0000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 0000001E0000724654f8ee59;
+			};
+		000000320000724654f8ee59 = {
+			dependencies = (
+				);
+			productReference = 0000002C0000724654f8ee59;
+			name = Release_Coverage_Mac64;
+			productType = "com.apple.product-type.library.static";
+			buildRules = (
+				);
+			isa = PBXNativeTarget;
+			productName = ImageIO;
+			buildConfigurationList = 000000330000724654f8ee59;
+			buildPhases = (
+				0000002F0000724654f8ee59,
+				);
+			};
+		000000380000724654f8ee59 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/telemetry/2.1A3/include",
+					"../../../../../../sdk/libpng/1.4.0/include",
+					"../../../../../../sdk/libjpg/jpeg-8c",
+					..,
+					);
+				CLANG_WARN_INT_CONVERSION = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				PRODUCT_NAME = ImageIO_d;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"../../../../../../sdk/libpng/1.4.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/telemetry/2.1A3/lib",
+					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					);
+				SYMROOT = "../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2";
+				OBJROOT = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				CONFIGURATION_TEMP_DIR = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					"CCP_ASSERT_ENABLED=1",
+					"$(inherited)",
+					);
+				COPY_PHASE_STRIP = NO;
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PREFIX_HEADER = StdAfx.h;
+				GCC_DYNAMIC_NO_PIC = NO;
+				SDKROOT = macosx;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				};
+			name = Release;
+			};
+		000000110000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000120000724654f8ee59;
+			};
+		000000070000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000080000724654f8ee59;
+			};
+		0000000D0000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 0000000E0000724654f8ee59;
+			};
+		000000160000724654f8ee59 = {
+			name = HostBitmap.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = HostBitmap.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000370000724654f8ee59 = {
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000003B0000724654f8ee59,
+				);
+			defaultConfigurationIsVisible = 0;
+			};
+		0000001B0000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 0000001C0000724654f8ee59;
+			};
+		000000150000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000160000724654f8ee59;
+			};
+		000000140000724654f8ee59 = {
+			name = Tr2TgaHandler.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = Tr2TgaHandler.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000300000724654f8ee59 = {
+			dependencies = (
+				);
+			productReference = 0000002B0000724654f8ee59;
+			name = Debug_Mac64;
+			productType = "com.apple.product-type.library.static";
+			buildRules = (
+				);
+			isa = PBXNativeTarget;
+			productName = ImageIO;
+			buildConfigurationList = 000000310000724654f8ee59;
+			buildPhases = (
+				0000002F0000724654f8ee59,
+				);
+			};
+		000000040000724654f8ee59 = {
+			name = ImageIOResult.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ImageIOResult.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000330000724654f8ee59 = {
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				000000390000724654f8ee59,
+				);
+			defaultConfigurationIsVisible = 0;
+			};
+		000000010000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000020000724654f8ee59;
+			};
+		000000190000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 0000001A0000724654f8ee59;
+			};
+		0000003B0000724654f8ee59 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				};
+			name = Release;
+			};
+		0000003A0000724654f8ee59 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/telemetry/2.1A3/include",
+					"../../../../../../sdk/libpng/1.4.0/include",
+					"../../../../../../sdk/libjpg/jpeg-8c",
+					..,
+					);
+				CLANG_WARN_INT_CONVERSION = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				PRODUCT_NAME = ImageIO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				GCC_OPTIMIZATION_LEVEL = s;
+				ONLY_ACTIVE_ARCH = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"../../../../../../sdk/libpng/1.4.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/telemetry/2.1A3/lib",
+					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					);
+				SYMROOT = "../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2";
+				OBJROOT = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				CONFIGURATION_TEMP_DIR = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					"$(inherited)",
+					);
+				COPY_PHASE_STRIP = NO;
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PREFIX_HEADER = StdAfx.h;
+				GCC_DYNAMIC_NO_PIC = NO;
+				SDKROOT = macosx;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				};
+			name = Release;
+			};
+		000000220000724654f8ee59 = {
+			name = Tr2ImageHandler.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = Tr2ImageHandler.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000C0000724654f8ee59 = {
+			name = Tr2DdsHandler.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = Tr2DdsHandler.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000360000724654f8ee59 = {
+			projectDirPath = "";
+			targets = (
+				000000300000724654f8ee59,
+				000000320000724654f8ee59,
+				000000340000724654f8ee59,
+				);
+			knownRegions = (
+				en,
+				);
+			developmentRegion = English;
+			projectRoot = "";
+			hasScannedForEncodings = 0;
+			compatibilityVersion = "Xcode 3.2";
+			mainGroup = 0000002E0000724654f8ee59;
+			attributes = {
+				ORGANIZATIONNAME = CCP;
+				LastUpgradeCheck = 0460;
+				};
+			isa = PBXProject;
+			buildConfigurationList = 000000370000724654f8ee59;
+			};
+		0000002F0000724654f8ee59 = {
+			files = (
+				000000010000724654f8ee59,
+				000000030000724654f8ee59,
+				000000050000724654f8ee59,
+				000000070000724654f8ee59,
+				000000090000724654f8ee59,
+				0000000B0000724654f8ee59,
+				0000000D0000724654f8ee59,
+				0000000F0000724654f8ee59,
+				000000110000724654f8ee59,
+				000000130000724654f8ee59,
+				);
+			buildActionMask = 2147483647;
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			};
+		000000180000724654f8ee59 = {
+			name = ImageIOResult.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = ImageIOResult.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000240000724654f8ee59 = {
+			name = Tr2JpgHandler.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = Tr2JpgHandler.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000080000724654f8ee59 = {
+			name = StdAfx.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = StdAfx.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000001A0000724654f8ee59 = {
+			name = PsdHandler.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = PsdHandler.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000100000724654f8ee59 = {
+			name = Tr2JpgHandler.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = Tr2JpgHandler.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000E0000724654f8ee59 = {
+			name = Tr2ImageHandler.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = Tr2ImageHandler.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000260000724654f8ee59 = {
+			name = Tr2PngHandler.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = Tr2PngHandler.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000340000724654f8ee59 = {
+			dependencies = (
+				);
+			productReference = 0000002D0000724654f8ee59;
+			name = Release_Mac64;
+			productType = "com.apple.product-type.library.static";
+			buildRules = (
+				);
+			isa = PBXNativeTarget;
+			productName = ImageIO;
+			buildConfigurationList = 000000350000724654f8ee59;
+			buildPhases = (
+				0000002F0000724654f8ee59,
+				);
+			};
+		0000001E0000724654f8ee59 = {
+			name = Tr2BmpHandler.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = Tr2BmpHandler.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000270000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000280000724654f8ee59;
+			};
+		0000002B0000724654f8ee59 = {
+			path = ImageIO_d.lib;
+			isa = PBXFileReference;
+			includeInIndex = 0;
+			explicitFileType = archive.ar;
+			sourceTree = BUILT_PRODUCTS_DIR;
+			};
+		000000020000724654f8ee59 = {
+			name = HostBitmap.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = HostBitmap.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000050000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000060000724654f8ee59;
+			};
+		000000280000724654f8ee59 = {
+			name = Tr2TgaHandler.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = Tr2TgaHandler.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000230000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000240000724654f8ee59;
+			};
+		0000000A0000724654f8ee59 = {
+			name = Tr2BmpHandler.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = Tr2BmpHandler.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000350000724654f8ee59 = {
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000003A0000724654f8ee59,
+				);
+			defaultConfigurationIsVisible = 0;
+			};
+		000000060000724654f8ee59 = {
+			name = PsdHandler.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = PsdHandler.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000210000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000220000724654f8ee59;
+			};
+		000000090000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 0000000A0000724654f8ee59;
+			};
+		000000170000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000180000724654f8ee59;
+			};
+		0000002D0000724654f8ee59 = {
+			path = ImageIO.lib;
+			isa = PBXFileReference;
+			includeInIndex = 0;
+			explicitFileType = archive.ar;
+			sourceTree = BUILT_PRODUCTS_DIR;
+			};
+		000000120000724654f8ee59 = {
+			name = Tr2PngHandler.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = Tr2PngHandler.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000002A0000724654f8ee59 = {
+			isa = PBXGroup;
+			sourceTree = "<group>";
+			children = (
+				);
+			name = Dependencies;
+			};
+		000000030000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000040000724654f8ee59;
+			};
+		0000002C0000724654f8ee59 = {
+			path = ImageIO_cc.lib;
+			isa = PBXFileReference;
+			includeInIndex = 0;
+			explicitFileType = archive.ar;
+			sourceTree = BUILT_PRODUCTS_DIR;
+			};
+		000000290000724654f8ee59 = {
+			isa = PBXGroup;
+			sourceTree = "<group>";
+			children = (
+				000000020000724654f8ee59,
+				000000160000724654f8ee59,
+				000000040000724654f8ee59,
+				000000180000724654f8ee59,
+				000000060000724654f8ee59,
+				0000001A0000724654f8ee59,
+				000000080000724654f8ee59,
+				0000001C0000724654f8ee59,
+				0000000A0000724654f8ee59,
+				0000001E0000724654f8ee59,
+				0000000C0000724654f8ee59,
+				000000200000724654f8ee59,
+				0000000E0000724654f8ee59,
+				000000220000724654f8ee59,
+				000000100000724654f8ee59,
+				000000240000724654f8ee59,
+				000000120000724654f8ee59,
+				000000260000724654f8ee59,
+				000000140000724654f8ee59,
+				000000280000724654f8ee59,
+				);
+			name = "Source Files";
+			};
+		0000001C0000724654f8ee59 = {
+			name = StdAfx.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = StdAfx.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		000000310000724654f8ee59 = {
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				000000380000724654f8ee59,
+				);
+			defaultConfigurationIsVisible = 0;
+			};
+		0000000B0000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 0000000C0000724654f8ee59;
+			};
+		000000250000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000260000724654f8ee59;
+			};
+		0000001F0000724654f8ee59 = {
+			isa = PBXBuildFile;
+			fileRef = 000000200000724654f8ee59;
+			};
+		};
+	objectVersion = 46;
+	rootObject = 000000360000724654f8ee59;
+	}

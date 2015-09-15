@@ -4,6 +4,7 @@ Imports:
 - ../core_project.yaml
 - ../ImageIO/uses_ImageIO.yaml
 - ../../../../../../sdk/GoogleTest/1.6.0/gtest.yaml
+- ../CcpCore/uses_CcpCoreStatic.yaml
 
 # Settings from the General section, for all configurations
 General:
