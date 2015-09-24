@@ -211,6 +211,7 @@ FormatDescriptor s_ddsFormats[] =
 	{ DDSFMT_P8,			8,  0,          0,          0,          0,				0, PIXEL_FORMAT_UNKNOWN			},
 	{ DDSFMT_A8L8,			16, 0xff,       0,          0,          0xff00,			0, PIXEL_FORMAT_R8G8_UNORM		},	// hack
 
+	{ DDSFMT_R32F,			32, 0,			0,          0,          0,				114, PIXEL_FORMAT_R32_FLOAT },
 	{ DDSFMT_A16B16G16R16,	64, 0,          0,          0,          0,				36,  PIXEL_FORMAT_R16G16B16A16_UNORM },
 	{ DDSFMT_A16B16G16R16F, 64, 0,          0,          0,          0,				113, PIXEL_FORMAT_R16G16B16A16_FLOAT },
 	{ DDSFMT_A32B32G32R32F, 128,0,          0,          0,          0,				116, PIXEL_FORMAT_R32G32B32A32_FLOAT },
@@ -250,6 +251,7 @@ void CacheSupportedFormats()
 	s_supportedFormats.insert( DDSFMT_A16B16G16R16 );
 	s_supportedFormats.insert( DDSFMT_A16B16G16R16F );
 	s_supportedFormats.insert( DDSFMT_A32B32G32R32F );
+	s_supportedFormats.insert( DDSFMT_R32F );
 
 	// Not supported by device but conversion done at load time (on background thread)
 	s_supportedFormats.insert( DDSFMT_R8G8B8 );
