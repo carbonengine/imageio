@@ -504,6 +504,7 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters&
 			header.dwMipMapCount = mipCount;
 			header.dwWidth >>= skipCount;
 			header.dwHeight >>= skipCount;
+			header.dwDepth = std::max( 1u, header.dwDepth >> skipCount );
 		}
 	}
 
