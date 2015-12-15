@@ -238,6 +238,8 @@ void CacheSupportedFormats()
 	s_supportedFormats.insert( DDSFMT_DXT4 );
 	s_supportedFormats.insert( DDSFMT_DXT5 );
 	s_supportedFormats.insert( DDSFMT_DX10 );
+	s_supportedFormats.insert( FOURCC_ATI1 );
+	s_supportedFormats.insert( FOURCC_ATI2 );
 	s_supportedFormats.insert( DDSFMT_X8R8G8B8 );
 	s_supportedFormats.insert( DDSFMT_A8R8G8B8 );
 	s_supportedFormats.insert( DDSFMT_R5G6B5 );
@@ -361,6 +363,14 @@ std::pair<int32_t, PixelFormat> FindDdsFormat( const DDS_PIXELFORMAT& pf, const 
 		if( pf.dwFourCC == FOURCC_DXT4 || pf.dwFourCC == FOURCC_DXT5 )
 		{
 			return std::make_pair( (int32_t)pf.dwFourCC, PIXEL_FORMAT_BC3_UNORM );
+		}
+		if( pf.dwFourCC == FOURCC_ATI1 )
+		{
+			return std::make_pair( (int32_t)pf.dwFourCC, PIXEL_FORMAT_BC4_UNORM );
+		}
+		if( pf.dwFourCC == FOURCC_ATI2 )
+		{
+			return std::make_pair( (int32_t)pf.dwFourCC, PIXEL_FORMAT_BC5_UNORM );
 		}
 		if( pf.dwFourCC == FOURCC_DX10  )
 		{
@@ -625,17 +635,21 @@ bool MakePixelFormat( DDS_PIXELFORMAT &ddspf, const Tr2BitmapDimensions& bd )
 		{
 			ddspf.dwFlags |= DDS_FOURCC;
 			ddspf.dwFourCC = FOURCC_RXGB;
-		}
-		else if( fmt == FOURCC_ATI1 )
+		}*/
+		else if( pixelFormat == PIXEL_FORMAT_BC4_SNORM ||
+			pixelFormat == PIXEL_FORMAT_BC4_TYPELESS ||
+			pixelFormat == PIXEL_FORMAT_BC4_UNORM )
 		{
 			ddspf.dwFlags |= DDS_FOURCC;
 			ddspf.dwFourCC = FOURCC_ATI1;
 		}
-		else if( fmt == FOURCC_ATI2 )
+		else if( pixelFormat == PIXEL_FORMAT_BC5_SNORM ||
+			pixelFormat == PIXEL_FORMAT_BC5_TYPELESS ||
+			pixelFormat == PIXEL_FORMAT_BC5_UNORM )
 		{
 			ddspf.dwFlags |= DDS_FOURCC;
 			ddspf.dwFourCC = FOURCC_ATI2;
-		}*/
+		}
 		ddspf.dwRGBBitCount = 0;
 		ddspf.dwRBitMask = 0;
 		ddspf.dwGBitMask = 0;
