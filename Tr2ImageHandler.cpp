@@ -176,7 +176,7 @@ void ImageIO::LoadParameters::GetMipLevelRange( uint32_t width, uint32_t height,
 		else if( mipCount )
 		{
 			// limit total mipmap count to three!
-			skipCount = mipCount - 3;
+			skipCount = mipCount >= 3 ? mipCount - 3 : 0;
 		}
 		else
 		{
