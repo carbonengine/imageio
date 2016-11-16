@@ -471,6 +471,7 @@ Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 	if( bd.GetFormat() != PIXEL_FORMAT_B8G8R8X8_UNORM		&&
 		bd.GetFormat() != PIXEL_FORMAT_B8G8R8A8_UNORM		&& 
 		bd.GetFormat() != PIXEL_FORMAT_R8_UNORM				&&
+		bd.GetFormat() != PIXEL_FORMAT_A8_UNORM				&&
 		bd.GetFormat() != PIXEL_FORMAT_R16_UNORM			&& 
 		bd.GetFormat() != PIXEL_FORMAT_R16G16B16A16_UNORM	&& 
 		bd.GetFormat() != PIXEL_FORMAT_R10G10B10A2_UNORM	&&
@@ -532,6 +533,7 @@ Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
 	switch( image.GetFormat() ) 
 	{
 	case PIXEL_FORMAT_R8_UNORM:
+	case PIXEL_FORMAT_A8_UNORM:
 	case PIXEL_FORMAT_R16_UNORM:
 		colorType = PNG_COLOR_TYPE_GRAY;
 		break;
