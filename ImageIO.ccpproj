@@ -79,11 +79,6 @@ BaseConfigurations:
     Imports:
     - ../../../../../../sdk/zlib/1.2.3/zlib_1.2.3.yaml
   
-  Android:
-    General:
-      AndroidTargetAPI: android-14
-      TargetExt: .a
-
 Configurations:
   Debug|Win32,x64:
     BaseConfigurations:
@@ -123,17 +118,3 @@ Configurations:
     - CodeCoverage
     General:
       TargetName: ImageIO_cc
-
-  Debug|Tegra-Android:
-    BaseConfigurations:
-    - Debug
-    - Android
-    General:
-      TargetName: libImageIO_d
-
-  Release|Tegra-Android:
-    BaseConfigurations:
-    - Release
-    - Android
-    General:
-      TargetName: libImageIO

@@ -35,15 +35,6 @@ BaseConfigurations:
     Imports:
     - ../../../../../../sdk/zlib/1.2.3/zlib_1.2.3.yaml
 
-  Android:
-    General:
-      AndroidTargetAPI: android-14
-      TargetExt: .so
-    Link:
-      AdditionalDependencies:
-      - log
-      - android
-      
   Debug:
     General: 
       TargetName: ImageIOTest_d
@@ -65,7 +56,7 @@ Configurations:
     - Debug
     - Windows
 
-  Debug|Linux32,Linux64,Mac64,ORBIS:
+  Debug|Linux32,Linux64,Mac64:
     BaseConfigurations:
     - Debug
 
@@ -82,7 +73,7 @@ Configurations:
     - Release
     - Windows
 
-  Release|Win32,x64,Linux32,Linux64,Mac64,ORBIS:
+  Release|Win32,x64,Linux32,Linux64,Mac64:
     BaseConfigurations:
     - Release
 
@@ -92,24 +83,3 @@ Configurations:
     General:
       TargetName: ImageIOTest_cc
       GenerateCodeCoverage: true
-
-  Debug|Tegra-Android:
-    BaseConfigurations:
-    - Android
-    General: 
-      TargetName: libImageIOTest_d
-    ClCompile:
-      PreprocessorDefinitions:
-      - _DEBUG
-      Optimization: Disabled
-    AntBuild:
-      AndroidManifestLocation: AndroidManifest_d.xml
-
-  Release|Tegra-Android:
-    BaseConfigurations:
-    - Android
-    General:
-      TargetName: libImageIOTest
-    ClCompile:
-      GenerateDebugInformation: False
-      OptimizationLevel: O3
