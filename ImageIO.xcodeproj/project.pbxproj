@@ -119,12 +119,12 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				PRODUCT_NAME = ImageIO_d;
+				PRODUCT_NAME = ImageIO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				ONLY_ACTIVE_ARCH = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -143,8 +143,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				CONFIGURATION_TEMP_DIR = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					_DEBUG,
-					"CCP_ASSERT_ENABLED=1",
+					NDEBUG,
 					"$(inherited)",
 					);
 				COPY_PHASE_STRIP = NO;
@@ -204,7 +203,7 @@
 			dependencies = (
 				);
 			productReference = 0000002B0000724654f8ee59;
-			name = Debug_Mac64;
+			name = Release_Mac64;
 			productType = "com.apple.product-type.library.static";
 			buildRules = (
 				);
@@ -262,12 +261,12 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				PRODUCT_NAME = ImageIO;
+				PRODUCT_NAME = ImageIO_d;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				ONLY_ACTIVE_ARCH = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -286,7 +285,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				CONFIGURATION_TEMP_DIR = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					NDEBUG,
+					_DEBUG,
+					"CCP_ASSERT_ENABLED=1",
 					"$(inherited)",
 					);
 				COPY_PHASE_STRIP = NO;
@@ -413,7 +413,7 @@
 			dependencies = (
 				);
 			productReference = 0000002D0000724654f8ee59;
-			name = Release_Mac64;
+			name = Debug_Mac64;
 			productType = "com.apple.product-type.library.static";
 			buildRules = (
 				);
@@ -437,7 +437,7 @@
 			fileRef = 000000280000724654f8ee59;
 			};
 		0000002B0000724654f8ee59 = {
-			path = ImageIO_d.lib;
+			path = ImageIO.lib;
 			isa = PBXFileReference;
 			includeInIndex = 0;
 			explicitFileType = archive.ar;
@@ -504,7 +504,7 @@
 			fileRef = 000000180000724654f8ee59;
 			};
 		0000002D0000724654f8ee59 = {
-			path = ImageIO.lib;
+			path = ImageIO_d.lib;
 			isa = PBXFileReference;
 			includeInIndex = 0;
 			explicitFileType = archive.ar;
