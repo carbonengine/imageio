@@ -14,7 +14,7 @@
 				HEADER_SEARCH_PATHS = (
 					.,
 					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/2.1A3/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					"../../../../../../sdk/libpng/1.4.0/include",
 					"../../../../../../sdk/libjpg/jpeg-8c",
 					..,
@@ -40,7 +40,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"../../../../../../sdk/libpng/1.4.0/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/telemetry/2.1A3/lib",
+					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
 					);
@@ -108,7 +108,7 @@
 				HEADER_SEARCH_PATHS = (
 					.,
 					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/2.1A3/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					"../../../../../../sdk/libpng/1.4.0/include",
 					"../../../../../../sdk/libjpg/jpeg-8c",
 					..,
@@ -133,7 +133,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"../../../../../../sdk/libpng/1.4.0/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/telemetry/2.1A3/lib",
+					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
 					);
@@ -250,7 +250,7 @@
 				HEADER_SEARCH_PATHS = (
 					.,
 					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/2.1A3/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					"../../../../../../sdk/libpng/1.4.0/include",
 					"../../../../../../sdk/libjpg/jpeg-8c",
 					..,
@@ -275,7 +275,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"../../../../../../sdk/libpng/1.4.0/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/telemetry/2.1A3/lib",
+					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
 					);
