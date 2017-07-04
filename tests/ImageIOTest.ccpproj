@@ -33,7 +33,7 @@ Link:
 BaseConfigurations:
   Windows:
     Imports:
-    - ../../../../../../sdk/zlib/1.2.3/zlib_1.2.3.yaml
+    - ../../../../../../sdk/zlib/1.2.11/zlib_1.2.11.yaml
 
   Debug:
     General: 

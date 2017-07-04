@@ -1,7 +1,7 @@
 Imports:
 - ../core_project.yaml
 - ../CcpCore/uses_CcpCore.yaml
-- ../../../../../../sdk/libpng/1.4.0/libpng_1.4.0.yaml
+- ../../../../../../sdk/libpng/1.6.29/libpng_1.6.29.yaml
 - ../../../../../../sdk/libJPG/jpeg-8c/jpeg-8c.yaml
 
 Link:

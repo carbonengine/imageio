@@ -2,7 +2,7 @@
 Imports:
 - ../core_project.yaml
 - ../CcpCore/uses_CcpCore.yaml
-- ../../../../../../sdk/libpng/1.4.0/libpng_1.4.0.yaml
+- ../../../../../../sdk/libpng/1.6.29/libpng_1.6.29.yaml
 - ../../../../../../sdk/libJPG/jpeg-8c/jpeg-8c.yaml
 
 # Settings from the General section, for all configurations
@@ -77,7 +77,7 @@ BaseConfigurations:
 
   Windows:
     Imports:
-    - ../../../../../../sdk/zlib/1.2.3/zlib_1.2.3.yaml
+    - ../../../../../../sdk/zlib/1.2.11/zlib_1.2.11.yaml
   
 Configurations:
   Debug|Win32,x64:
