@@ -4,6 +4,7 @@ Imports:
 - ../CcpCore/uses_CcpCore.yaml
 - ../../../../../../sdk/libpng/1.6.29/libpng_1.6.29.yaml
 - ../../../../../../sdk/libJPG/jpeg-8c/jpeg-8c.yaml
+- ../../../../../../sdk/zlib/1.2.11/zlib_1.2.11.yaml
 
 # Settings from the General section, for all configurations
 General:
@@ -74,16 +75,11 @@ BaseConfigurations:
       Optimization: Disabled
       RuntimeLibrary: MultiThreadedDLL
       DebugInformationFormat: ProgramDatabase
-
-  Windows:
-    Imports:
-    - ../../../../../../sdk/zlib/1.2.11/zlib_1.2.11.yaml
   
 Configurations:
   Debug|Win32,x64:
     BaseConfigurations:
     - Debug
-    - Windows
     General:
       TargetName: ImageIO_d
   
@@ -96,14 +92,12 @@ Configurations:
   Dev|Win32,x64:
     BaseConfigurations:
     - Dev
-    - Windows
     General:
       TargetName: ImageIO_dev
   
   Release|Win32,x64:
     BaseConfigurations:
     - Release
-    - Windows
     General:
       TargetName: ImageIO
   

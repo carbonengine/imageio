@@ -3,6 +3,7 @@ Imports:
 - ../CcpCore/uses_CcpCore.yaml
 - ../../../../../../sdk/libpng/1.6.29/libpng_1.6.29.yaml
 - ../../../../../../sdk/libJPG/jpeg-8c/jpeg-8c.yaml
+- ../../../../../../sdk/zlib/1.2.11/zlib_1.2.11.yaml
 
 Link:
   AdditionalLibraryDirectories:
