@@ -73,66 +73,36 @@
 			sourceTree = "<group>";
 			};
 		0000007F00002ee030d132ce = {
-			files = (
-				0000006300002ee030d132ce,
-				0000006500002ee030d132ce,
-				0000006700002ee030d132ce,
-				0000006B00002ee030d132ce,
-				0000006D00002ee030d132ce,
-				0000006F00002ee030d132ce,
-				0000007300002ee030d132ce,
+			dependencies = (
 				);
-			buildActionMask = 2147483647;
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
+			productReference = 0000007A00002ee030d132ce;
+			name = Release_Mac64;
+			productType = "com.apple.product-type.tool";
+			buildRules = (
+				);
+			isa = PBXNativeTarget;
+			productName = ImageIOTest;
+			buildConfigurationList = 0000008000002ee030d132ce;
+			buildPhases = (
+				0000007E00002ee030d132ce,
+				0000008100002ee030d132ce,
+				);
 			};
 		0000006400002ee030d132ce = {
-			name = libpng14.a;
+			name = libCcpCore.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/libpng/1.4.0/lib/MacOsXx86_64/libpng14.a";
+			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
 		0000007600002ee030d132ce = {
-			isa = PBXGroup;
+			name = CoreFoundation.framework;
+			fileEncoding = 4;
+			lastKnownFileType = wrapper.framework;
+			path = "/System/Library/Frameworks/CoreFoundation.framework";
+			isa = PBXFileReference;
 			sourceTree = "<group>";
-			children = (
-				0000001E00002ee030d132ce,
-				0000002000002ee030d132ce,
-				0000002200002ee030d132ce,
-				0000002400002ee030d132ce,
-				0000002600002ee030d132ce,
-				0000002800002ee030d132ce,
-				0000002A00002ee030d132ce,
-				0000002C00002ee030d132ce,
-				0000002E00002ee030d132ce,
-				0000003000002ee030d132ce,
-				0000003200002ee030d132ce,
-				0000003400002ee030d132ce,
-				0000003600002ee030d132ce,
-				0000003800002ee030d132ce,
-				0000003A00002ee030d132ce,
-				0000005400002ee030d132ce,
-				0000005600002ee030d132ce,
-				0000005800002ee030d132ce,
-				0000005A00002ee030d132ce,
-				0000005C00002ee030d132ce,
-				0000003C00002ee030d132ce,
-				0000003E00002ee030d132ce,
-				0000004000002ee030d132ce,
-				0000004200002ee030d132ce,
-				0000004400002ee030d132ce,
-				0000004600002ee030d132ce,
-				0000004800002ee030d132ce,
-				0000004A00002ee030d132ce,
-				0000004C00002ee030d132ce,
-				0000004E00002ee030d132ce,
-				0000005000002ee030d132ce,
-				0000005200002ee030d132ce,
-				0000005E00002ee030d132ce,
-				);
-			name = resourcesInclude;
 			};
 		0000000100002ee030d132ce = {
 			isa = PBXBuildFile;
@@ -185,6 +155,72 @@
 		0000008B00002ee030d132ce = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
+					.,
+					"../../../carbon/src",
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
+					"../../../../../../sdk/libpng/1.6.29/include",
+					"../../../../../../sdk/libjpg/jpeg-8c",
+					"../../../../../../sdk/zlib/1.2.11/include",
+					"../../../../../../sdk/googletest/1.6.0/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
+					..,
+					);
+				CLANG_WARN_INT_CONVERSION = YES;
+				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				OTHER_LDFLAGS = "-headerpad_max_install_names";
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				PRODUCT_NAME = ImageIOTest_cc;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				GCC_OPTIMIZATION_LEVEL = s;
+				ONLY_ACTIVE_ARCH = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
+					"../../autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
+					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
+					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
+					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					);
+				SYMROOT = "../../autobuild/ImageIOTest/MacOsX$(ARCHS)/clang4.2";
+				OBJROOT = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				CONFIGURATION_TEMP_DIR = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					BLUEBUILD_STATIC,
+					"GTEST_USE_OWN_TR1_TUPLE=1",
+					BLUEBUILD_STATIC,
+					BLUEBUILD,
+					"$(inherited)",
+					);
+				COPY_PHASE_STRIP = NO;
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PREFIX_HEADER = StdAfx.h;
+				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				SDKROOT = macosx;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				};
 			name = Release;
 			};
@@ -197,12 +233,11 @@
 			sourceTree = "<group>";
 			};
 		0000007B00002ee030d132ce = {
-			isa = PBXGroup;
-			children = (
-				0000007500002ee030d132ce,
-				0000007700002ee030d132ce,
-				);
-			sourceTree = "<group>";
+			path = ImageIOTest_cc.exe;
+			isa = PBXFileReference;
+			includeInIndex = 0;
+			explicitFileType = "compiled.mach-o.executable";
+			sourceTree = BUILT_PRODUCTS_DIR;
 			};
 		0000006500002ee030d132ce = {
 			isa = PBXBuildFile;
@@ -221,12 +256,19 @@
 			fileRef = 0000003A00002ee030d132ce;
 			};
 		0000008400002ee030d132ce = {
-			isa = XCConfigurationList;
-			defaultConfigurationName = Release;
-			buildConfigurations = (
-				0000008A00002ee030d132ce,
+			files = (
+				0000005F00002ee030d132ce,
+				0000006300002ee030d132ce,
+				0000006500002ee030d132ce,
+				0000006700002ee030d132ce,
+				0000006900002ee030d132ce,
+				0000006B00002ee030d132ce,
+				0000006F00002ee030d132ce,
+				0000007500002ee030d132ce,
 				);
-			defaultConfigurationIsVisible = 0;
+			buildActionMask = 2147483647;
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 			};
 		0000005800002ee030d132ce = {
 			name = rgbIndexed.tga.h;
@@ -245,8 +287,9 @@
 					.,
 					"../../../carbon/src",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					"../../../../../../sdk/libpng/1.4.0/include",
+					"../../../../../../sdk/libpng/1.6.29/include",
 					"../../../../../../sdk/libjpg/jpeg-8c",
+					"../../../../../../sdk/zlib/1.2.11/include",
 					"../../../../../../sdk/googletest/1.6.0/include",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					..,
@@ -258,12 +301,12 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				PRODUCT_NAME = ImageIOTest_d;
+				PRODUCT_NAME = ImageIOTest;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				ONLY_ACTIVE_ARCH = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -271,10 +314,11 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/libpng/1.4.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
 					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
@@ -286,7 +330,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				CONFIGURATION_TEMP_DIR = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					_DEBUG,
 					"GTEST_USE_OWN_TR1_TUPLE=1",
 					BLUEBUILD_STATIC,
 					BLUEBUILD,
@@ -302,12 +345,18 @@
 			name = Release;
 			};
 		0000008700002ee030d132ce = {
-			isa = XCConfigurationList;
-			defaultConfigurationName = Release;
-			buildConfigurations = (
-				0000008B00002ee030d132ce,
+			files = (
+				0000006500002ee030d132ce,
+				0000007300002ee030d132ce,
+				0000006B00002ee030d132ce,
+				0000007100002ee030d132ce,
+				0000006F00002ee030d132ce,
+				0000006100002ee030d132ce,
+				0000007500002ee030d132ce,
 				);
-			defaultConfigurationIsVisible = 0;
+			buildActionMask = 2147483647;
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 			};
 		0000006100002ee030d132ce = {
 			isa = PBXBuildFile;
@@ -358,11 +407,44 @@
 			sourceTree = "<group>";
 			};
 		0000007800002ee030d132ce = {
-			path = ImageIOTest.exe;
-			isa = PBXFileReference;
-			includeInIndex = 0;
-			explicitFileType = "compiled.mach-o.executable";
-			sourceTree = BUILT_PRODUCTS_DIR;
+			isa = PBXGroup;
+			sourceTree = "<group>";
+			children = (
+				0000001E00002ee030d132ce,
+				0000002000002ee030d132ce,
+				0000002200002ee030d132ce,
+				0000002400002ee030d132ce,
+				0000002600002ee030d132ce,
+				0000002800002ee030d132ce,
+				0000002A00002ee030d132ce,
+				0000002C00002ee030d132ce,
+				0000002E00002ee030d132ce,
+				0000003000002ee030d132ce,
+				0000003200002ee030d132ce,
+				0000003400002ee030d132ce,
+				0000003600002ee030d132ce,
+				0000003800002ee030d132ce,
+				0000003A00002ee030d132ce,
+				0000005400002ee030d132ce,
+				0000005600002ee030d132ce,
+				0000005800002ee030d132ce,
+				0000005A00002ee030d132ce,
+				0000005C00002ee030d132ce,
+				0000003C00002ee030d132ce,
+				0000003E00002ee030d132ce,
+				0000004000002ee030d132ce,
+				0000004200002ee030d132ce,
+				0000004400002ee030d132ce,
+				0000004600002ee030d132ce,
+				0000004800002ee030d132ce,
+				0000004A00002ee030d132ce,
+				0000004C00002ee030d132ce,
+				0000004E00002ee030d132ce,
+				0000005000002ee030d132ce,
+				0000005200002ee030d132ce,
+				0000005E00002ee030d132ce,
+				);
+			name = resourcesInclude;
 			};
 		0000003300002ee030d132ce = {
 			isa = PBXBuildFile;
@@ -409,10 +491,10 @@
 			sourceTree = "<group>";
 			};
 		0000007200002ee030d132ce = {
-			name = libImageIO_d.a;
+			name = libpng_d.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO_d.a";
+			path = "../../../../../../sdk/libpng/1.6.29/lib/MacOsXx86_64/clang4.2/libpng_d.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -441,42 +523,26 @@
 			fileRef = 0000002600002ee030d132ce;
 			};
 		0000008600002ee030d132ce = {
-			projectDirPath = "";
-			targets = (
-				0000007D00002ee030d132ce,
-				0000008000002ee030d132ce,
-				0000008300002ee030d132ce,
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000008C00002ee030d132ce,
 				);
-			knownRegions = (
-				en,
-				);
-			developmentRegion = English;
-			projectRoot = "";
-			hasScannedForEncodings = 0;
-			compatibilityVersion = "Xcode 3.2";
-			mainGroup = 0000007B00002ee030d132ce;
-			attributes = {
-				ORGANIZATIONNAME = CCP;
-				LastUpgradeCheck = 0460;
+			defaultConfigurationIsVisible = 0;
+			};
+		0000008D00002ee030d132ce = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 				};
-			isa = PBXProject;
-			buildConfigurationList = 0000008700002ee030d132ce;
+			name = Release;
 			};
 		0000007D00002ee030d132ce = {
-			dependencies = (
+			isa = PBXGroup;
+			children = (
+				0000007700002ee030d132ce,
+				0000007900002ee030d132ce,
 				);
-			productReference = 0000007800002ee030d132ce;
-			name = Release_Mac64;
-			productType = "com.apple.product-type.tool";
-			buildRules = (
-				);
-			isa = PBXNativeTarget;
-			productName = ImageIOTest;
-			buildConfigurationList = 0000007E00002ee030d132ce;
-			buildPhases = (
-				0000007C00002ee030d132ce,
-				0000007F00002ee030d132ce,
-				);
+			sourceTree = "<group>";
 			};
 		0000005600002ee030d132ce = {
 			name = rgbGarbled.bmp.h;
@@ -498,6 +564,73 @@
 			isa = PBXBuildFile;
 			fileRef = 0000001800002ee030d132ce;
 			};
+		0000008C00002ee030d132ce = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					.,
+					"../../../carbon/src",
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
+					"../../../../../../sdk/libpng/1.6.29/include",
+					"../../../../../../sdk/libjpg/jpeg-8c",
+					"../../../../../../sdk/zlib/1.2.11/include",
+					"../../../../../../sdk/googletest/1.6.0/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
+					..,
+					);
+				CLANG_WARN_INT_CONVERSION = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				OTHER_LDFLAGS = "-headerpad_max_install_names";
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				PRODUCT_NAME = ImageIOTest_d;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
+					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
+					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
+					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					);
+				SYMROOT = "../../autobuild/ImageIOTest/MacOsX$(ARCHS)/clang4.2";
+				OBJROOT = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				CONFIGURATION_TEMP_DIR = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					"GTEST_USE_OWN_TR1_TUPLE=1",
+					BLUEBUILD_STATIC,
+					BLUEBUILD,
+					"$(inherited)",
+					);
+				COPY_PHASE_STRIP = NO;
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PREFIX_HEADER = StdAfx.h;
+				GCC_DYNAMIC_NO_PIC = NO;
+				SDKROOT = macosx;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				};
+			name = Release;
+			};
 		0000001B00002ee030d132ce = {
 			isa = PBXBuildFile;
 			fileRef = 0000001C00002ee030d132ce;
@@ -511,26 +644,8 @@
 			sourceTree = "<group>";
 			};
 		0000007500002ee030d132ce = {
-			isa = PBXGroup;
-			sourceTree = "<group>";
-			children = (
-				0000007600002ee030d132ce,
-				0000000200002ee030d132ce,
-				0000000400002ee030d132ce,
-				0000001800002ee030d132ce,
-				0000000600002ee030d132ce,
-				0000001A00002ee030d132ce,
-				0000000800002ee030d132ce,
-				0000000A00002ee030d132ce,
-				0000000C00002ee030d132ce,
-				0000001C00002ee030d132ce,
-				0000000E00002ee030d132ce,
-				0000001000002ee030d132ce,
-				0000001200002ee030d132ce,
-				0000001400002ee030d132ce,
-				0000001600002ee030d132ce,
-				);
-			name = "Source Files";
+			isa = PBXBuildFile;
+			fileRef = 0000007600002ee030d132ce;
 			};
 		0000001E00002ee030d132ce = {
 			name = _all.h;
@@ -549,10 +664,10 @@
 			sourceTree = "<group>";
 			};
 		0000006800002ee030d132ce = {
-			name = libz.dylib;
+			name = libpng.a;
 			fileEncoding = 4;
-			lastKnownFileType = "compiled.mach-o.dylib";
-			path = "../../../../../../../../../../usr/lib/libz.dylib";
+			lastKnownFileType = archive.ar;
+			path = "../../../../../../sdk/libpng/1.6.29/lib/MacOsXx86_64/clang4.2/libpng.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -585,10 +700,10 @@
 			fileRef = 0000003E00002ee030d132ce;
 			};
 		0000006600002ee030d132ce = {
-			name = libCcpCore.a;
+			name = libz.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore.a";
+			path = "../../../../../../sdk/zlib/1.2.11/lib/MacOsXx86_64/libz.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -597,7 +712,7 @@
 			fileRef = 0000005600002ee030d132ce;
 			};
 		0000007A00002ee030d132ce = {
-			path = ImageIOTest_d.exe;
+			path = ImageIOTest.exe;
 			isa = PBXFileReference;
 			includeInIndex = 0;
 			explicitFileType = "compiled.mach-o.executable";
@@ -668,20 +783,12 @@
 			sourceTree = "<group>";
 			};
 		0000008000002ee030d132ce = {
-			dependencies = (
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000008A00002ee030d132ce,
 				);
-			productReference = 0000007900002ee030d132ce;
-			name = Release_Coverage_Mac64;
-			productType = "com.apple.product-type.tool";
-			buildRules = (
-				);
-			isa = PBXNativeTarget;
-			productName = ImageIOTest;
-			buildConfigurationList = 0000008100002ee030d132ce;
-			buildPhases = (
-				0000007C00002ee030d132ce,
-				0000008200002ee030d132ce,
-				);
+			defaultConfigurationIsVisible = 0;
 			};
 		0000002100002ee030d132ce = {
 			isa = PBXBuildFile;
@@ -700,30 +807,38 @@
 			sourceTree = "<group>";
 			};
 		0000008100002ee030d132ce = {
-			isa = XCConfigurationList;
-			defaultConfigurationName = Release;
-			buildConfigurations = (
-				0000008900002ee030d132ce,
+			files = (
+				0000006300002ee030d132ce,
+				0000006500002ee030d132ce,
+				0000006700002ee030d132ce,
+				0000006B00002ee030d132ce,
+				0000006D00002ee030d132ce,
+				0000006F00002ee030d132ce,
+				0000007500002ee030d132ce,
 				);
-			defaultConfigurationIsVisible = 0;
+			buildActionMask = 2147483647;
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 			};
 		0000005900002ee030d132ce = {
 			isa = PBXBuildFile;
 			fileRef = 0000005A00002ee030d132ce;
 			};
 		0000008500002ee030d132ce = {
-			files = (
-				0000006300002ee030d132ce,
-				0000006700002ee030d132ce,
-				0000007100002ee030d132ce,
-				0000006B00002ee030d132ce,
-				0000006F00002ee030d132ce,
-				0000006100002ee030d132ce,
-				0000007300002ee030d132ce,
+			dependencies = (
 				);
-			buildActionMask = 2147483647;
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
+			productReference = 0000007C00002ee030d132ce;
+			name = Debug_Mac64;
+			productType = "com.apple.product-type.tool";
+			buildRules = (
+				);
+			isa = PBXNativeTarget;
+			productName = ImageIOTest;
+			buildConfigurationList = 0000008600002ee030d132ce;
+			buildPhases = (
+				0000007E00002ee030d132ce,
+				0000008700002ee030d132ce,
+				);
 			};
 		0000004600002ee030d132ce = {
 			name = rgba16.dds.h;
@@ -742,12 +857,22 @@
 			fileRef = 0000003C00002ee030d132ce;
 			};
 		0000007E00002ee030d132ce = {
-			isa = XCConfigurationList;
-			defaultConfigurationName = Release;
-			buildConfigurations = (
-				0000008800002ee030d132ce,
+			files = (
+				0000000100002ee030d132ce,
+				0000000300002ee030d132ce,
+				0000000500002ee030d132ce,
+				0000000700002ee030d132ce,
+				0000000900002ee030d132ce,
+				0000000B00002ee030d132ce,
+				0000000D00002ee030d132ce,
+				0000000F00002ee030d132ce,
+				0000001100002ee030d132ce,
+				0000001300002ee030d132ce,
+				0000001500002ee030d132ce,
 				);
-			defaultConfigurationIsVisible = 0;
+			buildActionMask = 2147483647;
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
 			};
 		0000002A00002ee030d132ce = {
 			name = r.psd.h;
@@ -790,19 +915,20 @@
 			sourceTree = "<group>";
 			};
 		0000008200002ee030d132ce = {
-			files = (
-				0000005F00002ee030d132ce,
-				0000006300002ee030d132ce,
-				0000006500002ee030d132ce,
-				0000006700002ee030d132ce,
-				0000006900002ee030d132ce,
-				0000006B00002ee030d132ce,
-				0000006F00002ee030d132ce,
-				0000007300002ee030d132ce,
+			dependencies = (
 				);
-			buildActionMask = 2147483647;
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
+			productReference = 0000007B00002ee030d132ce;
+			name = Release_Coverage_Mac64;
+			productType = "com.apple.product-type.tool";
+			buildRules = (
+				);
+			isa = PBXNativeTarget;
+			productName = ImageIOTest;
+			buildConfigurationList = 0000008300002ee030d132ce;
+			buildPhases = (
+				0000007E00002ee030d132ce,
+				0000008400002ee030d132ce,
+				);
 			};
 		0000000800002ee030d132ce = {
 			name = TestBmpHandler.cpp;
@@ -813,10 +939,10 @@
 			sourceTree = "<group>";
 			};
 		0000007400002ee030d132ce = {
-			name = CoreFoundation.framework;
+			name = libImageIO_d.a;
 			fileEncoding = 4;
-			lastKnownFileType = wrapper.framework;
-			path = "/System/Library/Frameworks/CoreFoundation.framework";
+			lastKnownFileType = archive.ar;
+			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO_d.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -853,20 +979,12 @@
 			fileRef = 0000005400002ee030d132ce;
 			};
 		0000008300002ee030d132ce = {
-			dependencies = (
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000008B00002ee030d132ce,
 				);
-			productReference = 0000007A00002ee030d132ce;
-			name = Debug_Mac64;
-			productType = "com.apple.product-type.tool";
-			buildRules = (
-				);
-			isa = PBXNativeTarget;
-			productName = ImageIOTest;
-			buildConfigurationList = 0000008400002ee030d132ce;
-			buildPhases = (
-				0000007C00002ee030d132ce,
-				0000008500002ee030d132ce,
-				);
+			defaultConfigurationIsVisible = 0;
 			};
 		0000002400002ee030d132ce = {
 			name = al.psd.h;
@@ -877,68 +995,26 @@
 			sourceTree = "<group>";
 			};
 		0000008800002ee030d132ce = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					.,
-					"../../../carbon/src",
-					.,
-					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					"../../../../../../sdk/libpng/1.4.0/include",
-					"../../../../../../sdk/libjpg/jpeg-8c",
-					"../../../../../../sdk/googletest/1.6.0/include",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					..,
-					);
-				CLANG_WARN_INT_CONVERSION = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				OTHER_LDFLAGS = "-headerpad_max_install_names";
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				PRODUCT_NAME = ImageIOTest;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				GCC_OPTIMIZATION_LEVEL = s;
-				ONLY_ACTIVE_ARCH = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/libpng/1.4.0/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
-					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					);
-				SYMROOT = "../../autobuild/ImageIOTest/MacOsX$(ARCHS)/clang4.2";
-				OBJROOT = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				CONFIGURATION_TEMP_DIR = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"GTEST_USE_OWN_TR1_TUPLE=1",
-					BLUEBUILD_STATIC,
-					BLUEBUILD,
-					"$(inherited)",
-					);
-				COPY_PHASE_STRIP = NO;
-				CLANG_CXX_LIBRARY = "libc++";
-				GCC_PREFIX_HEADER = StdAfx.h;
-				GCC_DYNAMIC_NO_PIC = NO;
-				SDKROOT = macosx;
-				ALWAYS_SEARCH_USER_PATHS = NO;
+			projectDirPath = "";
+			targets = (
+				0000007F00002ee030d132ce,
+				0000008200002ee030d132ce,
+				0000008500002ee030d132ce,
+				);
+			knownRegions = (
+				en,
+				);
+			developmentRegion = English;
+			projectRoot = "";
+			hasScannedForEncodings = 0;
+			compatibilityVersion = "Xcode 3.2";
+			mainGroup = 0000007D00002ee030d132ce;
+			attributes = {
+				ORGANIZATIONNAME = CCP;
+				LastUpgradeCheck = 0460;
 				};
-			name = Release;
+			isa = PBXProject;
+			buildConfigurationList = 0000008900002ee030d132ce;
 			};
 		0000002200002ee030d132ce = {
 			name = al.dds.h;
@@ -953,22 +1029,11 @@
 			fileRef = 0000004A00002ee030d132ce;
 			};
 		0000007C00002ee030d132ce = {
-			files = (
-				0000000100002ee030d132ce,
-				0000000300002ee030d132ce,
-				0000000500002ee030d132ce,
-				0000000700002ee030d132ce,
-				0000000900002ee030d132ce,
-				0000000B00002ee030d132ce,
-				0000000D00002ee030d132ce,
-				0000000F00002ee030d132ce,
-				0000001100002ee030d132ce,
-				0000001300002ee030d132ce,
-				0000001500002ee030d132ce,
-				);
-			buildActionMask = 2147483647;
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
+			path = ImageIOTest_d.exe;
+			isa = PBXFileReference;
+			includeInIndex = 0;
+			explicitFileType = "compiled.mach-o.executable";
+			sourceTree = BUILT_PRODUCTS_DIR;
 			};
 		0000005400002ee030d132ce = {
 			name = rgbCube.dds.h;
@@ -1070,30 +1135,23 @@
 			isa = PBXGroup;
 			sourceTree = "<group>";
 			children = (
-				0000006400002ee030d132ce,
-				0000006600002ee030d132ce,
-				0000006800002ee030d132ce,
-				0000006C00002ee030d132ce,
-				0000006E00002ee030d132ce,
-				0000007000002ee030d132ce,
-				0000007400002ee030d132ce,
-				0000006000002ee030d132ce,
-				0000006400002ee030d132ce,
-				0000006600002ee030d132ce,
-				0000006800002ee030d132ce,
-				0000006A00002ee030d132ce,
-				0000006C00002ee030d132ce,
-				0000007000002ee030d132ce,
-				0000007400002ee030d132ce,
-				0000006400002ee030d132ce,
-				0000006800002ee030d132ce,
-				0000007200002ee030d132ce,
-				0000006C00002ee030d132ce,
-				0000007000002ee030d132ce,
-				0000006200002ee030d132ce,
-				0000007400002ee030d132ce,
+				0000007800002ee030d132ce,
+				0000000200002ee030d132ce,
+				0000000400002ee030d132ce,
+				0000001800002ee030d132ce,
+				0000000600002ee030d132ce,
+				0000001A00002ee030d132ce,
+				0000000800002ee030d132ce,
+				0000000A00002ee030d132ce,
+				0000000C00002ee030d132ce,
+				0000001C00002ee030d132ce,
+				0000000E00002ee030d132ce,
+				0000001000002ee030d132ce,
+				0000001200002ee030d132ce,
+				0000001400002ee030d132ce,
+				0000001600002ee030d132ce,
 				);
-			name = Dependencies;
+			name = "Source Files";
 			};
 		0000004700002ee030d132ce = {
 			isa = PBXBuildFile;
@@ -1112,83 +1170,43 @@
 			sourceTree = "<group>";
 			};
 		0000008900002ee030d132ce = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					.,
-					"../../../carbon/src",
-					.,
-					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					"../../../../../../sdk/libpng/1.4.0/include",
-					"../../../../../../sdk/libjpg/jpeg-8c",
-					"../../../../../../sdk/googletest/1.6.0/include",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					..,
-					);
-				CLANG_WARN_INT_CONVERSION = YES;
-				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				OTHER_LDFLAGS = "-headerpad_max_install_names";
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				PRODUCT_NAME = ImageIOTest_cc;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				GCC_OPTIMIZATION_LEVEL = s;
-				ONLY_ACTIVE_ARCH = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/libpng/1.4.0/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
-					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					);
-				SYMROOT = "../../autobuild/ImageIOTest/MacOsX$(ARCHS)/clang4.2";
-				OBJROOT = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				CONFIGURATION_TEMP_DIR = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					BLUEBUILD_STATIC,
-					"GTEST_USE_OWN_TR1_TUPLE=1",
-					BLUEBUILD_STATIC,
-					BLUEBUILD,
-					"$(inherited)",
-					);
-				COPY_PHASE_STRIP = NO;
-				CLANG_CXX_LIBRARY = "libc++";
-				GCC_PREFIX_HEADER = StdAfx.h;
-				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				SDKROOT = macosx;
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				};
-			name = Release;
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000008D00002ee030d132ce,
+				);
+			defaultConfigurationIsVisible = 0;
 			};
 		0000007900002ee030d132ce = {
-			path = ImageIOTest_cc.exe;
-			isa = PBXFileReference;
-			includeInIndex = 0;
-			explicitFileType = "compiled.mach-o.executable";
-			sourceTree = BUILT_PRODUCTS_DIR;
+			isa = PBXGroup;
+			sourceTree = "<group>";
+			children = (
+				0000006400002ee030d132ce,
+				0000006600002ee030d132ce,
+				0000006800002ee030d132ce,
+				0000006C00002ee030d132ce,
+				0000006E00002ee030d132ce,
+				0000007000002ee030d132ce,
+				0000007600002ee030d132ce,
+				0000006000002ee030d132ce,
+				0000006400002ee030d132ce,
+				0000006600002ee030d132ce,
+				0000006800002ee030d132ce,
+				0000006A00002ee030d132ce,
+				0000006C00002ee030d132ce,
+				0000007000002ee030d132ce,
+				0000007600002ee030d132ce,
+				0000006600002ee030d132ce,
+				0000007400002ee030d132ce,
+				0000006C00002ee030d132ce,
+				0000007200002ee030d132ce,
+				0000007000002ee030d132ce,
+				0000006200002ee030d132ce,
+				0000007600002ee030d132ce,
+				);
+			name = Dependencies;
 			};
 		};
 	objectVersion = 46;
-	rootObject = 0000008600002ee030d132ce;
+	rootObject = 0000008800002ee030d132ce;
 	}
