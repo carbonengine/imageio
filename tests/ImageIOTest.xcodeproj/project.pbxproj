@@ -65,10 +65,10 @@
 			fileRef = 0000004E00002ee030d132ce;
 			};
 		0000006E00002ee030d132ce = {
-			name = libImageIO.a;
+			name = libgtest.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO.a";
+			path = "../../../../../../sdk/googletest/1.6.0/lib/MacOsXx86_64/libgtest.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -89,10 +89,10 @@
 				);
 			};
 		0000006400002ee030d132ce = {
-			name = libCcpCore.a;
+			name = libjpeg.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore.a";
+			path = "../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsXx86_64/libjpeg.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -163,7 +163,7 @@
 					"../../../carbon/src",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-8c",
+					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					"../../../../../../sdk/googletest/1.6.0/include",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
@@ -197,7 +197,7 @@
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
-					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
@@ -263,7 +263,7 @@
 				0000006700002ee030d132ce,
 				0000006900002ee030d132ce,
 				0000006B00002ee030d132ce,
-				0000006F00002ee030d132ce,
+				0000006D00002ee030d132ce,
 				0000007500002ee030d132ce,
 				);
 			buildActionMask = 2147483647;
@@ -288,7 +288,7 @@
 					"../../../carbon/src",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-8c",
+					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					"../../../../../../sdk/googletest/1.6.0/include",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
@@ -319,7 +319,7 @@
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
-					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
@@ -346,11 +346,11 @@
 			};
 		0000008700002ee030d132ce = {
 			files = (
-				0000006500002ee030d132ce,
+				0000006300002ee030d132ce,
+				0000006700002ee030d132ce,
 				0000007300002ee030d132ce,
-				0000006B00002ee030d132ce,
+				0000006D00002ee030d132ce,
 				0000007100002ee030d132ce,
-				0000006F00002ee030d132ce,
 				0000006100002ee030d132ce,
 				0000007500002ee030d132ce,
 				);
@@ -574,7 +574,7 @@
 					"../../../carbon/src",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-8c",
+					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					"../../../../../../sdk/googletest/1.6.0/include",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
@@ -605,7 +605,7 @@
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
-					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
@@ -664,10 +664,10 @@
 			sourceTree = "<group>";
 			};
 		0000006800002ee030d132ce = {
-			name = libpng.a;
+			name = libz.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/libpng/1.6.29/lib/MacOsXx86_64/clang4.2/libpng.a";
+			path = "../../../../../../sdk/zlib/1.2.11/lib/MacOsXx86_64/libz.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -700,10 +700,10 @@
 			fileRef = 0000003E00002ee030d132ce;
 			};
 		0000006600002ee030d132ce = {
-			name = libz.a;
+			name = libCcpCore.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/zlib/1.2.11/lib/MacOsXx86_64/libz.a";
+			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -811,7 +811,7 @@
 				0000006300002ee030d132ce,
 				0000006500002ee030d132ce,
 				0000006700002ee030d132ce,
-				0000006B00002ee030d132ce,
+				0000006900002ee030d132ce,
 				0000006D00002ee030d132ce,
 				0000006F00002ee030d132ce,
 				0000007500002ee030d132ce,
@@ -1056,10 +1056,10 @@
 			sourceTree = "<group>";
 			};
 		0000006C00002ee030d132ce = {
-			name = libgtest.a;
+			name = libCcpCore_cc.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/googletest/1.6.0/lib/MacOsXx86_64/libgtest.a";
+			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore_cc.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -1084,10 +1084,10 @@
 			fileRef = 0000007200002ee030d132ce;
 			};
 		0000006A00002ee030d132ce = {
-			name = libCcpCore_cc.a;
+			name = libpng.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore_cc.a";
+			path = "../../../../../../sdk/libpng/1.6.29/lib/MacOsXx86_64/clang4.2/libpng.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -1112,10 +1112,10 @@
 			fileRef = 0000001200002ee030d132ce;
 			};
 		0000007000002ee030d132ce = {
-			name = libjpeg.a;
+			name = libImageIO.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsXx86_64/libjpeg.a";
+			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -1184,7 +1184,7 @@
 				0000006400002ee030d132ce,
 				0000006600002ee030d132ce,
 				0000006800002ee030d132ce,
-				0000006C00002ee030d132ce,
+				0000006A00002ee030d132ce,
 				0000006E00002ee030d132ce,
 				0000007000002ee030d132ce,
 				0000007600002ee030d132ce,
@@ -1194,13 +1194,13 @@
 				0000006800002ee030d132ce,
 				0000006A00002ee030d132ce,
 				0000006C00002ee030d132ce,
-				0000007000002ee030d132ce,
+				0000006E00002ee030d132ce,
 				0000007600002ee030d132ce,
-				0000006600002ee030d132ce,
+				0000006400002ee030d132ce,
+				0000006800002ee030d132ce,
 				0000007400002ee030d132ce,
-				0000006C00002ee030d132ce,
+				0000006E00002ee030d132ce,
 				0000007200002ee030d132ce,
-				0000007000002ee030d132ce,
 				0000006200002ee030d132ce,
 				0000007600002ee030d132ce,
 				);

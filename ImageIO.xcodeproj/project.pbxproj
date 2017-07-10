@@ -16,7 +16,7 @@
 					"../../../carbon/src",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-8c",
+					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					..,
 					);
@@ -44,7 +44,7 @@
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
-					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					);
 				SYMROOT = "../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2";
 				OBJROOT = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
@@ -112,7 +112,7 @@
 					"../../../carbon/src",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-8c",
+					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					..,
 					);
@@ -139,7 +139,7 @@
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
-					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					);
 				SYMROOT = "../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2";
 				OBJROOT = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
@@ -256,7 +256,7 @@
 					"../../../carbon/src",
 					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-8c",
+					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					..,
 					);
@@ -283,7 +283,7 @@
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
-					"../../../../../../sdk/libjpg/jpeg-8c/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					);
 				SYMROOT = "../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2";
 				OBJROOT = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
