@@ -1,7 +1,7 @@
 ProjectGuid: 504BC561-AF34-424A-82B7-D381526FA474
 # These are the SDKs that are used by all configurations
 Imports:
-- ../core_project.yaml
+- ../core_project/core_project.yaml
 - ../ImageIO/uses_ImageIO.yaml
 - ../../../../../../sdk/GoogleTest/1.6.0/gtest.yaml
 - ../CcpCore/uses_CcpCoreStatic.yaml

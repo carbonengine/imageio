@@ -1,5 +1,5 @@
 Imports:
-- ../core_project.yaml
+- ../core_project/core_project.yaml
 - ../CcpCore/uses_CcpCore.yaml
 - ../../../../../../sdk/libpng/1.6.29/libpng_1.6.29.yaml
 - ../../../../../../sdk/libJPG/jpeg-9b/jpeg-9b.yaml
