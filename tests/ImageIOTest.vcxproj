@@ -283,6 +283,7 @@
     <PostBuildEvent/>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="autoversion.h"/>
     <ClInclude Include="MemoryStream.h"/>
     <ClInclude Include="StdAfx.h"/>
     <ClInclude Include="TestHelpers.h"/>
