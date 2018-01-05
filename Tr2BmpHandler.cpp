@@ -238,9 +238,6 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters&, ImageIO::H
 		metadata->cutout = Cutout();
 	}
 	
-	uint32_t width = dibHeader.width;
-	uint32_t height = dibHeader.height;
-
 	if( !bitmap.CreateFromBitmapDimensions( dimensions ) )
 	{
 		return Result::ERROR_CREATING_BITMAP;

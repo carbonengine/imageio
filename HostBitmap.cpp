@@ -253,6 +253,10 @@ bool HostBitmap::ChangeFormat( Tr2RenderContextEnum::PixelFormat format )
 // --------------------------------------------------------------------------------------
 bool HostBitmap::ConvertFormat( Tr2RenderContextEnum::PixelFormat format )
 {
+	if( !IsValid() )
+	{
+		return false;
+	}
 	if( format == GetFormat() )
 	{
 		return true;
@@ -289,6 +293,11 @@ bool HostBitmap::ConvertFormat( Tr2RenderContextEnum::PixelFormat format )
 
 		size_t newSize = pixelCount;
 		m_data.resize( "HostBitmap::m_data", newSize );
+		if( m_data.empty() )
+		{
+			Destroy();
+			return false;
+		}
 
 		const uint8_t* src = reinterpret_cast<uint8_t*>( oldData );
 		uint8_t* dst = reinterpret_cast<uint8_t*>( m_data.get() );
@@ -319,6 +328,11 @@ bool HostBitmap::ConvertFormat( Tr2RenderContextEnum::PixelFormat format )
 
 		size_t newSize = pixelCount * 4;
 		m_data.resize( "HostBitmap::m_data", newSize );
+		if( m_data.empty() )
+		{
+			Destroy();
+			return false;
+		}
 
 		const uint8_t* src = reinterpret_cast<uint8_t*>( oldData );
 		uint8_t* dst = reinterpret_cast<uint8_t*>( m_data.get() );
@@ -673,6 +687,11 @@ bool HostBitmap::ConvertToVolume()
 	unsigned volumeSize = slicePitch * cubeSize;
 
 	CcpMallocBuffer newData( "HostBitmap::m_data", volumeSize );
+	if( newData.empty() )
+	{
+		CCP_LOGERR( "HostBitmap.ConvertToVolume: out of memory" );
+		return false;
+	}
 
 	const unsigned sourceOffset = ( GetHeight() - cubeSize ) * GetPitch();
 	for( unsigned int slice = 0; slice < cubeSize; ++slice )

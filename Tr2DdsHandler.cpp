@@ -467,18 +467,12 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters&
 		return ImageIO::Result::INVALID_HEADER;
 	}
 
-	uint32_t arraySize;
 	if( header.ddspf.dwFourCC == FOURCC_DX10 )
 	{
 		if( stream.Read( &headerDxt10, sizeof( headerDxt10 ) ) == -1 )
 		{
 			return ImageIO::Result::READ_FAILURE;
 		}
-		arraySize = headerDxt10.arraySize;
-	}
-	else
-	{
-		arraySize = 1;
 	}
 	skipBytes = 0;
 
@@ -836,8 +830,6 @@ ImageIO::Result ReadRgb( ICcpStream& stream, ImageIO::HostBitmap& bitmap, size_t
 
 ImageIO::Result ReadImagePixels( ICcpStream& stream, size_t elementSkipBytes, ImageIO::HostBitmap& bitmap, const DDS_HEADER& header, const DDS_HEADER_DXT10& headerDxt10 )
 {
-	unsigned int size = unsigned( bitmap.GetRawDataSize() );
-
 	IMAGE_IO_CR_RETURN_RESULT( CheckSupportedFormat( header, headerDxt10 ) );
 
 	if( FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_R8G8B8 )
