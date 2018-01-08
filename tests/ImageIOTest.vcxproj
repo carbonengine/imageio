@@ -47,7 +47,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)/Microsoft.Cpp.Default.props" />
+  <Import Project="$(VCTargetsPath)/Microsoft.Cpp.Default.props"/>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.exe</TargetExt>
     <OutDir>../../autobuild/ImageIOTest/$(Platform)/$(PlatformToolset)/</OutDir>
@@ -90,7 +90,7 @@
     <IntDir>../temp/$(ProjectName)/$(Platform)/$(Configuration)/$(PlatformToolset)/</IntDir>
     <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)/Microsoft.Cpp.props" />
+  <Import Project="$(VCTargetsPath)/Microsoft.Cpp.props"/>
   <PropertyGroup Label="UserMacros">
     <CcpSdkPath>../../../../../../sdk</CcpSdkPath>
     <CcpSharedToolsPath>../../../../../../shared_tools</CcpSharedToolsPath>
@@ -107,13 +107,13 @@
       <Value>$(CcpBranchPath)</Value>
     </BuildMacro>
   </ItemGroup>
-  <ImportGroup Label="ExtensionSettings" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'" Label="PropertySheets" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dev|x64'" Label="PropertySheets" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets" />
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets"/>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets"/>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'" Label="PropertySheets"/>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Dev|x64'" Label="PropertySheets"/>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets"/>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets"/>
   <PropertyGroup>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ImageIOTest_d</TargetName>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">True</LinkIncremental>
@@ -146,11 +146,11 @@
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCoreStatic_d.lib;CcpCore_d.lib;ImageIO_d.lib;gtest.lib;jpeg_d.lib;libpng_d.lib;psapi.lib;rad_tm_win32.lib;zlib_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ResourceCompile />
-    <Manifest />
-    <PreBuildEvent />
-    <PreLinkEvent />
-    <PostBuildEvent />
+    <ResourceCompile/>
+    <Manifest/>
+    <PreBuildEvent/>
+    <PreLinkEvent/>
+    <PostBuildEvent/>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -171,11 +171,11 @@
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCore.lib;CcpCoreStatic.lib;ImageIO.lib;gtest.lib;jpeg.lib;libpng.lib;psapi.lib;rad_tm_win64.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ResourceCompile />
-    <Manifest />
-    <PreBuildEvent />
-    <PreLinkEvent />
-    <PostBuildEvent />
+    <ResourceCompile/>
+    <Manifest/>
+    <PreBuildEvent/>
+    <PreLinkEvent/>
+    <PostBuildEvent/>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">
     <ClCompile>
@@ -197,11 +197,11 @@
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCore.lib;CcpCoreStatic.lib;ImageIO_dev.lib;gtest.lib;jpeg.lib;libpng.lib;psapi.lib;rad_tm_win32.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ResourceCompile />
-    <Manifest />
-    <PreBuildEvent />
-    <PreLinkEvent />
-    <PostBuildEvent />
+    <ResourceCompile/>
+    <Manifest/>
+    <PreBuildEvent/>
+    <PreLinkEvent/>
+    <PostBuildEvent/>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dev|x64'">
     <ClCompile>
@@ -223,11 +223,11 @@
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCore.lib;CcpCoreStatic.lib;ImageIO_dev.lib;gtest.lib;jpeg.lib;libpng.lib;psapi.lib;rad_tm_win64.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ResourceCompile />
-    <Manifest />
-    <PreBuildEvent />
-    <PreLinkEvent />
-    <PostBuildEvent />
+    <ResourceCompile/>
+    <Manifest/>
+    <PreBuildEvent/>
+    <PreLinkEvent/>
+    <PostBuildEvent/>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -251,11 +251,11 @@
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCoreStatic_d.lib;CcpCore_d.lib;ImageIO_d.lib;gtest.lib;jpeg_d.lib;libpng_d.lib;psapi.lib;rad_tm_win64.lib;zlib_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ResourceCompile />
-    <Manifest />
-    <PreBuildEvent />
-    <PreLinkEvent />
-    <PostBuildEvent />
+    <ResourceCompile/>
+    <Manifest/>
+    <PreBuildEvent/>
+    <PreLinkEvent/>
+    <PostBuildEvent/>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -276,66 +276,67 @@
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCore.lib;CcpCoreStatic.lib;ImageIO.lib;gtest.lib;jpeg.lib;libpng.lib;psapi.lib;rad_tm_win32.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ResourceCompile />
-    <Manifest />
-    <PreBuildEvent />
-    <PreLinkEvent />
-    <PostBuildEvent />
+    <ResourceCompile/>
+    <Manifest/>
+    <PreBuildEvent/>
+    <PreLinkEvent/>
+    <PostBuildEvent/>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="MemoryStream.h" />
-    <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="TestHelpers.h" />
-    <ClInclude Include="resourcesInclude\a.dds.h" />
-    <ClInclude Include="resourcesInclude\al.dds.h" />
-    <ClInclude Include="resourcesInclude\al.psd.h" />
-    <ClInclude Include="resourcesInclude\l.dds.h" />
-    <ClInclude Include="resourcesInclude\r.png.h" />
-    <ClInclude Include="resourcesInclude\r.psd.h" />
-    <ClInclude Include="resourcesInclude\r.tga.h" />
-    <ClInclude Include="resourcesInclude\rg.png.h" />
-    <ClInclude Include="resourcesInclude\rgb.bmp.h" />
-    <ClInclude Include="resourcesInclude\rgb.dds.h" />
-    <ClInclude Include="resourcesInclude\rgb.jpg.h" />
-    <ClInclude Include="resourcesInclude\rgb.png.h" />
-    <ClInclude Include="resourcesInclude\rgb.psd.h" />
-    <ClInclude Include="resourcesInclude\rgb.tga.h" />
-    <ClInclude Include="resourcesInclude\rgba.bmp.h" />
-    <ClInclude Include="resourcesInclude\rgba.dds.h" />
-    <ClInclude Include="resourcesInclude\rgba.png.h" />
-    <ClInclude Include="resourcesInclude\rgba.psd.h" />
-    <ClInclude Include="resourcesInclude\rgba.tga.h" />
-    <ClInclude Include="resourcesInclude\rgba16.dds.h" />
-    <ClInclude Include="resourcesInclude\rgba16f.dds.h" />
-    <ClInclude Include="resourcesInclude\rgbaCube.dds.h" />
-    <ClInclude Include="resourcesInclude\rgbaGarbled.bmp.h" />
-    <ClInclude Include="resourcesInclude\rgbaMips.dds.h" />
-    <ClInclude Include="resourcesInclude\rgbaRle.tga.h" />
-    <ClInclude Include="resourcesInclude\rgbaVolume.dds.h" />
-    <ClInclude Include="resourcesInclude\rgbCube.dds.h" />
-    <ClInclude Include="resourcesInclude\rgbGarbled.bmp.h" />
-    <ClInclude Include="resourcesInclude\rgbIndexed.tga.h" />
-    <ClInclude Include="resourcesInclude\rgbRle.psd.h" />
-    <ClInclude Include="resourcesInclude\rgbRle.tga.h" />
-    <ClInclude Include="resourcesInclude\rgbx.dds.h" />
-    <ClInclude Include="resourcesInclude\_all.h" />
+    <ClInclude Include="autoversion.h"/>
+    <ClInclude Include="MemoryStream.h"/>
+    <ClInclude Include="StdAfx.h"/>
+    <ClInclude Include="TestHelpers.h"/>
+    <ClInclude Include="resourcesInclude\a.dds.h"/>
+    <ClInclude Include="resourcesInclude\al.dds.h"/>
+    <ClInclude Include="resourcesInclude\al.psd.h"/>
+    <ClInclude Include="resourcesInclude\l.dds.h"/>
+    <ClInclude Include="resourcesInclude\r.png.h"/>
+    <ClInclude Include="resourcesInclude\r.psd.h"/>
+    <ClInclude Include="resourcesInclude\r.tga.h"/>
+    <ClInclude Include="resourcesInclude\rg.png.h"/>
+    <ClInclude Include="resourcesInclude\rgb.bmp.h"/>
+    <ClInclude Include="resourcesInclude\rgb.dds.h"/>
+    <ClInclude Include="resourcesInclude\rgb.jpg.h"/>
+    <ClInclude Include="resourcesInclude\rgb.png.h"/>
+    <ClInclude Include="resourcesInclude\rgb.psd.h"/>
+    <ClInclude Include="resourcesInclude\rgb.tga.h"/>
+    <ClInclude Include="resourcesInclude\rgba.bmp.h"/>
+    <ClInclude Include="resourcesInclude\rgba.dds.h"/>
+    <ClInclude Include="resourcesInclude\rgba.png.h"/>
+    <ClInclude Include="resourcesInclude\rgba.psd.h"/>
+    <ClInclude Include="resourcesInclude\rgba.tga.h"/>
+    <ClInclude Include="resourcesInclude\rgba16.dds.h"/>
+    <ClInclude Include="resourcesInclude\rgba16f.dds.h"/>
+    <ClInclude Include="resourcesInclude\rgbaCube.dds.h"/>
+    <ClInclude Include="resourcesInclude\rgbaGarbled.bmp.h"/>
+    <ClInclude Include="resourcesInclude\rgbaMips.dds.h"/>
+    <ClInclude Include="resourcesInclude\rgbaRle.tga.h"/>
+    <ClInclude Include="resourcesInclude\rgbaVolume.dds.h"/>
+    <ClInclude Include="resourcesInclude\rgbCube.dds.h"/>
+    <ClInclude Include="resourcesInclude\rgbGarbled.bmp.h"/>
+    <ClInclude Include="resourcesInclude\rgbIndexed.tga.h"/>
+    <ClInclude Include="resourcesInclude\rgbRle.psd.h"/>
+    <ClInclude Include="resourcesInclude\rgbRle.tga.h"/>
+    <ClInclude Include="resourcesInclude\rgbx.dds.h"/>
+    <ClInclude Include="resourcesInclude\_all.h"/>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ImageIOTest.cpp" />
-    <ClCompile Include="MemoryStream.cpp" />
+    <ClCompile Include="ImageIOTest.cpp"/>
+    <ClCompile Include="MemoryStream.cpp"/>
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TestBmpHandler.cpp" />
-    <ClCompile Include="TestDdsHandler.cpp" />
-    <ClCompile Include="TestHelpers.cpp" />
-    <ClCompile Include="TestHostBitmap.cpp" />
-    <ClCompile Include="TestJpgHandler.cpp" />
-    <ClCompile Include="TestPngHandler.cpp" />
-    <ClCompile Include="TestPsdHandler.cpp" />
-    <ClCompile Include="TestTgaHandler.cpp" />
+    <ClCompile Include="TestBmpHandler.cpp"/>
+    <ClCompile Include="TestDdsHandler.cpp"/>
+    <ClCompile Include="TestHelpers.cpp"/>
+    <ClCompile Include="TestHostBitmap.cpp"/>
+    <ClCompile Include="TestJpgHandler.cpp"/>
+    <ClCompile Include="TestPngHandler.cpp"/>
+    <ClCompile Include="TestPsdHandler.cpp"/>
+    <ClCompile Include="TestTgaHandler.cpp"/>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ItemGroup/>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
 </Project>
