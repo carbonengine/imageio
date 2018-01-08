@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files"/>
-    <Filter Include="Source Files\resourcesInclude"/>
+    <Filter Include="Source Files" />
+    <Filter Include="Source Files\resourcesInclude" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="autoversion.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="MemoryStream.h">
       <Filter>Source Files</Filter>
     </ClInclude>
