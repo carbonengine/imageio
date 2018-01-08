@@ -12,13 +12,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					.,
-					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					..,
+					"../../../../../../sdk/libjpg/jpeg-9b",
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/libpng/1.6.29/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					);
 				CLANG_WARN_INT_CONVERSION = YES;
 				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
@@ -31,7 +31,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				ONLY_ACTIVE_ARCH = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -40,10 +40,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					);
 				SYMROOT = "../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2";
@@ -59,9 +59,10 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_PREFIX_HEADER = StdAfx.h;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				SDKROOT = macosx;
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
 				};
 			name = Release;
 			};
@@ -108,13 +109,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					.,
-					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					..,
+					"../../../../../../sdk/libjpg/jpeg-9b",
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/libpng/1.6.29/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					);
 				CLANG_WARN_INT_CONVERSION = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -126,7 +127,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				GCC_OPTIMIZATION_LEVEL = s;
 				ONLY_ACTIVE_ARCH = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -135,10 +136,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					);
 				SYMROOT = "../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2";
@@ -153,9 +154,10 @@
 				COPY_PHASE_STRIP = NO;
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_PREFIX_HEADER = StdAfx.h;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				SDKROOT = macosx;
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
 				};
 			name = Release;
 			};
@@ -252,13 +254,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					.,
-					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					..,
+					"../../../../../../sdk/libjpg/jpeg-9b",
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/libpng/1.6.29/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					);
 				CLANG_WARN_INT_CONVERSION = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -270,7 +272,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				ONLY_ACTIVE_ARCH = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -279,10 +281,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					);
 				SYMROOT = "../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2";
@@ -291,16 +293,17 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				CONFIGURATION_TEMP_DIR = "../temp/ImageIO/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					_DEBUG,
 					"CCP_ASSERT_ENABLED=1",
+					_DEBUG,
 					"$(inherited)",
 					);
 				COPY_PHASE_STRIP = NO;
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_PREFIX_HEADER = StdAfx.h;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				SDKROOT = macosx;
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
 				};
 			name = Release;
 			};

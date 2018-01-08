@@ -156,18 +156,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					.,
-					"../../../carbon/src",
-					.,
-					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					"../../../../../../sdk/googletest/1.6.0/include",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					..,
+					"../../../../../../sdk/libjpg/jpeg-9b",
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/libpng/1.6.29/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					);
 				CLANG_WARN_INT_CONVERSION = YES;
 				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
@@ -181,7 +177,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				GCC_OPTIMIZATION_LEVEL = s;
 				ONLY_ACTIVE_ARCH = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -190,16 +186,13 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
-					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
+					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
+					"../../autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					);
 				SYMROOT = "../../autobuild/ImageIOTest/MacOsX$(ARCHS)/clang4.2";
@@ -208,7 +201,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				CONFIGURATION_TEMP_DIR = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					BLUEBUILD_STATIC,
 					"GTEST_USE_OWN_TR1_TUPLE=1",
 					BLUEBUILD_STATIC,
 					BLUEBUILD,
@@ -218,9 +210,10 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_PREFIX_HEADER = StdAfx.h;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				SDKROOT = macosx;
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
 				};
 			name = Release;
 			};
@@ -282,17 +275,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					.,
-					"../../../carbon/src",
-					.,
-					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					"../../../../../../sdk/googletest/1.6.0/include",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					..,
+					"../../../../../../sdk/libjpg/jpeg-9b",
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/libpng/1.6.29/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					);
 				CLANG_WARN_INT_CONVERSION = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -305,7 +295,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				GCC_OPTIMIZATION_LEVEL = s;
 				ONLY_ACTIVE_ARCH = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -314,15 +304,13 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
+					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
-					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
-					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					);
 				SYMROOT = "../../autobuild/ImageIOTest/MacOsX$(ARCHS)/clang4.2";
 				OBJROOT = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
@@ -338,9 +326,10 @@
 				COPY_PHASE_STRIP = NO;
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_PREFIX_HEADER = StdAfx.h;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				SDKROOT = macosx;
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
 				};
 			name = Release;
 			};
@@ -568,17 +557,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					.,
-					"../../../carbon/src",
-					.,
-					"../../../carbon/src",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/libjpg/jpeg-9b",
 					"../../../../../../sdk/zlib/1.2.11/include",
 					"../../../../../../sdk/googletest/1.6.0/include",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					..,
+					"../../../../../../sdk/libjpg/jpeg-9b",
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/libpng/1.6.29/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
 					);
 				CLANG_WARN_INT_CONVERSION = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -591,7 +577,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				ONLY_ACTIVE_ARCH = YES;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -600,15 +586,13 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
+					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
-					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
-					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					);
 				SYMROOT = "../../autobuild/ImageIOTest/MacOsX$(ARCHS)/clang4.2";
 				OBJROOT = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
@@ -616,18 +600,19 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				CONFIGURATION_TEMP_DIR = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					_DEBUG,
 					"GTEST_USE_OWN_TR1_TUPLE=1",
 					BLUEBUILD_STATIC,
+					_DEBUG,
 					BLUEBUILD,
 					"$(inherited)",
 					);
 				COPY_PHASE_STRIP = NO;
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_PREFIX_HEADER = StdAfx.h;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				SDKROOT = macosx;
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
 				};
 			name = Release;
 			};
@@ -1181,28 +1166,18 @@
 			isa = PBXGroup;
 			sourceTree = "<group>";
 			children = (
-				0000006400002ee030d132ce,
-				0000006600002ee030d132ce,
-				0000006800002ee030d132ce,
-				0000006A00002ee030d132ce,
-				0000006E00002ee030d132ce,
-				0000007000002ee030d132ce,
-				0000007600002ee030d132ce,
 				0000006000002ee030d132ce,
-				0000006400002ee030d132ce,
 				0000006600002ee030d132ce,
-				0000006800002ee030d132ce,
 				0000006A00002ee030d132ce,
-				0000006C00002ee030d132ce,
-				0000006E00002ee030d132ce,
-				0000007600002ee030d132ce,
-				0000006400002ee030d132ce,
-				0000006800002ee030d132ce,
 				0000007400002ee030d132ce,
 				0000006E00002ee030d132ce,
-				0000007200002ee030d132ce,
+				0000007000002ee030d132ce,
 				0000006200002ee030d132ce,
+				0000006400002ee030d132ce,
 				0000007600002ee030d132ce,
+				0000006800002ee030d132ce,
+				0000006C00002ee030d132ce,
+				0000007200002ee030d132ce,
 				);
 			name = Dependencies;
 			};
