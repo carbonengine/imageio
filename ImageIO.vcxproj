@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5a9b1520-f847-5935-a5af-8ad07e94f497}</ProjectGuid>
+    <ProjectGuid>{82BC94E8-0F17-33C6-2A7D-D8E7375A221E}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <PlatformToolset>v100</PlatformToolset>
