@@ -5,9 +5,6 @@
     <Filter Include="Source Files\resourcesInclude" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="autoversion.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="MemoryStream.h">
       <Filter>Source Files</Filter>
     </ClInclude>
