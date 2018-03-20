@@ -266,12 +266,50 @@ bool DoReadImage( PngCallbacks& cbs, png_bytep* rowPtrs, png_structp png )
 
 ImageIO::Result ReadImagePixels( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, png_structp png, uint32_t channels, uint32_t bitsPerPixel, ImageIO::HostBitmap& bitmap )
 {
-	const size_t stride = bitmap.GetWidth() * bitsPerPixel / 8;
+	const size_t stride = ( bitmap.GetWidth() * bitsPerPixel + 7 ) / 8;
 	const size_t size   = stride * bitmap.GetHeight();
 
 	PngCallbacks cbs( PngCallbacks::READ, png, stream );
 
-	if( channels == 3 )
+	if( bitsPerPixel == 1 && channels == 1 )
+	{
+		uint8_t* data = (uint8_t*)CCP_MALLOC( "Tr2PngHandler/m_data", size );
+		if( !data )
+		{
+			return ImageIO::Result( ImageIO::Result::OUT_OF_MEMORY, "couldn't allocate " CCP_SIZET_FORMAT " bytes", size );
+		}
+		png_bytep* rowPtrs = CCP_NEW( "Tr2PngHandler/rowPtrs" ) png_bytep[bitmap.GetHeight()];
+		for( unsigned i = 0; i != bitmap.GetHeight(); ++i )
+		{
+			rowPtrs[i] = data + i * stride;
+		}
+
+		if( !DoReadImage( cbs, rowPtrs, png ) || cbs.IoFailed() )
+		{
+			CCP_FREE( data );
+			CCP_DELETE[] rowPtrs;
+			return ImageIO::Result::INVALID_DATA;
+		}
+
+		CCP_DELETE[] rowPtrs;
+
+		auto outData = reinterpret_cast<uint8_t*>( bitmap.GetRawData() );
+		for( uint32_t j = 0; j < bitmap.GetHeight(); ++j )
+		{
+			auto inRow = data + j * stride;
+
+			for( uint32_t i = 0; i < bitmap.GetWidth(); ++i )
+			{
+				uint8_t bit = ( ( 1 << ( 7 - ( i & 7 ) ) ) & inRow[i >> 3] ) ? 0xff : 0;
+				*outData++ = bit;
+				*outData++ = bit;
+				*outData++ = bit;
+				*outData++ = bit;
+			}
+		}
+		CCP_FREE( data );
+	}
+	else if( channels == 3 )
 	{
 		uint8_t* data = (uint8_t*)CCP_MALLOC( "Tr2PngHandler/m_data", size );
 		if( !data )
