@@ -300,11 +300,11 @@ ImageIO::Result ReadImagePixels( ICcpStream& stream, const ImageIO::LoadParamete
 
 			for( uint32_t i = 0; i < bitmap.GetWidth(); ++i )
 			{
-				uint8_t bit = ( ( 1 << ( 7 - ( i & 7 ) ) ) & inRow[i >> 3] ) ? 0xff : 0;
+				uint8_t bit = ( ( 1 << ( 7 - ( i & 7 ) ) ) & inRow[i >> 3] ) ? 0xFF : 0;
 				*outData++ = bit;
 				*outData++ = bit;
 				*outData++ = bit;
-				*outData++ = bit;
+				*outData++ = 0xFF;
 			}
 		}
 		CCP_FREE( data );
