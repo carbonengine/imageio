@@ -11,7 +11,10 @@ class HostBitmap: public Tr2BitmapDimensions
 {
 public:
     HostBitmap();
+	HostBitmap( HostBitmap&& other );
 	virtual ~HostBitmap();
+
+	HostBitmap& operator=( HostBitmap&& other );
 
 	bool IsValid() const;
 	virtual void Destroy();
