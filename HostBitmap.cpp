@@ -61,7 +61,7 @@ HostBitmap::~HostBitmap()
 
 HostBitmap& HostBitmap::operator=( HostBitmap&& other )
 {
-	std::swap( static_cast<Tr2BitmapDimensions&&>( *this ), static_cast<Tr2BitmapDimensions&&>( other ) );
+	std::swap( static_cast<Tr2BitmapDimensions&>( *this ), static_cast<Tr2BitmapDimensions&>( other ) );
 	std::swap( m_name, other.m_name );
 	std::swap( m_data, other.m_data );
 	return *this;
