@@ -115,7 +115,7 @@ Result ReadImage( ICcpStream& src, const LoadParameters& loadParameters, HostBit
 // Return Value:
 //   Result of the operation (OK if image saving is supported)
 // --------------------------------------------------------------------------------------
-Result IsSaveSupported( const wchar_t* filename, Tr2BitmapDimensions& dimensions )
+Result IsSaveSupported( const wchar_t* filename, const Tr2BitmapDimensions& dimensions )
 {
 	auto handler = GetImageHandler( GetExtension( filename ) );
 	if( !handler )

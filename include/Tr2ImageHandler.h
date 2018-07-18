@@ -75,7 +75,7 @@ struct ImageFormatFunctions
 
 void RegisterImageHandler( const ImageFormatFunctions& imageHandler );
 Result ReadImage( ICcpStream& src, const LoadParameters& loadParameters, HostBitmap& bitmap, Metadata* metadata = nullptr );
-Result IsSaveSupported( const wchar_t* sourceName, Tr2BitmapDimensions& dimensions );
+Result IsSaveSupported( const wchar_t* sourceName, const Tr2BitmapDimensions& dimensions );
 Result SaveImage( const wchar_t* sourceName, const HostBitmap& bitmap, ICcpStream& dest );
 
 }
