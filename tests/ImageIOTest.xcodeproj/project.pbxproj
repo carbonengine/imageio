@@ -25,10 +25,10 @@
 			fileRef = 0000001A00002ee030d132ce;
 			};
 		0000005A00002ee030d132ce = {
-			name = rgbRle.psd.h;
+			name = rgbGarbled.bmp.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbRle.psd.h";
+			path = "resourcesInclude/rgbGarbled.bmp.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -41,18 +41,18 @@
 			fileRef = 0000003000002ee030d132ce;
 			};
 		0000003400002ee030d132ce = {
-			name = rgb.jpg.h;
+			name = rgb.bmp.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgb.jpg.h";
+			path = "resourcesInclude/rgb.bmp.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
 		0000004800002ee030d132ce = {
-			name = rgba16f.dds.h;
+			name = rgba.tga.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgba16f.dds.h";
+			path = "resourcesInclude/rgba.tga.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -65,42 +65,33 @@
 			fileRef = 0000004E00002ee030d132ce;
 			};
 		0000006E00002ee030d132ce = {
-			name = libgtest.a;
+			name = libpng.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/googletest/1.6.0/lib/MacOsXx86_64/libgtest.a";
+			path = "../../../../../../sdk/libpng/1.6.29/lib/MacOsXx86_64/clang4.2/libpng.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
 		0000007F00002ee030d132ce = {
-			dependencies = (
-				);
-			productReference = 0000007A00002ee030d132ce;
-			name = Release_Mac64;
-			productType = "com.apple.product-type.tool";
-			buildRules = (
-				);
-			isa = PBXNativeTarget;
-			productName = ImageIOTest;
-			buildConfigurationList = 0000008000002ee030d132ce;
-			buildPhases = (
-				0000007E00002ee030d132ce,
-				0000008100002ee030d132ce,
-				);
+			path = ImageIOTest_cc.exe;
+			isa = PBXFileReference;
+			includeInIndex = 0;
+			explicitFileType = "compiled.mach-o.executable";
+			sourceTree = BUILT_PRODUCTS_DIR;
 			};
 		0000006400002ee030d132ce = {
-			name = libjpeg.a;
+			name = libImageIO_cc.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsXx86_64/libjpeg.a";
+			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO_cc.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
 		0000007600002ee030d132ce = {
-			name = CoreFoundation.framework;
+			name = libpng_d.a;
 			fileEncoding = 4;
-			lastKnownFileType = wrapper.framework;
-			path = "/System/Library/Frameworks/CoreFoundation.framework";
+			lastKnownFileType = archive.ar;
+			path = "../../../../../../sdk/libpng/1.6.29/lib/MacOsXx86_64/clang4.2/libpng_d.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -121,18 +112,18 @@
 			sourceTree = "<group>";
 			};
 		0000004E00002ee030d132ce = {
-			name = rgbaMips.dds.h;
+			name = rgbaCube.dds.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbaMips.dds.h";
+			path = "resourcesInclude/rgbaCube.dds.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
 		0000005000002ee030d132ce = {
-			name = rgbaRle.tga.h;
+			name = rgbaGarbled.bmp.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbaRle.tga.h";
+			path = "resourcesInclude/rgbaGarbled.bmp.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -141,10 +132,10 @@
 			fileRef = 0000001600002ee030d132ce;
 			};
 		0000004A00002ee030d132ce = {
-			name = rgbaCube.dds.h;
+			name = rgba16.dds.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbaCube.dds.h";
+			path = "resourcesInclude/rgba16.dds.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -153,6 +144,615 @@
 			fileRef = 0000000400002ee030d132ce;
 			};
 		0000008B00002ee030d132ce = {
+			files = (
+				0000006700002ee030d132ce,
+				0000006B00002ee030d132ce,
+				0000007700002ee030d132ce,
+				0000007100002ee030d132ce,
+				0000007500002ee030d132ce,
+				0000006500002ee030d132ce,
+				0000007900002ee030d132ce,
+				);
+			buildActionMask = 2147483647;
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			};
+		0000003000002ee030d132ce = {
+			name = r.tga.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/r.tga.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000007B00002ee030d132ce = {
+			isa = PBXGroup;
+			sourceTree = "<group>";
+			children = (
+				0000007C00002ee030d132ce,
+				0000000200002ee030d132ce,
+				0000000400002ee030d132ce,
+				0000001800002ee030d132ce,
+				0000000600002ee030d132ce,
+				0000001A00002ee030d132ce,
+				0000000800002ee030d132ce,
+				0000000A00002ee030d132ce,
+				0000000C00002ee030d132ce,
+				0000001C00002ee030d132ce,
+				0000000E00002ee030d132ce,
+				0000001000002ee030d132ce,
+				0000001200002ee030d132ce,
+				0000001400002ee030d132ce,
+				0000001600002ee030d132ce,
+				);
+			name = "Source Files";
+			};
+		0000006500002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000006600002ee030d132ce;
+			};
+		0000004200002ee030d132ce = {
+			name = rgba.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgba.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000003900002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000003A00002ee030d132ce;
+			};
+		0000008400002ee030d132ce = {
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000008E00002ee030d132ce,
+				);
+			defaultConfigurationIsVisible = 0;
+			};
+		0000005800002ee030d132ce = {
+			name = rgbCube.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgbCube.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000008A00002ee030d132ce = {
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000009000002ee030d132ce,
+				);
+			defaultConfigurationIsVisible = 0;
+			};
+		0000008700002ee030d132ce = {
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000008F00002ee030d132ce,
+				);
+			defaultConfigurationIsVisible = 0;
+			};
+		0000006100002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000006200002ee030d132ce;
+			};
+		0000004F00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000005000002ee030d132ce;
+			};
+		0000003800002ee030d132ce = {
+			name = rgb.jpg.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgb.jpg.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000004400002ee030d132ce = {
+			name = rgba.png.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgba.png.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000003E00002ee030d132ce = {
+			name = rgb.tga.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgb.tga.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000006000002ee030d132ce = {
+			name = rgbRle.tga.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgbRle.tga.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000600002ee030d132ce = {
+			name = StdAfx.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = StdAfx.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000007800002ee030d132ce = {
+			name = libImageIO_d.a;
+			fileEncoding = 4;
+			lastKnownFileType = archive.ar;
+			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO_d.a";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000003300002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000003400002ee030d132ce;
+			};
+		0000006700002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000006800002ee030d132ce;
+			};
+		0000005200002ee030d132ce = {
+			name = rgbaMips.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgbaMips.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000006F00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000007000002ee030d132ce;
+			};
+		0000003700002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000003800002ee030d132ce;
+			};
+		0000000500002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000000600002ee030d132ce;
+			};
+		0000001800002ee030d132ce = {
+			name = MemoryStream.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = MemoryStream.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000002600002ee030d132ce = {
+			name = bc1.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/bc1.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000007200002ee030d132ce = {
+			name = libgtest.a;
+			fileEncoding = 4;
+			lastKnownFileType = archive.ar;
+			path = "../../../../../../sdk/googletest/1.6.0/lib/MacOsXx86_64/libgtest.a";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000A00002ee030d132ce = {
+			name = TestDdsHandler.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = TestDdsHandler.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000700002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000000800002ee030d132ce;
+			};
+		0000000F00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000001000002ee030d132ce;
+			};
+		0000002700002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000002800002ee030d132ce;
+			};
+		0000002500002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000002600002ee030d132ce;
+			};
+		0000008600002ee030d132ce = {
+			dependencies = (
+				);
+			productReference = 0000007F00002ee030d132ce;
+			name = Release_Coverage_Mac64;
+			productType = "com.apple.product-type.tool";
+			buildRules = (
+				);
+			isa = PBXNativeTarget;
+			productName = ImageIOTest;
+			buildConfigurationList = 0000008700002ee030d132ce;
+			buildPhases = (
+				0000008200002ee030d132ce,
+				0000008800002ee030d132ce,
+				);
+			};
+		0000008D00002ee030d132ce = {
+			isa = XCConfigurationList;
+			defaultConfigurationName = Release;
+			buildConfigurations = (
+				0000009100002ee030d132ce,
+				);
+			defaultConfigurationIsVisible = 0;
+			};
+		0000007D00002ee030d132ce = {
+			isa = PBXGroup;
+			sourceTree = "<group>";
+			children = (
+				0000007800002ee030d132ce,
+				0000006600002ee030d132ce,
+				0000006A00002ee030d132ce,
+				0000007400002ee030d132ce,
+				0000006E00002ee030d132ce,
+				0000007000002ee030d132ce,
+				0000006400002ee030d132ce,
+				0000007A00002ee030d132ce,
+				0000007600002ee030d132ce,
+				0000006800002ee030d132ce,
+				0000006C00002ee030d132ce,
+				0000007200002ee030d132ce,
+				);
+			name = Dependencies;
+			};
+		0000005600002ee030d132ce = {
+			name = rgbaVolume.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgbaVolume.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000001C00002ee030d132ce = {
+			name = TestHelpers.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = TestHelpers.h;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000008E00002ee030d132ce = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"../../../../../../sdk/zlib/1.2.11/include",
+					"../../../../../../sdk/googletest/1.6.0/include",
+					..,
+					"../../../../../../sdk/libjpg/jpeg-9b",
+					.,
+					"../../../carbon/src",
+					"../../../../../../sdk/libpng/1.6.29/include",
+					"../../../../../../sdk/telemetry/3.0.1.1008/include",
+					);
+				CLANG_WARN_INT_CONVERSION = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				OTHER_LDFLAGS = "-headerpad_max_install_names";
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				PRODUCT_NAME = ImageIOTest;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				GCC_OPTIMIZATION_LEVEL = s;
+				ONLY_ACTIVE_ARCH = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
+					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
+					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
+					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
+					);
+				SYMROOT = "../../autobuild/ImageIOTest/MacOsX$(ARCHS)/clang4.2";
+				OBJROOT = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				CONFIGURATION_TEMP_DIR = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"GTEST_USE_OWN_TR1_TUPLE=1",
+					BLUEBUILD_STATIC,
+					BLUEBUILD,
+					"$(inherited)",
+					);
+				COPY_PHASE_STRIP = NO;
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PREFIX_HEADER = StdAfx.h;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				SDKROOT = macosx;
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
+				};
+			name = Release;
+			};
+		0000001700002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000001800002ee030d132ce;
+			};
+		0000008C00002ee030d132ce = {
+			projectDirPath = "";
+			targets = (
+				0000008300002ee030d132ce,
+				0000008600002ee030d132ce,
+				0000008900002ee030d132ce,
+				);
+			knownRegions = (
+				en,
+				);
+			developmentRegion = English;
+			projectRoot = "";
+			hasScannedForEncodings = 0;
+			compatibilityVersion = "Xcode 3.2";
+			mainGroup = 0000008100002ee030d132ce;
+			attributes = {
+				ORGANIZATIONNAME = CCP;
+				LastUpgradeCheck = 0460;
+				};
+			isa = PBXProject;
+			buildConfigurationList = 0000008D00002ee030d132ce;
+			};
+		0000001B00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000001C00002ee030d132ce;
+			};
+		0000003A00002ee030d132ce = {
+			name = rgb.png.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgb.png.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000007500002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000007600002ee030d132ce;
+			};
+		0000001E00002ee030d132ce = {
+			name = _all.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/_all.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000C00002ee030d132ce = {
+			name = TestHelpers.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = TestHelpers.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000006800002ee030d132ce = {
+			name = libjpeg.a;
+			fileEncoding = 4;
+			lastKnownFileType = archive.ar;
+			path = "../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsXx86_64/libjpeg.a";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000005C00002ee030d132ce = {
+			name = rgbIndexed.tga.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgbIndexed.tga.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000B00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000000C00002ee030d132ce;
+			};
+		0000002900002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000002A00002ee030d132ce;
+			};
+		0000002000002ee030d132ce = {
+			name = a.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/a.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000003D00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000003E00002ee030d132ce;
+			};
+		0000006600002ee030d132ce = {
+			name = libCcpCore_d.a;
+			fileEncoding = 4;
+			lastKnownFileType = archive.ar;
+			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore_d.a";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000005500002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000005600002ee030d132ce;
+			};
+		0000007A00002ee030d132ce = {
+			name = CoreFoundation.framework;
+			fileEncoding = 4;
+			lastKnownFileType = wrapper.framework;
+			path = "/System/Library/Frameworks/CoreFoundation.framework";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000E00002ee030d132ce = {
+			name = TestHostBitmap.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = TestHostBitmap.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000003500002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000003600002ee030d132ce;
+			};
+		0000006900002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000006A00002ee030d132ce;
+			};
+		0000000200002ee030d132ce = {
+			name = ImageIOTest.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ImageIOTest.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000004500002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000004600002ee030d132ce;
+			};
+		0000006200002ee030d132ce = {
+			name = rgbx.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgbx.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000000400002ee030d132ce = {
+			name = MemoryStream.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = MemoryStream.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000001D00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000001E00002ee030d132ce;
+			};
+		0000005100002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000005200002ee030d132ce;
+			};
+		0000002300002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000002400002ee030d132ce;
+			};
+		0000003200002ee030d132ce = {
+			name = rg.png.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rg.png.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000008000002ee030d132ce = {
+			path = ImageIOTest_d.exe;
+			isa = PBXFileReference;
+			includeInIndex = 0;
+			explicitFileType = "compiled.mach-o.executable";
+			sourceTree = BUILT_PRODUCTS_DIR;
+			};
+		0000002100002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000002200002ee030d132ce;
+			};
+		0000003F00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000004000002ee030d132ce;
+			};
+		0000003C00002ee030d132ce = {
+			name = rgb.psd.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgb.psd.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000008100002ee030d132ce = {
+			isa = PBXGroup;
+			children = (
+				0000007B00002ee030d132ce,
+				0000007D00002ee030d132ce,
+				);
+			sourceTree = "<group>";
+			};
+		0000005900002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000005A00002ee030d132ce;
+			};
+		0000008500002ee030d132ce = {
+			files = (
+				0000006700002ee030d132ce,
+				0000006900002ee030d132ce,
+				0000006B00002ee030d132ce,
+				0000006D00002ee030d132ce,
+				0000007100002ee030d132ce,
+				0000007300002ee030d132ce,
+				0000007900002ee030d132ce,
+				);
+			buildActionMask = 2147483647;
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			};
+		0000004600002ee030d132ce = {
+			name = rgba.psd.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgba.psd.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000001F00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000002000002ee030d132ce;
+			};
+		0000003B00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000003C00002ee030d132ce;
+			};
+		0000007E00002ee030d132ce = {
+			path = ImageIOTest.exe;
+			isa = PBXFileReference;
+			includeInIndex = 0;
+			explicitFileType = "compiled.mach-o.executable";
+			sourceTree = BUILT_PRODUCTS_DIR;
+			};
+		0000009100002ee030d132ce = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				};
+			name = Release;
+			};
+		0000002A00002ee030d132ce = {
+			name = l.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/l.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000008F00002ee030d132ce = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
@@ -217,185 +817,156 @@
 				};
 			name = Release;
 			};
-		0000003000002ee030d132ce = {
-			name = rgb.bmp.h;
+		0000001600002ee030d132ce = {
+			name = TestTgaHandler.cpp;
 			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgb.bmp.h";
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = TestTgaHandler.cpp;
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
-		0000007B00002ee030d132ce = {
-			path = ImageIOTest_cc.exe;
-			isa = PBXFileReference;
-			includeInIndex = 0;
-			explicitFileType = "compiled.mach-o.executable";
-			sourceTree = BUILT_PRODUCTS_DIR;
-			};
-		0000006500002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000006600002ee030d132ce;
-			};
-		0000004200002ee030d132ce = {
-			name = rgba.psd.h;
+		0000001400002ee030d132ce = {
+			name = TestPsdHandler.cpp;
 			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgba.psd.h";
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = TestPsdHandler.cpp;
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
-		0000003900002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000003A00002ee030d132ce;
+		0000004C00002ee030d132ce = {
+			name = rgba16f.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/rgba16f.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
 			};
-		0000008400002ee030d132ce = {
+		0000002E00002ee030d132ce = {
+			name = r.psd.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/r.psd.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000008200002ee030d132ce = {
 			files = (
-				0000005F00002ee030d132ce,
+				0000000100002ee030d132ce,
+				0000000300002ee030d132ce,
+				0000000500002ee030d132ce,
+				0000000700002ee030d132ce,
+				0000000900002ee030d132ce,
+				0000000B00002ee030d132ce,
+				0000000D00002ee030d132ce,
+				0000000F00002ee030d132ce,
+				0000001100002ee030d132ce,
+				0000001300002ee030d132ce,
+				0000001500002ee030d132ce,
+				);
+			buildActionMask = 2147483647;
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			};
+		0000000800002ee030d132ce = {
+			name = TestBmpHandler.cpp;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = TestBmpHandler.cpp;
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000007400002ee030d132ce = {
+			name = libImageIO.a;
+			fileEncoding = 4;
+			lastKnownFileType = archive.ar;
+			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO.a";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000002D00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000002E00002ee030d132ce;
+			};
+		0000005F00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000006000002ee030d132ce;
+			};
+		0000004300002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000004400002ee030d132ce;
+			};
+		0000005B00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000005C00002ee030d132ce;
+			};
+		0000000D00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000000E00002ee030d132ce;
+			};
+		0000002C00002ee030d132ce = {
+			name = r.png.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/r.png.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000005300002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000005400002ee030d132ce;
+			};
+		0000008300002ee030d132ce = {
+			dependencies = (
+				);
+			productReference = 0000007E00002ee030d132ce;
+			name = Release_Mac64;
+			productType = "com.apple.product-type.tool";
+			buildRules = (
+				);
+			isa = PBXNativeTarget;
+			productName = ImageIOTest;
+			buildConfigurationList = 0000008400002ee030d132ce;
+			buildPhases = (
+				0000008200002ee030d132ce,
+				0000008500002ee030d132ce,
+				);
+			};
+		0000002400002ee030d132ce = {
+			name = al.psd.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/al.psd.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000008800002ee030d132ce = {
+			files = (
 				0000006300002ee030d132ce,
-				0000006500002ee030d132ce,
 				0000006700002ee030d132ce,
 				0000006900002ee030d132ce,
 				0000006B00002ee030d132ce,
 				0000006D00002ee030d132ce,
-				0000007500002ee030d132ce,
-				);
-			buildActionMask = 2147483647;
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-			};
-		0000005800002ee030d132ce = {
-			name = rgbIndexed.tga.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbIndexed.tga.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000008A00002ee030d132ce = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					"../../../../../../sdk/zlib/1.2.11/include",
-					"../../../../../../sdk/googletest/1.6.0/include",
-					..,
-					"../../../../../../sdk/libjpg/jpeg-9b",
-					.,
-					"../../../carbon/src",
-					"../../../../../../sdk/libpng/1.6.29/include",
-					"../../../../../../sdk/telemetry/3.0.1.1008/include",
-					);
-				CLANG_WARN_INT_CONVERSION = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				OTHER_LDFLAGS = "-headerpad_max_install_names";
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				PRODUCT_NAME = ImageIOTest;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				GCC_OPTIMIZATION_LEVEL = s;
-				ONLY_ACTIVE_ARCH = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
-					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
-					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
-					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
-					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
-					);
-				SYMROOT = "../../autobuild/ImageIOTest/MacOsX$(ARCHS)/clang4.2";
-				OBJROOT = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				CONFIGURATION_TEMP_DIR = "../temp/ImageIOTest/MacOsX$(ARCHS)/$(CONFIGURATION)/clang4.2";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"GTEST_USE_OWN_TR1_TUPLE=1",
-					BLUEBUILD_STATIC,
-					BLUEBUILD,
-					"$(inherited)",
-					);
-				COPY_PHASE_STRIP = NO;
-				CLANG_CXX_LIBRARY = "libc++";
-				GCC_PREFIX_HEADER = StdAfx.h;
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				SDKROOT = macosx;
-				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
-				};
-			name = Release;
-			};
-		0000008700002ee030d132ce = {
-			files = (
-				0000006300002ee030d132ce,
-				0000006700002ee030d132ce,
-				0000007300002ee030d132ce,
-				0000006D00002ee030d132ce,
+				0000006F00002ee030d132ce,
 				0000007100002ee030d132ce,
-				0000006100002ee030d132ce,
-				0000007500002ee030d132ce,
+				0000007900002ee030d132ce,
 				);
 			buildActionMask = 2147483647;
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 			};
-		0000006100002ee030d132ce = {
+		0000002200002ee030d132ce = {
+			name = al.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/al.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000004900002ee030d132ce = {
 			isa = PBXBuildFile;
-			fileRef = 0000006200002ee030d132ce;
+			fileRef = 0000004A00002ee030d132ce;
 			};
-		0000004F00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000005000002ee030d132ce;
-			};
-		0000003800002ee030d132ce = {
-			name = rgb.psd.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgb.psd.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000004400002ee030d132ce = {
-			name = rgba.tga.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgba.tga.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000003E00002ee030d132ce = {
-			name = rgba.dds.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgba.dds.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000006000002ee030d132ce = {
-			name = libImageIO_cc.a;
-			fileEncoding = 4;
-			lastKnownFileType = archive.ar;
-			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO_cc.a";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000000600002ee030d132ce = {
-			name = StdAfx.cpp;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = StdAfx.cpp;
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000007800002ee030d132ce = {
+		0000007C00002ee030d132ce = {
 			isa = PBXGroup;
 			sourceTree = "<group>";
 			children = (
@@ -414,13 +985,13 @@
 				0000003600002ee030d132ce,
 				0000003800002ee030d132ce,
 				0000003A00002ee030d132ce,
-				0000005400002ee030d132ce,
-				0000005600002ee030d132ce,
+				0000003C00002ee030d132ce,
+				0000003E00002ee030d132ce,
 				0000005800002ee030d132ce,
 				0000005A00002ee030d132ce,
 				0000005C00002ee030d132ce,
-				0000003C00002ee030d132ce,
-				0000003E00002ee030d132ce,
+				0000005E00002ee030d132ce,
+				0000006000002ee030d132ce,
 				0000004000002ee030d132ce,
 				0000004200002ee030d132ce,
 				0000004400002ee030d132ce,
@@ -431,129 +1002,117 @@
 				0000004E00002ee030d132ce,
 				0000005000002ee030d132ce,
 				0000005200002ee030d132ce,
-				0000005E00002ee030d132ce,
+				0000005400002ee030d132ce,
+				0000005600002ee030d132ce,
+				0000006200002ee030d132ce,
 				);
 			name = resourcesInclude;
 			};
-		0000003300002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000003400002ee030d132ce;
-			};
-		0000006700002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000006800002ee030d132ce;
-			};
-		0000005200002ee030d132ce = {
-			name = rgbaVolume.dds.h;
+		0000005400002ee030d132ce = {
+			name = rgbaRle.tga.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbaVolume.dds.h";
+			path = "resourcesInclude/rgbaRle.tga.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
-		0000006F00002ee030d132ce = {
+		0000006B00002ee030d132ce = {
 			isa = PBXBuildFile;
-			fileRef = 0000007000002ee030d132ce;
+			fileRef = 0000006C00002ee030d132ce;
 			};
-		0000003700002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000003800002ee030d132ce;
-			};
-		0000000500002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000000600002ee030d132ce;
-			};
-		0000001800002ee030d132ce = {
-			name = MemoryStream.h;
+		0000005E00002ee030d132ce = {
+			name = rgbRle.psd.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = MemoryStream.h;
+			path = "resourcesInclude/rgbRle.psd.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
-		0000002600002ee030d132ce = {
-			name = l.dds.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/l.dds.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000007200002ee030d132ce = {
-			name = libpng_d.a;
+		0000006C00002ee030d132ce = {
+			name = libz.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/libpng/1.6.29/lib/MacOsXx86_64/clang4.2/libpng_d.a";
+			path = "../../../../../../sdk/zlib/1.2.11/lib/MacOsXx86_64/libz.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
-		0000000A00002ee030d132ce = {
-			name = TestDdsHandler.cpp;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = TestDdsHandler.cpp;
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000000700002ee030d132ce = {
+		0000003100002ee030d132ce = {
 			isa = PBXBuildFile;
-			fileRef = 0000000800002ee030d132ce;
+			fileRef = 0000003200002ee030d132ce;
 			};
-		0000000F00002ee030d132ce = {
+		0000007300002ee030d132ce = {
 			isa = PBXBuildFile;
-			fileRef = 0000001000002ee030d132ce;
+			fileRef = 0000007400002ee030d132ce;
 			};
-		0000002700002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000002800002ee030d132ce;
-			};
-		0000002500002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000002600002ee030d132ce;
-			};
-		0000008600002ee030d132ce = {
-			isa = XCConfigurationList;
-			defaultConfigurationName = Release;
-			buildConfigurations = (
-				0000008C00002ee030d132ce,
-				);
-			defaultConfigurationIsVisible = 0;
-			};
-		0000008D00002ee030d132ce = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				};
-			name = Release;
-			};
-		0000007D00002ee030d132ce = {
-			isa = PBXGroup;
-			children = (
-				0000007700002ee030d132ce,
-				0000007900002ee030d132ce,
-				);
-			sourceTree = "<group>";
-			};
-		0000005600002ee030d132ce = {
-			name = rgbGarbled.bmp.h;
+		0000003600002ee030d132ce = {
+			name = rgb.dds.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbGarbled.bmp.h";
+			path = "resourcesInclude/rgb.dds.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
-		0000001C00002ee030d132ce = {
-			name = TestHelpers.h;
+		0000007100002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000007200002ee030d132ce;
+			};
+		0000006A00002ee030d132ce = {
+			name = libCcpCore.a;
+			fileEncoding = 4;
+			lastKnownFileType = archive.ar;
+			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore.a";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000004B00002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000004C00002ee030d132ce;
+			};
+		0000004000002ee030d132ce = {
+			name = rgba.bmp.h;
 			fileEncoding = 4;
 			lastKnownFileType = sourcecode.cpp.h;
-			path = TestHelpers.h;
+			path = "resourcesInclude/rgba.bmp.h";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
-		0000001700002ee030d132ce = {
+		0000005D00002ee030d132ce = {
 			isa = PBXBuildFile;
-			fileRef = 0000001800002ee030d132ce;
+			fileRef = 0000005E00002ee030d132ce;
 			};
-		0000008C00002ee030d132ce = {
+		0000001100002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000001200002ee030d132ce;
+			};
+		0000007000002ee030d132ce = {
+			name = libCcpCore_cc.a;
+			fileEncoding = 4;
+			lastKnownFileType = archive.ar;
+			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore_cc.a";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000004100002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000004200002ee030d132ce;
+			};
+		0000002800002ee030d132ce = {
+			name = bc3.dds.h;
+			fileEncoding = 4;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = "resourcesInclude/bc3.dds.h";
+			isa = PBXFileReference;
+			sourceTree = "<group>";
+			};
+		0000007700002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000007800002ee030d132ce;
+			};
+		0000004700002ee030d132ce = {
+			isa = PBXBuildFile;
+			fileRef = 0000004800002ee030d132ce;
+			};
+		0000009000002ee030d132ce = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
@@ -616,532 +1175,6 @@
 				};
 			name = Release;
 			};
-		0000001B00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000001C00002ee030d132ce;
-			};
-		0000003A00002ee030d132ce = {
-			name = rgb.tga.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgb.tga.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000007500002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000007600002ee030d132ce;
-			};
-		0000001E00002ee030d132ce = {
-			name = _all.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/_all.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000000C00002ee030d132ce = {
-			name = TestHelpers.cpp;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = TestHelpers.cpp;
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000006800002ee030d132ce = {
-			name = libz.a;
-			fileEncoding = 4;
-			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/zlib/1.2.11/lib/MacOsXx86_64/libz.a";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000005C00002ee030d132ce = {
-			name = rgbRle.tga.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbRle.tga.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000000B00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000000C00002ee030d132ce;
-			};
-		0000002900002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000002A00002ee030d132ce;
-			};
-		0000002000002ee030d132ce = {
-			name = a.dds.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/a.dds.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000003D00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000003E00002ee030d132ce;
-			};
-		0000006600002ee030d132ce = {
-			name = libCcpCore.a;
-			fileEncoding = 4;
-			lastKnownFileType = archive.ar;
-			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore.a";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000005500002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000005600002ee030d132ce;
-			};
-		0000007A00002ee030d132ce = {
-			path = ImageIOTest.exe;
-			isa = PBXFileReference;
-			includeInIndex = 0;
-			explicitFileType = "compiled.mach-o.executable";
-			sourceTree = BUILT_PRODUCTS_DIR;
-			};
-		0000000E00002ee030d132ce = {
-			name = TestHostBitmap.cpp;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = TestHostBitmap.cpp;
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000003500002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000003600002ee030d132ce;
-			};
-		0000006900002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000006A00002ee030d132ce;
-			};
-		0000000200002ee030d132ce = {
-			name = ImageIOTest.cpp;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = ImageIOTest.cpp;
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000004500002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000004600002ee030d132ce;
-			};
-		0000006200002ee030d132ce = {
-			name = libCcpCore_d.a;
-			fileEncoding = 4;
-			lastKnownFileType = archive.ar;
-			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore_d.a";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000000400002ee030d132ce = {
-			name = MemoryStream.cpp;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = MemoryStream.cpp;
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000001D00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000001E00002ee030d132ce;
-			};
-		0000005100002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000005200002ee030d132ce;
-			};
-		0000002300002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000002400002ee030d132ce;
-			};
-		0000003200002ee030d132ce = {
-			name = rgb.dds.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgb.dds.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000008000002ee030d132ce = {
-			isa = XCConfigurationList;
-			defaultConfigurationName = Release;
-			buildConfigurations = (
-				0000008A00002ee030d132ce,
-				);
-			defaultConfigurationIsVisible = 0;
-			};
-		0000002100002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000002200002ee030d132ce;
-			};
-		0000003F00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000004000002ee030d132ce;
-			};
-		0000003C00002ee030d132ce = {
-			name = rgba.bmp.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgba.bmp.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000008100002ee030d132ce = {
-			files = (
-				0000006300002ee030d132ce,
-				0000006500002ee030d132ce,
-				0000006700002ee030d132ce,
-				0000006900002ee030d132ce,
-				0000006D00002ee030d132ce,
-				0000006F00002ee030d132ce,
-				0000007500002ee030d132ce,
-				);
-			buildActionMask = 2147483647;
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-			};
-		0000005900002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000005A00002ee030d132ce;
-			};
-		0000008500002ee030d132ce = {
-			dependencies = (
-				);
-			productReference = 0000007C00002ee030d132ce;
-			name = Debug_Mac64;
-			productType = "com.apple.product-type.tool";
-			buildRules = (
-				);
-			isa = PBXNativeTarget;
-			productName = ImageIOTest;
-			buildConfigurationList = 0000008600002ee030d132ce;
-			buildPhases = (
-				0000007E00002ee030d132ce,
-				0000008700002ee030d132ce,
-				);
-			};
-		0000004600002ee030d132ce = {
-			name = rgba16.dds.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgba16.dds.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000001F00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000002000002ee030d132ce;
-			};
-		0000003B00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000003C00002ee030d132ce;
-			};
-		0000007E00002ee030d132ce = {
-			files = (
-				0000000100002ee030d132ce,
-				0000000300002ee030d132ce,
-				0000000500002ee030d132ce,
-				0000000700002ee030d132ce,
-				0000000900002ee030d132ce,
-				0000000B00002ee030d132ce,
-				0000000D00002ee030d132ce,
-				0000000F00002ee030d132ce,
-				0000001100002ee030d132ce,
-				0000001300002ee030d132ce,
-				0000001500002ee030d132ce,
-				);
-			buildActionMask = 2147483647;
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-			};
-		0000002A00002ee030d132ce = {
-			name = r.psd.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/r.psd.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000001600002ee030d132ce = {
-			name = TestTgaHandler.cpp;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = TestTgaHandler.cpp;
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000001400002ee030d132ce = {
-			name = TestPsdHandler.cpp;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = TestPsdHandler.cpp;
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000004C00002ee030d132ce = {
-			name = rgbaGarbled.bmp.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbaGarbled.bmp.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000002E00002ee030d132ce = {
-			name = rg.png.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rg.png.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000008200002ee030d132ce = {
-			dependencies = (
-				);
-			productReference = 0000007B00002ee030d132ce;
-			name = Release_Coverage_Mac64;
-			productType = "com.apple.product-type.tool";
-			buildRules = (
-				);
-			isa = PBXNativeTarget;
-			productName = ImageIOTest;
-			buildConfigurationList = 0000008300002ee030d132ce;
-			buildPhases = (
-				0000007E00002ee030d132ce,
-				0000008400002ee030d132ce,
-				);
-			};
-		0000000800002ee030d132ce = {
-			name = TestBmpHandler.cpp;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = TestBmpHandler.cpp;
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000007400002ee030d132ce = {
-			name = libImageIO_d.a;
-			fileEncoding = 4;
-			lastKnownFileType = archive.ar;
-			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO_d.a";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000002D00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000002E00002ee030d132ce;
-			};
-		0000005F00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000006000002ee030d132ce;
-			};
-		0000004300002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000004400002ee030d132ce;
-			};
-		0000005B00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000005C00002ee030d132ce;
-			};
-		0000000D00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000000E00002ee030d132ce;
-			};
-		0000002C00002ee030d132ce = {
-			name = r.tga.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/r.tga.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000005300002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000005400002ee030d132ce;
-			};
-		0000008300002ee030d132ce = {
-			isa = XCConfigurationList;
-			defaultConfigurationName = Release;
-			buildConfigurations = (
-				0000008B00002ee030d132ce,
-				);
-			defaultConfigurationIsVisible = 0;
-			};
-		0000002400002ee030d132ce = {
-			name = al.psd.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/al.psd.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000008800002ee030d132ce = {
-			projectDirPath = "";
-			targets = (
-				0000007F00002ee030d132ce,
-				0000008200002ee030d132ce,
-				0000008500002ee030d132ce,
-				);
-			knownRegions = (
-				en,
-				);
-			developmentRegion = English;
-			projectRoot = "";
-			hasScannedForEncodings = 0;
-			compatibilityVersion = "Xcode 3.2";
-			mainGroup = 0000007D00002ee030d132ce;
-			attributes = {
-				ORGANIZATIONNAME = CCP;
-				LastUpgradeCheck = 0460;
-				};
-			isa = PBXProject;
-			buildConfigurationList = 0000008900002ee030d132ce;
-			};
-		0000002200002ee030d132ce = {
-			name = al.dds.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/al.dds.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000004900002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000004A00002ee030d132ce;
-			};
-		0000007C00002ee030d132ce = {
-			path = ImageIOTest_d.exe;
-			isa = PBXFileReference;
-			includeInIndex = 0;
-			explicitFileType = "compiled.mach-o.executable";
-			sourceTree = BUILT_PRODUCTS_DIR;
-			};
-		0000005400002ee030d132ce = {
-			name = rgbCube.dds.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbCube.dds.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000006B00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000006C00002ee030d132ce;
-			};
-		0000005E00002ee030d132ce = {
-			name = rgbx.dds.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgbx.dds.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000006C00002ee030d132ce = {
-			name = libCcpCore_cc.a;
-			fileEncoding = 4;
-			lastKnownFileType = archive.ar;
-			path = "../../autobuild/CcpCore/MacOsXx86_64/clang4.2/libCcpCore_cc.a";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000003100002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000003200002ee030d132ce;
-			};
-		0000007300002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000007400002ee030d132ce;
-			};
-		0000003600002ee030d132ce = {
-			name = rgb.png.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgb.png.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000007100002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000007200002ee030d132ce;
-			};
-		0000006A00002ee030d132ce = {
-			name = libpng.a;
-			fileEncoding = 4;
-			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/libpng/1.6.29/lib/MacOsXx86_64/clang4.2/libpng.a";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000004B00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000004C00002ee030d132ce;
-			};
-		0000004000002ee030d132ce = {
-			name = rgba.png.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/rgba.png.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000005D00002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000005E00002ee030d132ce;
-			};
-		0000001100002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000001200002ee030d132ce;
-			};
-		0000007000002ee030d132ce = {
-			name = libImageIO.a;
-			fileEncoding = 4;
-			lastKnownFileType = archive.ar;
-			path = "../../autobuild/ImageIO/MacOsXx86_64/clang4.2/libImageIO.a";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000004100002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000004200002ee030d132ce;
-			};
-		0000002800002ee030d132ce = {
-			name = r.png.h;
-			fileEncoding = 4;
-			lastKnownFileType = sourcecode.cpp.h;
-			path = "resourcesInclude/r.png.h";
-			isa = PBXFileReference;
-			sourceTree = "<group>";
-			};
-		0000007700002ee030d132ce = {
-			isa = PBXGroup;
-			sourceTree = "<group>";
-			children = (
-				0000007800002ee030d132ce,
-				0000000200002ee030d132ce,
-				0000000400002ee030d132ce,
-				0000001800002ee030d132ce,
-				0000000600002ee030d132ce,
-				0000001A00002ee030d132ce,
-				0000000800002ee030d132ce,
-				0000000A00002ee030d132ce,
-				0000000C00002ee030d132ce,
-				0000001C00002ee030d132ce,
-				0000000E00002ee030d132ce,
-				0000001000002ee030d132ce,
-				0000001200002ee030d132ce,
-				0000001400002ee030d132ce,
-				0000001600002ee030d132ce,
-				);
-			name = "Source Files";
-			};
-		0000004700002ee030d132ce = {
-			isa = PBXBuildFile;
-			fileRef = 0000004800002ee030d132ce;
-			};
 		0000001300002ee030d132ce = {
 			isa = PBXBuildFile;
 			fileRef = 0000001400002ee030d132ce;
@@ -1155,33 +1188,26 @@
 			sourceTree = "<group>";
 			};
 		0000008900002ee030d132ce = {
-			isa = XCConfigurationList;
-			defaultConfigurationName = Release;
-			buildConfigurations = (
-				0000008D00002ee030d132ce,
+			dependencies = (
 				);
-			defaultConfigurationIsVisible = 0;
+			productReference = 0000008000002ee030d132ce;
+			name = Debug_Mac64;
+			productType = "com.apple.product-type.tool";
+			buildRules = (
+				);
+			isa = PBXNativeTarget;
+			productName = ImageIOTest;
+			buildConfigurationList = 0000008A00002ee030d132ce;
+			buildPhases = (
+				0000008200002ee030d132ce,
+				0000008B00002ee030d132ce,
+				);
 			};
 		0000007900002ee030d132ce = {
-			isa = PBXGroup;
-			sourceTree = "<group>";
-			children = (
-				0000006000002ee030d132ce,
-				0000006600002ee030d132ce,
-				0000006A00002ee030d132ce,
-				0000007400002ee030d132ce,
-				0000006E00002ee030d132ce,
-				0000007000002ee030d132ce,
-				0000006200002ee030d132ce,
-				0000006400002ee030d132ce,
-				0000007600002ee030d132ce,
-				0000006800002ee030d132ce,
-				0000006C00002ee030d132ce,
-				0000007200002ee030d132ce,
-				);
-			name = Dependencies;
+			isa = PBXBuildFile;
+			fileRef = 0000007A00002ee030d132ce;
 			};
 		};
 	objectVersion = 46;
-	rootObject = 0000008800002ee030d132ce;
+	rootObject = 0000008C00002ee030d132ce;
 	}
