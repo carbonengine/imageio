@@ -289,6 +289,8 @@
     <ClInclude Include="resourcesInclude\a.dds.h" />
     <ClInclude Include="resourcesInclude\al.dds.h" />
     <ClInclude Include="resourcesInclude\al.psd.h" />
+    <ClInclude Include="resourcesInclude\bc1.dds.h" />
+    <ClInclude Include="resourcesInclude\bc3.dds.h" />
     <ClInclude Include="resourcesInclude\l.dds.h" />
     <ClInclude Include="resourcesInclude\r.png.h" />
     <ClInclude Include="resourcesInclude\r.psd.h" />

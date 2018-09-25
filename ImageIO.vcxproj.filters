@@ -10,6 +10,9 @@
     <ClInclude Include="ImageIOResult.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImageUtility.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="PsdHandler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -38,6 +41,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImageIOResult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PsdHandler.cpp">

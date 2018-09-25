@@ -325,6 +325,7 @@
   <ItemGroup>
     <ClInclude Include="HostBitmap.h" />
     <ClInclude Include="ImageIOResult.h" />
+    <ClInclude Include="ImageUtility.h" />
     <ClInclude Include="PsdHandler.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="Tr2BmpHandler.h" />
@@ -337,6 +338,7 @@
   <ItemGroup>
     <ClCompile Include="HostBitmap.cpp" />
     <ClCompile Include="ImageIOResult.cpp" />
+    <ClCompile Include="ImageUtility.cpp" />
     <ClCompile Include="PsdHandler.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

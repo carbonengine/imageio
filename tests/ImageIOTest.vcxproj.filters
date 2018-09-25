@@ -23,6 +23,12 @@
     <ClInclude Include="resourcesInclude\al.psd.h">
       <Filter>Source Files\resourcesInclude</Filter>
     </ClInclude>
+    <ClInclude Include="resourcesInclude\bc1.dds.h">
+      <Filter>Source Files\resourcesInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="resourcesInclude\bc3.dds.h">
+      <Filter>Source Files\resourcesInclude</Filter>
+    </ClInclude>
     <ClInclude Include="resourcesInclude\l.dds.h">
       <Filter>Source Files\resourcesInclude</Filter>
     </ClInclude>
