@@ -696,10 +696,10 @@ TEST( HostBitmap, GetPixelReturnsCorrectValueForBGRXBitmaps )
 	ASSERT_TRUE( LoadBitmap( s_rgbx, bitmap ) );
 	float r, g, b, a;
 	ASSERT_TRUE( bitmap.GetPixel( 0, 3, r, g, b, a ) );
-	EXPECT_EQ( 250, r * 255 );
-	EXPECT_EQ( 1, g * 255 );
-	EXPECT_EQ( 242, b * 255 );
-	EXPECT_EQ( 255, a * 255 );
+	EXPECT_EQ( 250, int( r * 255 ) );
+	EXPECT_EQ( 1, int( g * 255 ) );
+	EXPECT_EQ( 242, int( b * 255 ) );
+	EXPECT_EQ( 255, int( a * 255 ) );
 }
 
 
@@ -709,10 +709,10 @@ TEST( HostBitmap, GetPixelReturnsCorrectValueForBGRABitmaps )
 	ASSERT_TRUE( LoadBitmap( s_rgba, bitmap ) );
 	float r, g, b, a;
 	ASSERT_TRUE( bitmap.GetPixel( 4, 8, r, g, b, a ) );
-	EXPECT_EQ( 108, r * 255 );
-	EXPECT_EQ( 141, g * 255 );
-	EXPECT_EQ( 245, b * 255 );
-	EXPECT_EQ( 22, a * 255 );
+	EXPECT_EQ( 108, int( r * 255 ) );
+	EXPECT_EQ( 141, int( g * 255 ) );
+	EXPECT_EQ( 245, int( b * 255 ) );
+	EXPECT_EQ( 22, int( a * 255 ) );
 }
 
 TEST( HostBitmap, GetPixelReturnsCorrectValueForBC1Bitmaps )
@@ -721,10 +721,10 @@ TEST( HostBitmap, GetPixelReturnsCorrectValueForBC1Bitmaps )
 	ASSERT_TRUE( LoadBitmap( s_bc1, bitmap ) );
 	float r, g, b, a;
 	ASSERT_TRUE( bitmap.GetPixel( 1, 0, r, g, b, a ) );
-	EXPECT_EQ( 123, r * 255 );
-	EXPECT_EQ( 125, g * 255 );
-	EXPECT_EQ( 123, b * 255 );
-	EXPECT_EQ( 255, a * 255 );
+	EXPECT_EQ( 123, int( r * 255 ) );
+	EXPECT_EQ( 125, int( g * 255 ) );
+	EXPECT_EQ( 123, int( b * 255 ) );
+	EXPECT_EQ( 255, int( a * 255 ) );
 }
 
 TEST( HostBitmap, GetPixelReturnsCorrectValueForBC3Bitmaps )
