@@ -995,6 +995,8 @@ bool HostBitmap::GetPixel(uint32_t x, uint32_t y, float &r, float &g, float &b, 
 		case Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM:
 			pixelValue = ImageUtility::GetPixelColor_BC3( x, y, width, pitch, data );
 			break;
+		default:
+			break;
 		}
 		r = float( (pixelValue & 0x00ff0000) >> 16 ) / 255.f;
 		g = float( (pixelValue & 0x0000ff00) >> 8 ) / 255.f;
