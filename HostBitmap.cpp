@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "HostBitmap.h"
 #include "Tr2ImageHandler.h"
+#include "ImageUtility.h"
 
 using namespace Tr2RenderContextEnum;
 
@@ -848,6 +849,158 @@ bool HostBitmap::GenerateMipLevel( uint8_t* source, unsigned width, unsigned hei
 		src01 = std::min( right1 + bpp + vertStep, bottom );
 	}
 
+	return true;
+}
+
+bool HostBitmap::GetAverageColor(float &r, float &g, float &b, float &a) {
+	if( !IsValid() )
+	{
+		CCP_LOGERR( "GetAverageColor: bitmap %s is not valid" );
+		return false;
+	}
+
+	if( GetType() == TEX_TYPE_2D && GetArraySize() < 2 )
+	{
+		auto format = GetFormat();
+		if( format != Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM &&
+			format != Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM &&
+			format != Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM &&
+			format != Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM ) {
+			return false;
+		}
+
+		const uint32_t mipLevel = GetMipCount() - 1;
+
+		const uint32_t width = GetMipWidth( mipLevel );
+		const uint32_t height = GetMipHeight( mipLevel );
+
+		if( width == 0 || height == 0 )
+		{
+			return false;
+		}
+
+		const uint32_t pitch = GetMipPitch( mipLevel );
+		const char* data = GetMipRawData( mipLevel );
+
+		uint32_t yStep = std::min( height, uint32_t( sqrt( float( height ) ) ) );
+		uint32_t xStep = std::min( width, uint32_t( sqrt( float( width ) ) ) );
+		
+		// get the sample count, rounded up
+		uint32_t xSampleCount = uint32_t( float( width ) / float( xStep ) + 0.5f );
+		uint32_t ySampleCount = uint32_t( float( height ) / float( yStep ) + 0.5f );
+
+		// offset the grid by half of the remainder of the step
+		uint32_t xOffset = (width % xStep) / 2;
+		uint32_t yOffset = (height % yStep) / 2;
+
+		if( xOffset == 0 )
+		{
+			xOffset = xStep / 2;
+		}
+		if( yOffset == 0 )
+		{
+			yOffset = yStep / 2;
+		}
+
+		uint32_t rChannel = 0, bChannel = 0, gChannel = 0, aChannel = 0;
+
+		std::function<uint32_t( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* data )> GetPixel;
+
+		// Setup the correct get pixel function
+		switch( format ) 
+		{
+		case Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM:
+			GetPixel = []( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* data ) { return ImageUtility::GetPixelColor_BGRA( x, y, pitch, data ); };
+			break;
+		case Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM:
+			GetPixel = []( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* data ) { return ImageUtility::GetPixelColor_BGRX( x, y, pitch, data ); };
+			break;
+		case Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM:
+			GetPixel = []( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* data ) { return ImageUtility::GetPixelColor_BC1( x, y, width, pitch, data ); };
+			break;
+		default:			
+			GetPixel = []( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* data ) { return ImageUtility::GetPixelColor_BC3( x, y, width, pitch, data ); };
+			break;
+		}
+
+		// Go over the image and select the pixels every horizontal/vertical step
+		for( uint32_t x = 0; x < xSampleCount; ++x )
+		{
+			for( uint32_t y = 0; y < ySampleCount; ++y )
+			{
+				if( x * xStep + xOffset >= width ) 
+				{
+					continue;
+				}
+				if( y * yStep + yOffset >= height) 
+				{
+					continue;
+				}
+				uint32_t pixelValue = GetPixel( x * xStep + xOffset, y * yStep + yOffset, width, pitch, data );
+				rChannel += (pixelValue & 0x00ff0000) >> 16;
+				gChannel += (pixelValue & 0x0000ff00) >> 8;
+				bChannel += (pixelValue & 0x000000ff);
+				aChannel += (pixelValue & 0xff000000) >> 24;
+			}
+		}
+		
+		float multiplier = 1.0f / float( xSampleCount * ySampleCount ) / 255.f;
+		a = float(aChannel * multiplier);
+		r = float(rChannel * multiplier);
+		g = float(gChannel * multiplier);
+		b = float(bChannel * multiplier);
+
+		return true;
+	}
+	return false;
+}
+
+bool HostBitmap::GetPixel(uint32_t x, uint32_t y, float &r, float &g, float &b, float &a ) {
+	if( !IsValid() )
+	{
+		CCP_LOGERR( "GetPixel: bitmap is not valid" );
+		return false;
+	}
+
+	if( GetType() == TEX_TYPE_2D )
+	{
+		auto format = GetFormat();
+		if( format != Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM &&
+			format != Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM &&
+			format != Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM &&
+			format != Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM ) {
+			return false;
+		}
+
+		const uint32_t width = GetWidth();
+		const uint32_t height = GetHeight();
+
+		if( x > width || y > height ) {
+			CCP_LOGERR( "GetPixel: pixel index out of range. Requested pixel (%d, %d), dimensions (%d, %d)", x, y, width, height );
+			return false;
+		}
+		const uint32_t pitch = GetPitch();
+		const char* data = GetRawData();
+		unsigned int pixelValue = 0;
+		switch( format ) {
+		case Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM:
+			pixelValue = ImageUtility::GetPixelColor_BGRA( x, y, pitch, data );
+			break;
+		case Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM:
+			pixelValue = ImageUtility::GetPixelColor_BGRX( x, y, pitch, data );
+			break;
+		case Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM:
+			pixelValue = ImageUtility::GetPixelColor_BC1( x, y, width, pitch, data );
+			break;
+		case Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM:
+			pixelValue = ImageUtility::GetPixelColor_BC3( x, y, width, pitch, data );
+			break;
+		}
+		r = float( (pixelValue & 0x00ff0000) >> 16 ) / 255.f;
+		g = float( (pixelValue & 0x0000ff00) >> 8 ) / 255.f;
+		b = float( (pixelValue & 0x000000ff)  ) / 255.f;
+		a = float( (pixelValue & 0xff000000) >> 24 ) / 255.f;
+	}
 	return true;
 }
 

@@ -1,7 +1,35 @@
 #include "StdAfx.h"
+#include "TestHelpers.h"
+#include "MemoryStream.h"
 
 using namespace Tr2RenderContextEnum;
 using namespace ImageIO;
+namespace {
+
+	bool LoadBitmap( TestImage testImage, ImageIO::HostBitmap &bitmap )
+	{
+		ReadMemoryStream stream( testImage.data, testImage.dataSize );
+		return ImageIO::ReadImage( stream, ImageIO::LoadParameters( testImage.fileNameWide ), bitmap );
+	}
+
+	const TestImage s_rgbx = {
+		TEST_FILE( rgbx, dds ),
+		Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 12, 1, 1 ), nullptr };
+
+	const TestImage s_rgba = {
+		TEST_FILE( rgba, dds ),
+		Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 12, 1, 1 ), nullptr };
+
+	const TestImage s_bc1 = {
+		TEST_FILE( bc1, dds ),
+		Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_BC1_UNORM, 8, 8, 1, 4 ), nullptr };
+
+	const TestImage s_bc3 = {
+		TEST_FILE( bc3, dds ),
+		Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_BC3_UNORM, 32, 32, 1, 5 ), nullptr };
+
+}
+
 
 TEST( HostBitmap, BitmapIsInvalidBeforeCreation )
 {
@@ -661,6 +689,144 @@ TEST( HostBitmap, BitmapSizeIsSensible )
 	EXPECT_EQ( size, bmp.GetRawDataSize() );
 }
 
+
+TEST( HostBitmap, GetPixelReturnsCorrectValueForBGRXBitmaps )
+{
+	HostBitmap bitmap;
+	ASSERT_TRUE( LoadBitmap( s_rgbx, bitmap ) );
+	float r, g, b, a;
+	ASSERT_TRUE( bitmap.GetPixel( 0, 3, r, g, b, a ) );
+	EXPECT_EQ( 250, r * 255 );
+	EXPECT_EQ( 1, g * 255 );
+	EXPECT_EQ( 242, b * 255 );
+	EXPECT_EQ( 255, a * 255 );
+}
+
+
+TEST( HostBitmap, GetPixelReturnsCorrectValueForBGRABitmaps )
+{
+	HostBitmap bitmap;
+	ASSERT_TRUE( LoadBitmap( s_rgba, bitmap ) );
+	float r, g, b, a;
+	ASSERT_TRUE( bitmap.GetPixel( 4, 8, r, g, b, a ) );
+	EXPECT_EQ( 108, r * 255 );
+	EXPECT_EQ( 141, g * 255 );
+	EXPECT_EQ( 245, b * 255 );
+	EXPECT_EQ( 22, a * 255 );
+}
+
+TEST( HostBitmap, GetPixelReturnsCorrectValueForBC1Bitmaps )
+{
+	HostBitmap bitmap;
+	ASSERT_TRUE( LoadBitmap( s_bc1, bitmap ) );
+	float r, g, b, a;
+	ASSERT_TRUE( bitmap.GetPixel( 1, 0, r, g, b, a ) );
+	EXPECT_EQ( 123, r * 255 );
+	EXPECT_EQ( 125, g * 255 );
+	EXPECT_EQ( 123, b * 255 );
+	EXPECT_EQ( 255, a * 255 );
+}
+
+TEST( HostBitmap, GetPixelReturnsCorrectValueForBC3Bitmaps )
+{
+	HostBitmap bitmap;
+	ASSERT_TRUE( LoadBitmap( s_bc3, bitmap ) );
+	float r, g, b, a;
+	ASSERT_TRUE( bitmap.GetPixel( 0, 0, r, g, b, a ) );
+	EXPECT_EQ( 1.0f, r );
+	EXPECT_EQ( 1.0f, g );
+	EXPECT_EQ( 1.0f, b );
+	EXPECT_EQ( 0.0f, a );
+}
+
+TEST( HostBitmap, GetAverageColorOnBlackTextureWorks )
+{
+	HostBitmap bmp;
+	ASSERT_TRUE( bmp.Create( 4, 2, 1, PIXEL_FORMAT_B8G8R8A8_UNORM ) );
+	uint8_t pixels[] = {
+		0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+		0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,
+	};
+	memcpy( bmp.GetRawData(), pixels, sizeof( pixels ) );
+
+	float r, g, b, a;
+	ASSERT_TRUE( bmp.GetAverageColor( r, g, b, a ) );
+	EXPECT_EQ( 0, r );
+	EXPECT_EQ( 0, g );
+	EXPECT_EQ( 0, b );
+	EXPECT_EQ( 0, a );
+}
+
+TEST( HostBitmap, GetAverageColorGetsAverageOfGrid)
+{
+	HostBitmap bmp;
+	ASSERT_TRUE( bmp.Create( 4, 2, 1, PIXEL_FORMAT_B8G8R8A8_UNORM ) );
+	uint8_t pixels[] = {
+		0, 0, 0, 0,  255, 0, 0, 0,  0, 0, 0, 0,  0, 0, 255, 0,
+		0, 0, 0, 0,  0, 255, 0, 0,  0, 0, 0, 0,  0, 0, 0, 255,
+	};
+	memcpy( bmp.GetRawData(), pixels, sizeof( pixels ) );
+	float r, g, b, a;
+	ASSERT_TRUE( bmp.GetAverageColor( r, g, b, a ) );
+	EXPECT_EQ( 1.0f / 4.f, r );
+	EXPECT_EQ( 1.0f / 4.f, g );
+	EXPECT_EQ( 1.0f / 4.f, b );
+	EXPECT_EQ( 1.0f / 4.f, a );
+}
+
+TEST( HostBitmap, GetAverageColorSkipsEveryOtherPixelWhenImagesAreLargerThan128Pixels )
+{
+	HostBitmap bmp;
+	ASSERT_TRUE( bmp.Create( 16, 16, 1, PIXEL_FORMAT_B8G8R8A8_UNORM ) );
+	uint8_t pixels[256 * 4] = { };
+
+	for( uint32_t i = 0; i < 256; ++i ) {
+		uint32_t m = (i + 1) % 2;
+		pixels[i * 4] = 255 * m;
+		pixels[i * 4 + 1] = 255 * m;
+		pixels[i * 4 + 2] = 255 * m;
+		pixels[i * 4 + 3] = 255 * m;
+	}
+
+	memcpy( bmp.GetRawData(), pixels, sizeof( pixels ) );
+	float r, g, b, a;
+	ASSERT_TRUE( bmp.GetAverageColor( r, g, b, a ) );
+	EXPECT_EQ( 255, r * 255 );
+	EXPECT_EQ( 255, g * 255 );
+	EXPECT_EQ( 255, b * 255 );
+	EXPECT_EQ( 255, a * 255 );
+}
+
+TEST( HostBitmap, GetAverageColorTakesTheAverageColorOfTheImage)
+{
+	HostBitmap bmp;
+	ASSERT_TRUE( bmp.Create( 2, 2, 1, PIXEL_FORMAT_B8G8R8A8_UNORM ) );
+	uint8_t pixelChoice[4 * 4] = {
+		123, 60, 1, 0,
+		255, 0, 0, 255,
+		0, 255, 0, 0,
+		255, 0, 255, 0,
+	};
+	uint8_t pixels[4 * 4] = {};
+
+	for( uint32_t i = 0; i < 4; ++i ) {
+		
+		uint32_t pixelIndex = (i % 4) * 4;
+
+		pixels[i * 4] = pixelChoice[pixelIndex];
+		pixels[i * 4 + 1] = pixelChoice[pixelIndex + 1];
+		pixels[i * 4 + 2] = pixelChoice[pixelIndex + 2];
+		pixels[i * 4 + 3] = pixelChoice[pixelIndex + 3];
+	}
+
+	memcpy( bmp.GetRawData(), pixels, sizeof( pixels ) );
+	float r, g, b, a;
+	ASSERT_TRUE( bmp.GetAverageColor( r, g, b, a ) );
+	EXPECT_EQ( (123 + 255 + 0 + 255) / 4, int( b * 255 ));
+	EXPECT_EQ( (60 + 0 + 255 + 0) / 4, int( g * 255 ));
+	EXPECT_EQ( (1 + 0 + 0 + 255) / 4, int( r * 255 ));
+	EXPECT_EQ( (0 + 255 + 0 + 0) / 4, int( a * 255 ));
+}
 
 INSTANTIATE_TEST_CASE_P( HostBitmap,
                         PixelFormatTest,

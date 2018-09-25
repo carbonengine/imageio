@@ -14,6 +14,14 @@ static uint8_t s_al_psd[] = {
 #include "resourcesInclude/al.psd.h"
 };
 
+static uint8_t s_bc1_dds[] = {
+#include "resourcesInclude/bc1.dds.h"
+};
+
+static uint8_t s_bc3_dds[] = {
+#include "resourcesInclude/bc3.dds.h"
+};
+
 static uint8_t s_l_dds[] = {
 #include "resourcesInclude/l.dds.h"
 };

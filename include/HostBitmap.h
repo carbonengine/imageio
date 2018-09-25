@@ -48,6 +48,8 @@ public:
 
 	bool GenerateMipMaps();
 	bool ConvertFormat( Tr2RenderContextEnum::PixelFormat format );
+	bool GetAverageColor( float &r, float &g, float &b, float &a );
+	bool GetPixel( uint32_t x, uint32_t y, float &r, float &g, float &b, float &a );
 
 protected:
 	bool CheckForMatch( const Tr2BitmapDimensions& bd, bool checkDimensions, bool& alphaConvert, const char* log );

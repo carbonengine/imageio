@@ -21,3 +21,4 @@
 #include "ImageIO/Tr2PngHandler.h"
 #include "ImageIO/Tr2TgaHandler.h"
 #include "ImageIO/PsdHandler.h"
+#include "ImageIO/ImageUtility.h"
