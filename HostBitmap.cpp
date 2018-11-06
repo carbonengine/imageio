@@ -796,6 +796,10 @@ bool HostBitmap::GenerateMipMaps()
 	}		
 
 	m_data.resize( "HostBitmap::m_data", size * GetArraySize() );
+	if( m_data.empty() )
+	{
+		return false;
+	}
 
 	for( uint32_t j = 0; j < GetArraySize(); ++j )
 	{
