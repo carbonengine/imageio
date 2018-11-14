@@ -35,7 +35,8 @@ namespace ImageUtility {
 	}
 
 	unsigned GetPixelColor_BC1( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* source ) {
-		unsigned index = x / 4 + (y / 4) * ((width * 3) / 4);
+		// get the block index. ((width + 3) / 4) is basically a ceiling operator!
+		unsigned index = x / 4 + (y / 4) * ((width + 3) / 4);
 		index *= GetBlockByteSize( Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM );
 		unsigned pixelValue;
 		unsigned color0 = *reinterpret_cast<const unsigned short*>(source + index);
@@ -85,7 +86,7 @@ namespace ImageUtility {
 	}
 	
 	unsigned GetPixelColor_BC3( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* source ) {
-		unsigned index = x / 4 + (y / 4) * ((width * 3) / 4);
+		unsigned index = x / 4 + (y / 4) * ((width + 3) / 4);
 		index *= GetBlockByteSize( Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM );
 		unsigned pixelValue;
 		
