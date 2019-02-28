@@ -148,7 +148,7 @@
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
       <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCore_d.lib;jpeg_d.lib;libpng_d.lib;psapi.lib;rad_tm_win32.lib;zlib_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -180,7 +180,7 @@
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
       <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCore_d.lib;jpeg_d.lib;libpng_d.lib;psapi.lib;rad_tm_win64.lib;zlib_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -212,7 +212,7 @@
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
       <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCore.lib;jpeg.lib;libpng.lib;psapi.lib;rad_tm_win32.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -244,7 +244,7 @@
     <Link>
       <GenerateDebugInformation>True</GenerateDebugInformation>
       <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalDependencies>CcpCore.lib;jpeg.lib;libpng.lib;psapi.lib;rad_tm_win64.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -275,7 +275,7 @@
       <RuntimeTypeInfo>True</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>True</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
@@ -309,7 +309,7 @@
       <RuntimeTypeInfo>True</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CcpSdkPath)/zlib/1.2.11/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libjpg/jpeg-9b/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)/libpng/1.6.29/lib/$(Platform)/$(PlatformToolset);$(CcpSdkPath)\telemetry\3.0.1.1008\lib;../../../carbon/autobuild/CcpCore/$(Platform)/$(PlatformToolset)/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>True</GenerateDebugInformation>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <AdditionalAppleFrameworks>CoreFoundation;%(AdditionalAppleFrameworks)</AdditionalAppleFrameworks>
