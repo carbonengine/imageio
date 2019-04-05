@@ -28,6 +28,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{82BC94E8-0F17-33C6-2A7D-D8E7375A221E}</ProjectGuid>
+    <ProjectName>ImageIO</ProjectName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <PlatformToolset>v100</PlatformToolset>
