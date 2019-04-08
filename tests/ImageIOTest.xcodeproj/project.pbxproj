@@ -459,11 +459,11 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
 					);
@@ -484,7 +484,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				SDKROOT = macosx;
-				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override -Wno-deprecated-register -Wno-pragma-pack";
 				};
 			name = Release;
 			};
@@ -550,7 +550,7 @@
 			name = libjpeg.a;
 			fileEncoding = 4;
 			lastKnownFileType = archive.ar;
-			path = "../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsXx86_64/libjpeg.a";
+			path = "../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsXx86_64/clang4.2/libjpeg.a";
 			isa = PBXFileReference;
 			sourceTree = "<group>";
 			};
@@ -786,12 +786,12 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
 					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
 					"../../autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					);
@@ -813,7 +813,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				SDKROOT = macosx;
-				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override -Wno-deprecated-register -Wno-pragma-pack";
 				};
 			name = Release;
 			};
@@ -1145,11 +1145,11 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				LIBRARY_SEARCH_PATHS = (
-					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)",
 					"../../autobuild/ImageIO/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/googletest/1.6.0/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/zlib/1.2.11/lib/MacOsX$(ARCHS)",
 					"../../../../../../sdk/telemetry/3.0.1.1008/lib",
+					"../../../../../../sdk/libjpg/jpeg-9b/lib/MacOsX$(ARCHS)/clang4.2",
 					"../../../carbon/autobuild/CcpCore/MacOsX$(ARCHS)/clang4.2/",
 					"../../../../../../sdk/libpng/1.6.29/lib/MacOsX$(ARCHS)/clang4.2",
 					);
@@ -1171,7 +1171,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				SDKROOT = macosx;
-				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override";
+				WARNING_CFLAGS = "-Wno-nonportable-include-path -Wno-inconsistent-missing-override -Wno-deprecated-register -Wno-pragma-pack";
 				};
 			name = Release;
 			};
