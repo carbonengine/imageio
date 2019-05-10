@@ -329,8 +329,8 @@ bool HostBitmap::ConvertFormat( Tr2RenderContextEnum::PixelFormat format )
 		return true;
 	}
 
-	if( ( format == PIXEL_FORMAT_B8G8R8A8_UNORM && GetFormat() == PIXEL_FORMAT_R8_UNORM   ) ||
-		( format == PIXEL_FORMAT_B8G8R8A8_UNORM && GetFormat() == PIXEL_FORMAT_R8G8_UNORM ) )
+	if( ( format == PIXEL_FORMAT_B8G8R8A8_UNORM && ( GetFormat() == PIXEL_FORMAT_R8_UNORM || GetFormat() == PIXEL_FORMAT_R8G8_UNORM ) ) ||
+		( format == PIXEL_FORMAT_B8G8R8X8_UNORM && GetFormat() == PIXEL_FORMAT_R8_UNORM ) )
 	{
 		size_t pixelCount = GetRawDataSize() / Tr2RenderContextEnum::GetBytesPerPixel( GetFormat() );
 		uint8_t* oldData = (unsigned char*)CCP_MALLOC( "HostBitmap::ConvertFormat", GetRawDataSize() );
