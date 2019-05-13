@@ -745,7 +745,7 @@ bool HostBitmap::ConvertToVolume()
 // --------------------------------------------------------------------------------------
 bool HostBitmap::GenerateMipMaps()
 {
-	if( m_type != TEX_TYPE_2D || m_arraySize > 1 )
+	if( m_type != TEX_TYPE_2D && m_type != TEX_TYPE_CUBE )
 	{
 		return false;
 	}
