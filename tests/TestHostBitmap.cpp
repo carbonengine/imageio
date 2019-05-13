@@ -558,13 +558,6 @@ TEST( HostBitmap, CanConvertL8A8ToB8G8R8A8 )
 	}
 }
 
-TEST( HostBitmap, GenerateMipmapsFailsForCubeMap )
-{
-	HostBitmap bmp;
-	ASSERT_TRUE( bmp.CreateCube( 8, 1, PIXEL_FORMAT_B8G8R8A8_UNORM ) );
-	EXPECT_FALSE( bmp.GenerateMipMaps() );
-}
-
 TEST( HostBitmap, GenerateMipmapsFailsForNon8BitsPerChannelImages )
 {
 	PixelFormat formats[] = {
