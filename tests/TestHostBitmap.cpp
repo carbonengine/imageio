@@ -326,20 +326,6 @@ TEST( HostBitmap, Downsample2x2FailsForOddBitmapSize )
 	EXPECT_FALSE( bmp.Downsample2x2() );
 }
 
-TEST( HostBitmap, Downsample2x2FailsForBitmapWithMips )
-{
-	HostBitmap bmp;
-	ASSERT_TRUE( bmp.Create( 8, 8, 2, PIXEL_FORMAT_B8G8R8A8_UNORM ) );
-	EXPECT_FALSE( bmp.Downsample2x2() );
-}
-
-TEST( HostBitmap, Downsample2x2FailsForCubeBitmap )
-{
-	HostBitmap bmp;
-	ASSERT_TRUE( bmp.CreateCube( 8, 1, PIXEL_FORMAT_B8G8R8A8_UNORM ) );
-	EXPECT_FALSE( bmp.Downsample2x2() );
-}
-
 TEST( HostBitmap, Downsample2x2FailsForVolumeBitmap )
 {
 	HostBitmap bmp;
