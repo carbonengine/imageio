@@ -577,43 +577,94 @@ bool HostBitmap::PopulateMargin( unsigned margin )
 
 bool HostBitmap::Downsample2x2()
 {
-	if( !IsValid() || ( m_width & 1 ) || ( m_height & 1 ) || m_mipCount != 1 || m_type != TEX_TYPE_2D || m_arraySize > 1 )
+	if( !IsValid() || ( m_width & 1 ) || ( m_height & 1 ) || ( m_type != TEX_TYPE_2D && m_type != TEX_TYPE_CUBE ) )
 	{
-		CCP_LOGWARN( "Downsample2x2 only works with valid, even sized, single miplevel bitmaps" );
+		CCP_LOGWARN( "Downsample2x2 only works with valid, even sized bitmaps" );
 		return false;
 	}
 
-	if( m_format != PIXEL_FORMAT_B8G8R8A8_UNORM &&
-		m_format != PIXEL_FORMAT_B8G8R8X8_UNORM )
+	auto format = GetFormat();
+	switch( format )
 	{
-		CCP_LOGWARN( "Downsample2x2 only works with BGRA or BGRX, UNORM" );
+	case PIXEL_FORMAT_R8G8B8A8_TYPELESS:
+	case PIXEL_FORMAT_R8G8B8A8_UNORM:
+	case PIXEL_FORMAT_R8G8B8A8_UNORM_SRGB:
+	case PIXEL_FORMAT_R8G8B8A8_UINT:
+	case PIXEL_FORMAT_R8G8B8A8_SNORM:
+	case PIXEL_FORMAT_R8G8B8A8_SINT:
+	case PIXEL_FORMAT_R8G8_TYPELESS:
+	case PIXEL_FORMAT_R8G8_UNORM:
+	case PIXEL_FORMAT_R8G8_UINT:
+	case PIXEL_FORMAT_R8G8_SNORM:
+	case PIXEL_FORMAT_R8G8_SINT:
+	case PIXEL_FORMAT_R8_TYPELESS:
+	case PIXEL_FORMAT_R8_UNORM:
+	case PIXEL_FORMAT_R8_UINT:
+	case PIXEL_FORMAT_R8_SNORM:
+	case PIXEL_FORMAT_R8_SINT:
+	case PIXEL_FORMAT_A8_UNORM:
+	case PIXEL_FORMAT_B8G8R8A8_UNORM:
+	case PIXEL_FORMAT_B8G8R8X8_UNORM:
+	case PIXEL_FORMAT_B8G8R8A8_TYPELESS:
+	case PIXEL_FORMAT_B8G8R8A8_UNORM_SRGB:
+	case PIXEL_FORMAT_B8G8R8X8_TYPELESS:
+	case PIXEL_FORMAT_B8G8R8X8_UNORM_SRGB:
+		break;
+	default:
+		CCP_LOGWARN( "Downsample2x2 does not support this pixel format" );
 		return false;
 	}
 
 	const uint8_t* src = (const uint8_t*)m_data.get();
 		  uint8_t* dst = (uint8_t*)m_data.get();
+	const unsigned bpp = GetBytesPerPixel( m_format );
 
-	for( unsigned j = 0; j != m_height/2; ++j )
+	unsigned newMipCount = std::max( m_mipCount - 1, 1u );
+
+	for( unsigned l = 0; l < m_arraySize; l++ )
 	{
-		for( unsigned i = 0; i != m_width/2; ++i )
+		unsigned curWidth = m_width, curHeight = m_height;
+		for( unsigned k = 0; k < newMipCount; k++, curWidth /= 2, curHeight /= 2 )
 		{
-			for( unsigned byte = 0; byte != 4; ++byte, ++src, ++dst )
+			for( unsigned j = 0; j != curHeight/2; ++j )
 			{
-				unsigned sum = src[0] + src[4] + src[m_width*4] + src[m_width*4+4];
-				*dst = (uint8_t)(sum / 4);
+				for( unsigned i = 0; i != curWidth/2; ++i )
+				{
+					for( unsigned byte = 0; byte < bpp; ++byte, ++src, ++dst )
+					{
+						unsigned sum = src[0] + src[bpp] + src[curWidth*bpp] + src[curWidth*bpp + bpp];
+						*dst = (uint8_t)( sum / 4 );
+					}
+					src += bpp;
+				}
+				src += curWidth * bpp;
 			}
-			src += 4;
 		}
-		src += m_width * 4;
+
+		// Skip lowest mip level, but only if we had any mips to begin with
+		if( m_mipCount != 1 )
+		{
+			src += curHeight * curWidth * bpp;
+		}
 	}
-	CCP_ASSERT( (void*)src == m_data.get() + m_width * m_height * 4 );
+
+	uint32_t mipCount = newMipCount;
+	uint32_t width = m_width;
+	uint32_t height = m_height;
+
+	size_t size = 0;
+	while( mipCount-- )
+	{
+		size += width * height * bpp;
+		width = std::max( width / 2u, 1u );
+		height = std::max( height / 2u, 1u );
+	}
+
 	m_width  /= 2;
 	m_height /= 2;
-	CCP_ASSERT( (void*)dst == m_data.get() + m_width * m_height * 4 );
-	
-	const size_t newSize = m_width * m_height * 4;
+	m_mipCount = newMipCount;
 
-	m_data.resize( "HostBitmap::m_data", newSize );
+	m_data.resize( "HostBitmap::m_data", size * m_arraySize );
 
 	if( m_data.empty() )
 	{
