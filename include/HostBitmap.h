@@ -39,14 +39,19 @@ public:
 
 	bool PopulateMargin( unsigned margin );
 
+	bool CopyChannel( HostBitmap *source, unsigned srcChannel, unsigned dstChannel );
+
 	bool Downsample2x2();
 	bool Crop( unsigned left, unsigned top, unsigned right, unsigned bottom );
 
+	bool RotateFaceClockwise( unsigned face, unsigned times );
+	bool ConvertCrossmapToCubemap();
 	bool ConvertToVolume();
 
 	bool ChangeFormat( Tr2RenderContextEnum::PixelFormat format );
 
-	bool GenerateMipMaps();
+	bool GenerateMipMaps( unsigned levels = 0 );
+	bool DropMipMaps();
 	bool ConvertFormat( Tr2RenderContextEnum::PixelFormat format );
 	bool GetAverageColor( float &r, float &g, float &b, float &a );
 	bool GetPixel( uint32_t x, uint32_t y, float &r, float &g, float &b, float &a );

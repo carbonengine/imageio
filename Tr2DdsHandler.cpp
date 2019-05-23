@@ -242,6 +242,7 @@ void CacheSupportedFormats()
 	s_supportedFormats.insert( FOURCC_ATI2 );
 	s_supportedFormats.insert( DDSFMT_X8R8G8B8 );
 	s_supportedFormats.insert( DDSFMT_A8R8G8B8 );
+	s_supportedFormats.insert( DDSFMT_A8B8G8R8 );
 	s_supportedFormats.insert( DDSFMT_R5G6B5 );
 	s_supportedFormats.insert( DDSFMT_X1R5G5B5 );
 	s_supportedFormats.insert( DDSFMT_A1R5G5B5 );

@@ -329,6 +329,25 @@ bool HostBitmap::ConvertFormat( Tr2RenderContextEnum::PixelFormat format )
 		return true;
 	}
 
+	if( ( format == PIXEL_FORMAT_R8G8B8A8_UNORM && ( GetFormat() == PIXEL_FORMAT_B8G8R8A8_UNORM || GetFormat() == PIXEL_FORMAT_B8G8R8X8_UNORM ) ) || 
+		( GetFormat() == PIXEL_FORMAT_R8G8B8A8_UNORM && ( format == PIXEL_FORMAT_B8G8R8A8_UNORM || format == PIXEL_FORMAT_B8G8R8X8_UNORM ) ) )
+	{
+		char *data = m_data.get();
+		size_t size = GetRawDataSize();
+		unsigned bpp = GetBytesPerPixel( GetFormat() );
+
+		for( unsigned i = 0; i < size-2; i += bpp )
+		{
+			char tmp = data[i];
+			data[i] = data[i+2];
+			data[i+2] = tmp;
+		}
+
+		m_format = format;
+
+		return true;
+	}
+
 	if( ( format == PIXEL_FORMAT_B8G8R8A8_UNORM && ( GetFormat() == PIXEL_FORMAT_R8_UNORM || GetFormat() == PIXEL_FORMAT_R8G8_UNORM ) ) ||
 		( format == PIXEL_FORMAT_B8G8R8X8_UNORM && GetFormat() == PIXEL_FORMAT_R8_UNORM ) )
 	{
@@ -443,7 +462,7 @@ const char* HostBitmap::GetMipRawData( unsigned level, uint32_t arrayIndex ) con
 
 	if( arrayIndex > 0 )
 	{
-		unsigned faceSize = (unsigned int)m_data.size() / GetArraySize(); // is it safe to assume this?
+		unsigned faceSize = (unsigned int)( m_data.size() / GetArraySize() ); // is it safe to assume this?
 		offset += faceSize * arrayIndex;
 	}
 
@@ -575,6 +594,54 @@ bool HostBitmap::PopulateMargin( unsigned margin )
 	return true;
 }
 
+bool HostBitmap::CopyChannel( HostBitmap *source, unsigned srcChannel, unsigned dstChannel )
+{
+	if( !IsValid() || IsCompressed() || !source->IsValid() || source->IsCompressed() )
+	{
+		CCP_LOGWARN( "HostBitmap.CopyChannel: Need a valid uncompressed bitmap" );
+		return false;
+	}
+
+	if( m_type != source->m_type || m_arraySize != source->m_arraySize || m_mipCount != source->m_mipCount || m_width != source->m_width || m_height != source->m_height )
+	{
+		CCP_LOGWARN( "HostBitmap.CopyChannel: Bitmaps need same type and dimensions" );
+		return false;
+	}
+
+	unsigned dstBPP = GetBytesPerPixel( GetFormat() );
+	unsigned srcBPP = GetBytesPerPixel( source->GetFormat() );
+
+	if( dstChannel >= dstBPP )
+	{
+		CCP_LOGWARN( "HostBitmap.CopyChannel: Destination channel out of range" );
+		return false;
+	}
+
+	if( srcChannel >= srcBPP )
+	{
+		CCP_LOGWARN( "HostBitmap.CopyChannel: Source channel out of range" );
+		return false;
+	}
+
+	if( source == this && srcChannel == dstChannel )
+	{
+		return true;
+	}
+
+	size_t dstSize = GetRawDataSize();
+	size_t srcSize = source->GetRawDataSize();
+
+	const char *src = source->GetRawData();
+	char *dst = GetRawData();
+
+	for( unsigned srcPos = srcChannel, dstPos = dstChannel; dstPos < dstSize && srcPos < srcSize; srcPos += srcBPP, dstPos += dstBPP )
+	{
+		dst[dstPos] = src[srcPos];
+	}
+
+	return true;
+}
+
 bool HostBitmap::Downsample2x2()
 {
 	if( !IsValid() || ( m_width & 1 ) || ( m_height & 1 ) || ( m_type != TEX_TYPE_2D && m_type != TEX_TYPE_CUBE ) )
@@ -648,6 +715,10 @@ bool HostBitmap::Downsample2x2()
 		}
 	}
 
+	m_mipCount = newMipCount;
+	m_width /= 2;
+	m_height /= 2;
+
 	uint32_t mipCount = newMipCount;
 	uint32_t width = m_width;
 	uint32_t height = m_height;
@@ -659,10 +730,6 @@ bool HostBitmap::Downsample2x2()
 		width = std::max( width / 2u, 1u );
 		height = std::max( height / 2u, 1u );
 	}
-
-	m_width  /= 2;
-	m_height /= 2;
-	m_mipCount = newMipCount;
 
 	m_data.resize( "HostBitmap::m_data", size * m_arraySize );
 
@@ -710,6 +777,178 @@ bool HostBitmap::Crop( unsigned left, unsigned top, unsigned right, unsigned bot
 	m_width = right - left;
 	m_height = bottom - top;
 	m_data.resize( "HostBitmap::m_data", m_width * m_height * bpp );
+	return true;
+}
+
+// --------------------------------------------------------------------------------
+// Description:
+//   Rotates a face clockwise a multiple of 90 degrees
+// --------------------------------------------------------------------------------
+bool HostBitmap::RotateFaceClockwise( unsigned face, unsigned times )
+{
+	if( !IsValid() )
+	{
+		return false;
+	}
+
+	if( ( GetType() != TEX_TYPE_2D && GetType() != TEX_TYPE_CUBE ) || GetMipCount() > 1 )
+	{
+		CCP_LOGERR( "HostBitmap.RotateFaceClockwise requires 2D/CUBE bitmap with a single mip level" );
+		return false;
+	}
+
+	if( face >= GetArraySize() )
+	{
+		CCP_LOGERR( "HostBitmap.RotateFaceClockwise: index out of range" );
+		return false;
+	}
+
+	if( GetWidth() != GetHeight() )
+	{
+		CCP_LOGERR( "HostBitmap.RotateFaceClockwise: width must be equal to height" );
+		return false;
+	}
+	
+	if( IsCompressedFormat( GetFormat() ) )
+	{
+		CCP_LOGERR( "HostBitmap.RotateFaceClockwise: don't support compressed images" );
+		return false;
+	}
+
+	times = times % 4;
+	if( !times )
+	{
+		return true;
+	}
+
+	unsigned size = GetWidth();
+	unsigned pitch = GetPitch();
+	unsigned bpp = GetBytesPerPixel( m_format );
+
+	CcpMallocBuffer newData( "HostBitmap::m_data", GetRawDataSize() );
+	if( newData.empty() )
+	{
+		CCP_LOGERR( "HostBitmap.RotateFaceClockwise: out of memory" );
+		return false;
+	}
+
+	const char *srcRaw = GetRawData();
+	char *dstRaw = newData.get();
+
+	memcpy( dstRaw, srcRaw, GetRawDataSize() );
+
+	unsigned offset = pitch * size * face;
+	const char *srcOffset = srcRaw + offset;
+	char *dstOffset = dstRaw + offset;
+
+	for( unsigned oldX = 0; oldX < size; oldX++ )
+	{
+		for( unsigned oldY = 0; oldY < size; oldY++ )
+		{
+			unsigned newX = oldX, newY = oldY;
+			for( unsigned i = 0; i < times; i++ )
+			{
+				unsigned y = newX;
+				newX = size - 1 - newY;
+				newY = y;
+			}
+
+			const char *src = srcOffset + ( oldX + oldY * size ) * bpp;
+			char *dst = dstOffset + ( newX + newY * size ) * bpp;
+			for( unsigned k = 0; k < bpp; ++k )
+			{
+				dst[k] = src[k];
+			}
+		}
+	}
+
+	std::swap( m_data, newData );
+
+	return true;
+}
+
+// --------------------------------------------------------------------------------
+// Description:
+//   Convert a 2D 3x4 crossmap to a cubemap
+// --------------------------------------------------------------------------------
+bool HostBitmap::ConvertCrossmapToCubemap()
+{
+	if( !IsValid() )
+	{
+		return false;
+	}
+
+	if( GetType() != TEX_TYPE_2D || m_arraySize > 1 )
+	{
+		CCP_LOGERR( "HostBitmap.ConvertCrossmapToCubemap requires a 2D bitmap" );
+		return false;
+	}
+	
+	if( GetMipCount() != 1 )
+	{
+		CCP_LOGERR( "HostBitmap.ConvertCrossmapToCubemap: Bitmap has mips. Use DropMipMaps() first." );
+		return false;
+	}
+
+	// only support a single type crossmap for now
+	if( GetWidth() % 3 != 0 || GetHeight() % 4 != 0 || GetWidth() / 3 != GetHeight() / 4 )
+	{
+		CCP_LOGERR( "HostBitmap.ConvertCrossmapToCubemap: source image does not represent a 3:4 crossmap!" );
+		return false;
+	}
+	
+	if( IsCompressedFormat( GetFormat() ) )
+	{
+		CCP_LOGERR( "HostBitmap.ConvertCrossmapToCubemap: don't support compressed images" );
+		return false;
+	}
+
+	unsigned cubeSize = GetWidth() / 3;
+
+	unsigned srcPitch = GetPitch();
+	unsigned dstPitch = cubeSize * GetBytesPerPixel( m_format );
+
+	unsigned faceOffsets[] =
+	{
+		srcPitch * cubeSize + srcPitch / 3 * 2,
+		srcPitch * cubeSize,
+		srcPitch / 3,
+		srcPitch * cubeSize * 2 + srcPitch / 3,
+		srcPitch * cubeSize + srcPitch / 3,
+		srcPitch * cubeSize * 3 + srcPitch / 3,
+	};
+
+	CcpMallocBuffer newData( "HostBitmap::m_data", dstPitch * cubeSize * 6 );
+	if( newData.empty() )
+	{
+		CCP_LOGERR( "HostBitmap.ConvertCrossmapToCubemap: out of memory" );
+		return false;
+	}
+
+	const char *srcRaw = GetRawData();
+	char *dstRaw = newData.get();
+
+	for( unsigned face = 0; face < 6; face++ )
+	{
+		const char *srcOffset = srcRaw + faceOffsets[face];
+		char *dstOffset = dstRaw + face * cubeSize * dstPitch;
+
+		for( unsigned line = 0; line < cubeSize; ++line )
+		{
+			const char* srcLine = srcOffset + line * srcPitch;
+			char* destLine = dstOffset + line * dstPitch;
+			memcpy( destLine, srcLine, dstPitch );
+		}
+	}
+
+	std::swap( m_data, newData );
+
+	m_type = TEX_TYPE_CUBE;
+	m_width = m_height = cubeSize;
+	m_arraySize = 6;
+
+	RotateFaceClockwise( 5, 2 );
+
 	return true;
 }
 
@@ -794,9 +1033,9 @@ bool HostBitmap::ConvertToVolume()
 //   true When conversion was successful
 //   false Otherwise
 // --------------------------------------------------------------------------------------
-bool HostBitmap::GenerateMipMaps()
+bool HostBitmap::GenerateMipMaps( unsigned levels )
 {
-	if( m_type != TEX_TYPE_2D && m_type != TEX_TYPE_CUBE )
+	if( ( m_type != TEX_TYPE_2D && m_type != TEX_TYPE_CUBE ) || m_mipCount > 1 )
 	{
 		return false;
 	}
@@ -832,9 +1071,22 @@ bool HostBitmap::GenerateMipMaps()
 		return false;
 	}
 
-	uint32_t bkMipCount = m_mipCount;
 	m_mipCount = 0;
 	uint32_t mipCount = GetTrueMipCount();
+	if( levels )
+	{
+		if( levels > mipCount )
+		{
+			return false;
+		}
+
+		mipCount = levels;
+	}
+	else
+	{
+		levels = mipCount;
+	}
+
 	uint32_t width = m_width;
 	uint32_t height = m_height;
 
@@ -843,8 +1095,10 @@ bool HostBitmap::GenerateMipMaps()
 	{
 		size += width * height * GetBytesPerPixel( format );
 		width  = std::max( width  / 2u, 1u );
-		height = std::max( height / 2u, 1u );			
-	}		
+		height = std::max( height / 2u, 1u );
+	}
+
+	size_t originalSize = m_data.size();
 
 	m_data.resize( "HostBitmap::m_data", size * GetArraySize() );
 	if( m_data.empty() )
@@ -852,21 +1106,26 @@ bool HostBitmap::GenerateMipMaps()
 		return false;
 	}
 
-	for( uint32_t j = 0; j < GetArraySize(); ++j )
+	for( int32_t j = GetArraySize() - 1; j >= 0; --j )
 	{
 		width = m_width;
 		height = m_height;
-		for( unsigned i = 0; i + 1 < GetTrueMipCount(); ++i )
+
+		size_t topSize = width * height * GetBytesPerPixel( m_format );
+		memcpy( m_data.get() + m_data.size() / GetArraySize() * j, m_data.get() + originalSize / GetArraySize() * j, topSize );
+
+		for( unsigned i = 0; i + 1 < levels; ++i )
 		{
 			if( !GenerateMipLevel( reinterpret_cast<uint8_t*>( GetMipRawData( i, j ) ), width, height, reinterpret_cast<uint8_t*>( GetMipRawData( i + 1, j ) ) ) )
 			{
-				m_mipCount = bkMipCount;
 				return false;
 			}
 			width = std::max( width / 2, 1u );
 			height = std::max( height / 2, 1u );
 		}
 	}
+	m_mipCount = levels;
+
 	return true;
 }
 
@@ -903,6 +1162,37 @@ bool HostBitmap::GenerateMipLevel( uint8_t* source, unsigned width, unsigned hei
 		src00 = std::min( right0 + bpp + vertStep, bottom );
 		src01 = std::min( right1 + bpp + vertStep, bottom );
 	}
+
+	return true;
+}
+
+// --------------------------------------------------------------------------------------
+// Description:
+//   Removes mipmaps from the image. Only 2D images and formats with 8bits per 
+//   channel are supported.
+// Return Value:
+//   Will always return true, unless the bitmap is invalid
+// --------------------------------------------------------------------------------------
+bool HostBitmap::DropMipMaps()
+{
+	if( !IsValid() )
+	{
+		CCP_LOGERR( "HostBitmap.DropMipMaps: bitmap is not valid" );
+		return false;
+	}
+
+	if( m_mipCount == 1 )
+	{
+		return true;
+	}
+
+	size_t size = GetMipRawData( 1, 0 ) - GetRawData();
+	for( unsigned i = 1; i < m_arraySize; i++ ) // index 0 is already at the right place, skip it
+	{
+		memcpy( GetRawData() + size * i, GetMipRawData( 0, i ), size );
+	}
+	m_data.resize( "HostBitmap::m_data", size * GetArraySize() );
+	m_mipCount = 1;
 
 	return true;
 }

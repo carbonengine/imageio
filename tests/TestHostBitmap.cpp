@@ -642,7 +642,7 @@ TEST( HostBitmap, CanGenerateMipmaps )
 	memcpy( bmp.GetRawData(), pixels, sizeof( pixels ) );
 
 	EXPECT_TRUE( bmp.GenerateMipMaps() );
-	EXPECT_EQ( 0, bmp.GetMipCount() );
+	EXPECT_EQ( 3, bmp.GetMipCount() );
 	EXPECT_EQ( 3, bmp.GetTrueMipCount() );
 
 	uint8_t expectedPixels1[] = {
@@ -654,6 +654,127 @@ TEST( HostBitmap, CanGenerateMipmaps )
 		3,
 	};
 	EXPECT_EQ( 0, memcmp( expectedPixels2, bmp.GetMipRawData( 2 ), sizeof( expectedPixels2 ) ) );
+}
+
+TEST( HostBitmap, CanGenerateSpecificNumberOfMipmaps )
+{
+	HostBitmap bmp;
+	ASSERT_TRUE( bmp.Create( 5, 3, 1, PIXEL_FORMAT_A8_UNORM ) );
+	EXPECT_TRUE( bmp.GenerateMipMaps( 2 ) );
+	EXPECT_EQ( 2, bmp.GetMipCount() );
+}
+
+TEST( HostBitmap, CanDropMipmaps )
+{
+	HostBitmap bmp;
+	ASSERT_TRUE( bmp.Create( 5, 3, 1, PIXEL_FORMAT_A8_UNORM ) );
+	uint8_t pixels[15] = {};
+	memcpy( bmp.GetRawData(), pixels, sizeof( pixels ) );
+
+	EXPECT_TRUE( bmp.GenerateMipMaps() );
+	EXPECT_EQ( 3, bmp.GetMipCount() );
+
+	EXPECT_TRUE( bmp.DropMipMaps() );
+	EXPECT_EQ( 1, bmp.GetMipCount() );
+}
+
+TEST( HostBitmap, CanCopyChannel )
+{
+	HostBitmap bmp1, bmp2;
+	ASSERT_TRUE( bmp1.Create( 5, 3, 1, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	ASSERT_TRUE( bmp2.Create( 5, 3, 1, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	
+	EXPECT_TRUE( bmp1.CopyChannel( &bmp2, 3, 3 ) );
+	EXPECT_TRUE( bmp1.CopyChannel( &bmp1, 0, 1 ) );
+}
+
+TEST( HostBitmap, CannotCopyChannelBetweenIncompatibleBitmaps )
+{
+	HostBitmap bmp1, bmp2;
+
+	ASSERT_TRUE( bmp1.Create2DArray( 5, 3, 1, 3, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	ASSERT_TRUE( bmp2.Create2DArray( 5, 3, 1, 2, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	EXPECT_FALSE( bmp1.CopyChannel( &bmp2, 3, 3 ) );
+
+	ASSERT_TRUE( bmp1.Create( 5, 3, 1, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	ASSERT_TRUE( bmp2.Create2DArray( 5, 3, 1, 2, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	EXPECT_FALSE( bmp1.CopyChannel( &bmp2, 3, 3 ) );
+	
+	ASSERT_TRUE( bmp1.Create( 5, 4, 1, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	ASSERT_TRUE( bmp2.Create( 5, 3, 1, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	EXPECT_FALSE( bmp1.CopyChannel( &bmp2, 3, 3 ) );
+	
+	ASSERT_TRUE( bmp1.Create( 5, 3, 1, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	ASSERT_TRUE( bmp2.Create( 4, 3, 1, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	EXPECT_FALSE( bmp1.CopyChannel( &bmp2, 3, 3 ) );
+	
+	ASSERT_TRUE( bmp1.Create( 5, 3, 2, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	ASSERT_TRUE( bmp2.Create( 5, 3, 1, PIXEL_FORMAT_B8G8R8A8_UNORM) );
+	EXPECT_FALSE( bmp1.CopyChannel( &bmp2, 3, 3 ) );
+}
+
+TEST( HostBitmap, CanRotateBitmap )
+{
+	HostBitmap bmp;
+	ASSERT_TRUE( bmp.Create( 3, 3, 1, PIXEL_FORMAT_A8_UNORM ) );
+	uint8_t pixels[] = {
+		1, 2, 3,
+		4, 5, 6,
+		7, 8, 9
+	};
+	uint8_t pixelsRotated90[] = {
+		7, 4, 1,
+		8, 5, 2,
+		9, 6, 3
+	};
+	uint8_t pixelsRotated180[] = {
+		9, 8, 7,
+		6, 5, 4,
+		3, 2, 1
+	};
+	memcpy( bmp.GetRawData(), pixels, sizeof( pixels ) );
+
+	EXPECT_TRUE( bmp.RotateFaceClockwise( 0, 1 ) );
+
+	for( unsigned i = 0; i < 9; i++ )
+	{
+		EXPECT_EQ( bmp.GetRawData()[i], pixelsRotated90[i] );
+	}
+
+	EXPECT_TRUE( bmp.RotateFaceClockwise( 0, 5 ) );
+
+	for( unsigned i = 0; i < 9; i++ )
+	{
+		EXPECT_EQ( bmp.GetRawData()[i], pixelsRotated180[i] );
+	}
+
+	ASSERT_TRUE( bmp.Create2DArray( 3, 3, 1, 2, PIXEL_FORMAT_A8_UNORM ) );
+	uint8_t pixels2D[] = {
+		1, 2, 3,
+		4, 5, 6,
+		7, 8, 9,
+
+		10,11,12, 
+		13,14,15,
+		16,17,18,
+	};
+	uint8_t pixels2DRotated270[] = {
+		1, 2, 3,
+		4, 5, 6,
+		7, 8, 9,
+
+		12,15,18, 
+		11,14,17,
+		10,13,16,
+	};
+	memcpy( bmp.GetRawData(), pixels2D, sizeof( pixels2D ) );
+
+	EXPECT_TRUE( bmp.RotateFaceClockwise( 1, 3 ) );
+
+	for( unsigned i = 0; i < 18; i++ )
+	{
+		EXPECT_EQ( bmp.GetRawData()[i], pixels2DRotated270[i] );
+	}
 }
 
 TEST( HostBitmap, BitmapSizeIsSensible )
