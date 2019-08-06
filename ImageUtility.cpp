@@ -59,7 +59,7 @@ namespace ImageUtility {
 			case 2:
 				pixelValue = ConvertBGR565A8ToBGRA8( (2 * color0 + color1) / 3, 255 );
 				break;
-			case 3:
+			default:
 				pixelValue = ConvertBGR565A8ToBGRA8( (color0 + 2 * color1) / 3, 255 );
 				break;
 			}
@@ -77,7 +77,7 @@ namespace ImageUtility {
 			case 2:
 				pixelValue = ConvertBGR565A8ToBGRA8( (color0 + color1) / 2, 255 );
 				break;
-			case 3:
+			default:
 				pixelValue = ConvertBGR565A8ToBGRA8( (color0 + 2 * color1) / 3, 0 );
 				break;
 			}
@@ -145,7 +145,7 @@ namespace ImageUtility {
 		case 2:
 			pixelValue = color2 | alphaValue;
 			break;
-		case 3:
+		default:
 			pixelValue = color3 | alphaValue;
 			break;
 		}

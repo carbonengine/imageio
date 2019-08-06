@@ -472,7 +472,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParamet
 	ON_BLOCK_EXIT( [&] { png_destroy_read_struct( &png, &info, 0 ); } );
 
 	Tr2BitmapDimensions dimensions;
-	uint32_t channels, bitsPerPixel;
+	uint32_t channels = 0, bitsPerPixel = 0;
 	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, loadParameters, dimensions, metadata, png, info, channels, bitsPerPixel ) );
 
 	if( !bitmap.CreateFromBitmapDimensions( dimensions ) )

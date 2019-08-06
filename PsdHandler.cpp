@@ -300,7 +300,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParamet
 {
 	Tr2BitmapDimensions dimensions;
 	Header header;
-	uint16_t compression;
+	uint16_t compression = 0;
 	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, dimensions, header, compression ) );
 
 	if( metadata )

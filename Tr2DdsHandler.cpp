@@ -919,9 +919,9 @@ bool IsDdsExtension( const wchar_t* ext )
 Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata )
 {
 	Tr2BitmapDimensions dimensions;
-	DDS_HEADER header;
-	DDS_HEADER_DXT10 headerDxt10;
-	size_t skipBytes;
+	DDS_HEADER header = DDS_HEADER();
+	DDS_HEADER_DXT10 headerDxt10 = DDS_HEADER_DXT10();
+	size_t skipBytes = 0;
 	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, loadParameters, dimensions, header, headerDxt10, skipBytes ) );
 
 	if( metadata )

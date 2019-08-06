@@ -1227,8 +1227,8 @@ bool HostBitmap::GetAverageColor(float &r, float &g, float &b, float &a) {
 		const uint32_t pitch = GetMipPitch( mipLevel );
 		const char* data = GetMipRawData( mipLevel );
 
-		uint32_t yStep = std::min( height, uint32_t( sqrt( float( height ) ) ) );
-		uint32_t xStep = std::min( width, uint32_t( sqrt( float( width ) ) ) );
+        uint32_t yStep = std::min( height, std::max( 1u, uint32_t( sqrt( float( height ) ) ) ) );
+		uint32_t xStep = std::min( width, std::max( 1u, uint32_t( sqrt( float( width ) ) ) ) );
 		
 		// get the sample count, rounded up
 		uint32_t xSampleCount = uint32_t( float( width ) / float( xStep ) + 0.5f );
