@@ -8,6 +8,7 @@
 #include "StdAfx.h"
 #include "Tr2TgaHandler.h"
 #include "HostBitmap.h"
+#include "CcpMetadata.h"
 
 using namespace Tr2RenderContextEnum;
 
@@ -73,7 +74,26 @@ struct Header
 	uint8_t bpp;
 	uint8_t imageDescriptor;
 };
+
+struct Footer
+{
+	uint32_t extensionOffset;
+	uint32_t developerAreaOffset;
+	char signature[18];
+};
+
+struct DeveloperAreaEntry
+{
+	uint16_t tag;
+	uint32_t offset;
+	uint32_t size;
+};
+
 #pragma pack(pop)
+
+static const uint16_t CCP_DEVELOPER_TAG = ( 'C' << 8 ) | 'P';
+static const char* EXPECTED_FOOTER_SIGNATURE = "TRUEVISION-XFILE.";
+
 
 
 Tr2RenderContextEnum::PixelFormat GetFormat( const Header& header ) 
@@ -467,6 +487,105 @@ ImageIO::Result ReadImage( ICcpStream& stream, const Header& header, ImageIO::Ho
 	return ImageIO::Result::OK;
 }
 
+ImageIO::Result ReadMetadata( ICcpStream& stream, ImageIO::Metadata& metadata )
+{
+	if( stream.Seek( -ptrdiff_t( sizeof( Footer ) ), ICcpStream::SO_END ) < 0 )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+	Footer footer;
+	if( stream.Read( &footer, sizeof( footer ) ) != sizeof( footer ) )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+	if( strncmp( footer.signature, EXPECTED_FOOTER_SIGNATURE, sizeof( footer.signature ) ) )
+	{
+		return ImageIO::Result::OK;
+	}
+	if( footer.developerAreaOffset == 0 )
+	{
+		return ImageIO::Result::OK;
+	}
+	if( stream.Seek( footer.developerAreaOffset, ICcpStream::SO_BEGIN ) < 0 )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+	uint16_t count;
+	if( stream.Read( &count, sizeof( count ) ) != sizeof( count ) )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+	if( count == 0 )
+	{
+		return ImageIO::Result::OK;
+	}
+	std::unique_ptr<DeveloperAreaEntry[]> entries( new DeveloperAreaEntry[count] );
+	if( stream.Read( entries.get(), sizeof( DeveloperAreaEntry ) * count ) != sizeof( DeveloperAreaEntry ) * count )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+	for( uint16_t i = 0; i < count; ++i )
+	{
+		if( entries[i].tag == CCP_DEVELOPER_TAG )
+		{
+			if( stream.Seek( entries[i].offset, ICcpStream::SO_BEGIN ) < 0 )
+			{
+				return ImageIO::Result::READ_FAILURE;
+			}
+			auto result = ImageIO::LoadCcpMetadata( stream, metadata );
+			if( result.code == ImageIO::Result::INVALID_HEADER )
+			{
+				continue;
+			}
+			else
+			{
+				return result;
+			}
+		}
+	}
+	return ImageIO::Result::OK;
+}
+
+ImageIO::Result SaveMetadata( ICcpStream& stream, const ImageIO::Metadata& metadata )
+{
+	if( metadata.metadata.empty() )
+	{
+		return ImageIO::Result::OK;
+	}
+
+	auto metadataOffset = stream.GetPosition();
+
+	IMAGE_IO_CR_RETURN_RESULT( ImageIO::SaveCcpMetadata( stream, metadata ) );
+
+	auto directoryOffset = stream.GetPosition();
+
+	const uint16_t one = 1;  // one entry in the directory
+	if( stream.Write( &one, sizeof( one ) ) != sizeof( one ) )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+
+	DeveloperAreaEntry devEntry;
+	devEntry.tag = CCP_DEVELOPER_TAG;
+	devEntry.offset = uint32_t( metadataOffset );
+	devEntry.size = uint32_t( directoryOffset - metadataOffset );
+
+	if( stream.Write( &devEntry, sizeof( devEntry ) ) != sizeof( devEntry ) )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+
+	Footer footer;
+	strncpy_s( footer.signature, EXPECTED_FOOTER_SIGNATURE, sizeof( footer.signature ) );
+	footer.extensionOffset = 0;
+	footer.developerAreaOffset = uint32_t( directoryOffset );
+	if( stream.Write( &footer, sizeof( footer ) ) != sizeof( footer ) )
+	{
+		return ImageIO::Result::READ_FAILURE;
+	}
+	return ImageIO::Result::OK;
+}
+
 }
 
 
@@ -522,6 +641,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters&, ImageIO::H
 	if( metadata )
 	{
 		metadata->cutout = Cutout();
+		metadata->metadata.clear();
 	}
 
 	Tr2BitmapDimensions dimensions;
@@ -537,6 +657,11 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters&, ImageIO::H
 	{
 		bitmap.Destroy();
 		return r;
+	}
+
+	if( metadata )
+	{
+		ReadMetadata( stream, *metadata );
 	}
 	return Result::OK;
 }
@@ -718,7 +843,7 @@ Result SaveRows(
 // Return Value:
 //   Result of the operation
 // --------------------------------------------------------------------------------------
-Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
+Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadata* metadata )
 {
 	if( !image.IsValid() )
 	{
@@ -727,7 +852,12 @@ Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
 
 	IMAGE_IO_CR_RETURN_RESULT( IsSaveSupported( image ) );
 	IMAGE_IO_CR_RETURN_RESULT( SaveHeader( image.GetWidth(), image.GetHeight(), image.GetFormat(), output ) );
-	return SaveRows( image.GetWidth(), image.GetHeight(), image.GetFormat(), image.GetRawData(), output );
+	IMAGE_IO_CR_RETURN_RESULT( SaveRows( image.GetWidth(), image.GetHeight(), image.GetFormat(), image.GetRawData(), output ) );
+	if( metadata )
+	{
+		IMAGE_IO_CR_RETURN_RESULT( SaveMetadata( output, *metadata ) );
+	}
+	return Result::OK;
 }
 
 }

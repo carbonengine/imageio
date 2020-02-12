@@ -242,6 +242,17 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters&
 			metadata->cutout.width  = resx * pngUnitScale;
 			metadata->cutout.height = resy * pngUnitScale;
 		}
+
+		metadata->metadata.clear();
+
+		int numText = 0;
+		png_text* text;
+		png_get_text( png, info, &text, &numText );
+
+		for( int i = 0; i < numText; ++i )
+		{
+			metadata->metadata.push_back( std::make_pair( text[i].key, text[i].text ) );
+		}
 	}
 	auto format = GetFormat( channels, bitsPerPixel );
 	if( format == PIXEL_FORMAT_UNKNOWN )
@@ -530,7 +541,7 @@ Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 // Return Value:
 //   Result of the operation
 // --------------------------------------------------------------------------------------
-Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
+Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadata* metadata )
 {
 	if( !image.IsValid() )
 	{
@@ -653,6 +664,27 @@ Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
 		for( unsigned i = 0; i < image.GetHeight(); ++i )
 		{
 			rows[i] = ( png_bytep )( image.GetRawData() + i * image.GetPitch() );
+		}
+	}
+
+	std::unique_ptr<png_text> text;
+
+	if( metadata )
+	{
+		if( !metadata->metadata.empty() )
+		{
+			text.reset( new png_text[metadata->metadata.size()] );
+			for( size_t i = 0; i < metadata->metadata.size(); ++i )
+			{
+				text.get()[i].compression = PNG_TEXT_COMPRESSION_NONE;
+				text.get()[i].key = (png_charp)metadata->metadata[i].first.c_str();
+				text.get()[i].text = (png_charp)metadata->metadata[i].first.c_str();
+				text.get()[i].lang = nullptr;
+				text.get()[i].lang_key = nullptr;
+				text.get()[i].itxt_length = 0;
+				text.get()[i].text_length = 0;
+			}
+			png_set_text( png, info, text.get(), int( metadata->metadata.size() ) );
 		}
 	}
 

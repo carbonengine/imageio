@@ -325,6 +325,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CcpMetadata.h" />
     <ClInclude Include="HostBitmap.h" />
     <ClInclude Include="ImageIOResult.h" />
     <ClInclude Include="ImageUtility.h" />
@@ -338,6 +339,7 @@
     <ClInclude Include="Tr2TgaHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CcpMetadata.cpp" />
     <ClCompile Include="HostBitmap.cpp" />
     <ClCompile Include="ImageIOResult.cpp" />
     <ClCompile Include="ImageUtility.cpp" />

@@ -408,7 +408,7 @@ Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 // Return Value:
 //   Result of the operation
 // --------------------------------------------------------------------------------------
-Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
+Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadata* )
 {	
 	if( !image.IsValid() )
 	{

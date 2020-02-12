@@ -136,10 +136,11 @@ Result IsSaveSupported( const wchar_t* filename, const Tr2BitmapDimensions& dime
 //   filename - Destination file name (used to determine image format)
 //   bitmap - Bitmap to save
 //   dest - Destination stream
+//   metadata - Optional image metadata
 // Return Value:
 //   Result of the operation
 // --------------------------------------------------------------------------------------
-Result SaveImage( const wchar_t* filename, const HostBitmap& bitmap, ICcpStream& dest )
+Result SaveImage( const wchar_t* filename, const HostBitmap& bitmap, ICcpStream& dest, const Metadata* metadata )
 {
 	auto handler = GetImageHandler( GetExtension( filename ) );
 	if( !handler )
@@ -150,7 +151,7 @@ Result SaveImage( const wchar_t* filename, const HostBitmap& bitmap, ICcpStream&
 	{
 		return Result::METHOD_NOT_SUPPORTED;
 	}
-	return ( *handler->save )( bitmap, dest );
+	return ( *handler->save )( bitmap, dest, metadata );
 }
 
 }

@@ -2,6 +2,7 @@
 
 #include "Tr2DdsHandler.h"
 #include "HostBitmap.h"
+#include "CcpMetadata.h"
 
 #ifndef MAKEFOURCC
 #define MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
@@ -939,6 +940,11 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParamet
 		bitmap.Destroy();
 		return r;
 	}
+	if( metadata )
+	{
+		ImageIO::LoadCcpMetadata( stream, *metadata );
+	}
+
 	return Result::OK;
 }
 
@@ -970,7 +976,7 @@ Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 // Return Value:
 //   Result of the operation
 // --------------------------------------------------------------------------------------
-Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
+Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadata* metadata )
 {
 	if( !image.IsValid() )
 	{
@@ -987,6 +993,11 @@ Result Save( const ImageIO::HostBitmap& image, ICcpStream& output )
 		output.Write( &headerDxt10, sizeof( headerDxt10 ) );
 	}
 	output.Write( image.GetRawData(), image.GetRawDataSize() );
+
+	if( metadata && !metadata->metadata.empty() )
+	{
+		SaveCcpMetadata( output, *metadata );
+	}
 	return Result::OK;
 }
 
