@@ -6,6 +6,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CcpMetadata.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="HostBitmap.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -39,6 +42,9 @@
     <ClInclude Include="Tr2TgaHandler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClCompile Include="CcpMetadata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="HostBitmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
