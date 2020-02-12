@@ -18,7 +18,7 @@ namespace
 		uint32_t size;
 	};
 
-	struct CcpMedatadaEntry
+	struct CcpMetadataEntry
 	{
 		uint32_t keyOffset;
 		uint32_t keyLength;
@@ -66,7 +66,7 @@ namespace ImageIO
 		}
 
 		metadata.metadata.reserve( header.count );
-		const CcpMedatadaEntry* entry = reinterpret_cast<const CcpMedatadaEntry*>( data.get() );
+		const CcpMetadataEntry* entry = reinterpret_cast<const CcpMetadataEntry*>( data.get() );
 		for( uint32_t j = 0; j < header.count; ++j )
 		{
 			metadata.metadata.push_back( std::make_pair(
@@ -79,14 +79,14 @@ namespace ImageIO
 
 	Result SaveCcpMetadata( ICcpStream& stream, const Metadata& metadata )
 	{
-		std::vector<CcpMedatadaEntry> entries;
+		std::vector<CcpMetadataEntry> entries;
 		entries.reserve( metadata.metadata.size() );
 
-		uint32_t offset = uint32_t( sizeof( CcpMedatadaEntry ) * metadata.metadata.size() );
+		uint32_t offset = uint32_t( sizeof( CcpMetadataEntry ) * metadata.metadata.size() );
 		size_t size = 0;
 		for( size_t i = 0; i < metadata.metadata.size(); ++i )
 		{
-			CcpMedatadaEntry entry;
+			CcpMetadataEntry entry;
 			entry.keyOffset = uint32_t( offset + size );
 			entry.keyLength = uint32_t( metadata.metadata[i].first.length() + 1 );
 			size += entry.keyLength;
@@ -116,7 +116,7 @@ namespace ImageIO
 		{
 			return ImageIO::Result::WRITE_FAILURE;
 		}
-		if( stream.Write( entries.data(), entries.size() * sizeof( CcpMedatadaEntry ) ) != entries.size() * sizeof( CcpMedatadaEntry ) )
+		if( stream.Write( entries.data(), entries.size() * sizeof( CcpMetadataEntry ) ) != entries.size() * sizeof( CcpMetadataEntry ) )
 		{
 			return ImageIO::Result::WRITE_FAILURE;
 		}
