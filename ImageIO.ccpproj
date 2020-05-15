@@ -3,9 +3,9 @@ ProjectGuid: 82BC94E8-0F17-33C6-2A7D-D8E7375A221E
 Imports:
 - ../core_project/core_project.yaml
 - ../CcpCore/uses_CcpCore.yaml
-- ../../../../../../sdk/libpng/1.6.29/libpng_1.6.29.yaml
-- ../../../../../../sdk/libJPG/jpeg-9b/jpeg-9b.yaml
-- ../../../../../../sdk/zlib/1.2.11/zlib_1.2.11.yaml
+- ../../../vendor/libpng/1.6.29/libpng.yaml
+- ../../../vendor/libJPG/jpeg-9b/jpeg-9b.yaml
+- ../../../vendor/zlib/1.2.11/zlib.yaml
 
 # Settings from the General section, for all configurations
 General:

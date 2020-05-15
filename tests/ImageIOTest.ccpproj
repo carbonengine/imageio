@@ -3,7 +3,7 @@ ProjectGuid: 504BC561-AF34-424A-82B7-D381526FA474
 Imports:
 - ../core_project/core_project.yaml
 - ../ImageIO/uses_ImageIO.yaml
-- ../../../../../../sdk/GoogleTest/1.6.0/gtest.yaml
+- ../../../vendor/GoogleTest/1.10.0/gtest.yaml
 - ../CcpCore/uses_CcpCoreStatic.yaml
 
 # Settings from the General section, for all configurations
@@ -31,10 +31,6 @@ Link:
   ProgramDatabaseFile: $(TargetDir)$(TargetName).pdb
 
 BaseConfigurations:
-  Windows:
-    Imports:
-    - ../../../../../../sdk/zlib/1.2.11/zlib_1.2.11.yaml
-
   Debug:
     General: 
       TargetName: ImageIOTest_d
@@ -54,15 +50,12 @@ Configurations:
   Debug|Win32,x64:
     BaseConfigurations:
     - Debug
-    - Windows
 
   Debug|Linux32,Linux64,Mac64:
     BaseConfigurations:
     - Debug
 
   Dev|Win32,x64:
-    BaseConfigurations:
-    - Windows
     General: 
       TargetName: ImageIOTest_dev
     ClCompile:
@@ -71,7 +64,6 @@ Configurations:
   Release|Win32,x64:
     BaseConfigurations:
     - Release
-    - Windows
 
   Release|Win32,x64,Linux32,Linux64,Mac64:
     BaseConfigurations:
