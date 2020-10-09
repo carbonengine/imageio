@@ -18,30 +18,38 @@ namespace ImageUtility {
 		return (r << 16) | (g << 8) | b;
 	}
 
-	unsigned ConvertBGR565A8ToBGRA8( unsigned color, unsigned alpha )
+	uint32_t ConvertBGR565A8ToBGRA8( uint32_t color, uint32_t alpha )
 	{
-		return unsigned( color & 0x1f ) * 255 / 31 |
-			(unsigned( (color >> 5) & 0x3f ) * 255 / 63) << 8 |
-			(unsigned( (color >> 11) & 0x1f ) * 255 / 31) << 16 |
-			(alpha << 24);
+		return uint32_t( color & 0x1f ) * 255 / 31 |
+			( uint32_t( ( color >> 5 ) & 0x3f ) * 255 / 63 ) << 8 |
+			( uint32_t( ( color >> 11 ) & 0x1f ) * 255 / 31 ) << 16 |
+			( alpha << 24 );
 	}
 
-	unsigned GetPixelColor_BGRA( uint32_t x, uint32_t y, uint32_t pitch, const char* source ) {
-		return reinterpret_cast<const uint32_t*>(source + y * pitch)[x];
+	uint32_t GetPixelColor_BGRA( uint32_t x, uint32_t y, uint32_t pitch, const char* source )
+	{
+		return reinterpret_cast<const uint32_t*>( source + y * pitch )[x];
 	}
 
-	unsigned GetPixelColor_BGRX( uint32_t x, uint32_t y, uint32_t pitch, const char* source ) {
+	uint32_t GetPixelColor_R( uint32_t x, uint32_t y, uint32_t pitch, const char* source )
+	{
+		return uint32_t( reinterpret_cast<const uint8_t*>( source + y * pitch )[x] ) << 16;
+	}
+
+	uint32_t GetPixelColor_BGRX( uint32_t x, uint32_t y, uint32_t pitch, const char* source )
+	{
 		return GetPixelColor_BGRA( x, y, pitch, source ) | 0xff000000;
 	}
 
-	unsigned GetPixelColor_BC1( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* source ) {
+	uint32_t GetPixelColor_BC1( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* source )
+	{
 		// get the block index. ((width + 3) / 4) is basically a ceiling operator!
 		unsigned index = x / 4 + (y / 4) * ((width + 3) / 4);
 		index *= GetBlockByteSize( Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM );
-		unsigned pixelValue;
-		unsigned color0 = *reinterpret_cast<const unsigned short*>(source + index);
-		unsigned color1 = *reinterpret_cast<const unsigned short*>(source + index + 2);
-		unsigned bits = *reinterpret_cast<const unsigned*>(source + index + 4);
+		uint32_t pixelValue;
+		uint32_t color0 = *reinterpret_cast<const uint16_t*>( source + index );
+		uint32_t color1 = *reinterpret_cast<const uint16_t*>( source + index + 2 );
+		uint32_t bits = *reinterpret_cast<const uint32_t*>( source + index + 4 );
 
 		x = x % 4;
 		y = y % 4;
@@ -85,7 +93,8 @@ namespace ImageUtility {
 		return pixelValue;
 	}
 	
-	unsigned GetPixelColor_BC3( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* source ) {
+	uint32_t GetPixelColor_BC3( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* source )
+	{
 		unsigned index = x / 4 + (y / 4) * ((width + 3) / 4);
 		index *= GetBlockByteSize( Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM );
 		unsigned pixelValue;

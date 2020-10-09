@@ -1300,7 +1300,8 @@ bool HostBitmap::GetAverageColor(float &r, float &g, float &b, float &a) {
 	return false;
 }
 
-bool HostBitmap::GetPixel(uint32_t x, uint32_t y, float &r, float &g, float &b, float &a ) {
+bool HostBitmap::GetPixel( uint32_t x, uint32_t y, float& r, float& g, float& b, float& a ) const
+{
 	if( !IsValid() )
 	{
 		CCP_LOGERR( "GetPixel: bitmap is not valid" );
@@ -1328,6 +1329,9 @@ bool HostBitmap::GetPixel(uint32_t x, uint32_t y, float &r, float &g, float &b, 
 		const char* data = GetRawData();
 		unsigned int pixelValue = 0;
 		switch( format ) {
+		case Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM:
+			pixelValue = ImageUtility::GetPixelColor_R( x, y, pitch, data );
+			break;
 		case Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM:
 			pixelValue = ImageUtility::GetPixelColor_BGRA( x, y, pitch, data );
 			break;
@@ -1347,8 +1351,9 @@ bool HostBitmap::GetPixel(uint32_t x, uint32_t y, float &r, float &g, float &b, 
 		g = float( (pixelValue & 0x0000ff00) >> 8 ) / 255.f;
 		b = float( (pixelValue & 0x000000ff)  ) / 255.f;
 		a = float( (pixelValue & 0xff000000) >> 24 ) / 255.f;
+		return true;
 	}
-	return true;
+	return false;
 }
 
 }
