@@ -928,6 +928,6 @@ TEST( HostBitmap, GetAverageColorTakesTheAverageColorOfTheImage)
 	EXPECT_EQ( (0 + 255 + 0 + 0) / 4, int( a * 255 ));
 }
 
-INSTANTIATE_TEST_CASE_P( HostBitmap,
+INSTANTIATE_TEST_SUITE_P( HostBitmap,
                         PixelFormatTest,
 						::testing::Range( int( PIXEL_FORMAT_UNKNOWN + 1 ), int( PIXEL_FORMAT_SENTINEL ) ) );
