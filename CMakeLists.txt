@@ -37,4 +37,4 @@ target_precompile_headers(ImageIO PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx.h)
 
 target_link_libraries(ImageIO PUBLIC CcpCore JPEG::JPEG PNG::PNG ZLIB::ZLIB)
 
-target_compile_options(ImageIO PRIVATE "/fp:fast")
+target_compile_options(ImageIO PRIVATE "${MATH_OPTIMIZE_FLAG}")
