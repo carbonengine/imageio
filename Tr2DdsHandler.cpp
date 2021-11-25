@@ -47,8 +47,6 @@
 
 using namespace Tr2RenderContextEnum;
 
-extern bool g_convertA8L8FormatToB8G8R8A8;
-
 namespace
 {
 
@@ -857,7 +855,7 @@ ImageIO::Result ReadImagePixels( ICcpStream& stream, size_t elementSkipBytes, Im
 			return ImageIO::Result::READ_FAILURE;
 		}
 	}
-	if( g_convertA8L8FormatToB8G8R8A8 && FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_A8L8 )
+	if( FindDdsFormat( header.ddspf, headerDxt10.dxgiFormat ).first == DDSFMT_A8L8 )
 	{
 		if( !bitmap.ConvertFormat( PIXEL_FORMAT_B8G8R8A8_UNORM ) )
 		{

@@ -10,13 +10,6 @@ using namespace Tr2RenderContextEnum;
 #include "Tr2BmpHandler.h"
 #include "PsdHandler.h"
 
-// On DX9 R10G10B10A2 has inverted R and B channels. We need to work around that
-// when saving images.
-bool g_isR10G10B10FormatInverted = false;
-// On DX11 A8L8 format don't exist so we need to convert files with this format
-// to B8G8R8A8.
-bool g_convertA8L8FormatToB8G8R8A8 = false;
-
 namespace
 {
 

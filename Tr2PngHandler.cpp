@@ -6,8 +6,6 @@
 
 using namespace Tr2RenderContextEnum;
 
-extern bool g_isR10G10B10FormatInverted;
-
 namespace
 {
 
@@ -622,11 +620,6 @@ Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadat
 
 	int rSwizzle = 0;
 	int bSwizzle = 2;
-	if( g_isR10G10B10FormatInverted )
-	{
-		rSwizzle = 2;
-		bSwizzle = 0;
-	}
 
 	png_bytep* rows = CCP_NEW( "Tr2PngHandler/rows" ) png_bytep[image.GetHeight()];
 	if( colorType == PNG_COLOR_TYPE_RGB )

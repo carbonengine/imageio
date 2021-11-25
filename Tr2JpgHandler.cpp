@@ -34,8 +34,6 @@
 #define HAVE_STDLIB_H HAD_STDLIB_H_OVER_HERE
 #endif
 
-extern bool g_isR10G10B10FormatInverted;
-
 using namespace Tr2RenderContextEnum;
 
 //callbacks for libjpeg source and error handlers
@@ -470,11 +468,6 @@ Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadat
 
 		int rSwizzle = 0;
 		int bSwizzle = 2;
-		if( g_isR10G10B10FormatInverted )
-		{
-			rSwizzle = 2;
-			bSwizzle = 0;
-		}
 
 		const bool is1010102 = 
 			image.GetFormat() == PIXEL_FORMAT_R10G10B10A2_TYPELESS ||
