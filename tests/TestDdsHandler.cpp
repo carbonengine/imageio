@@ -28,8 +28,8 @@ const TestImage s_l = {
 	&CheckTopLeftPixel<uint8_t, 0xb4>, &CheckBottomRightPixel<uint8_t, 0x00>, nullptr };
 const TestImage s_al = { 
 	TEST_FILE( al, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8G8_UNORM, 7, 6, 1, 1 ), 
-	&CheckTopLeftPixel<uint16_t, 0xa369>, &CheckBottomRightPixel<uint16_t, 0x0026>, nullptr };
+	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 7, 6, 1, 1 ), 
+	&CheckTopLeftPixel<uint32_t, 0xa3696969>, &CheckBottomRightPixel<uint32_t, 0x00262626>, nullptr };
 const TestImage s_rgba16f = { 
 	TEST_FILE( rgba16f, dds ),
 	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R16G16B16A16_FLOAT, 4, 7, 1, 1 ), 
