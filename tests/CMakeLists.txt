@@ -28,6 +28,8 @@ target_precompile_headers(ImageIOTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx
 target_link_libraries(ImageIOTest PRIVATE ImageIO GTest::GTest GTest::Main)
 if(APPLE)
     target_link_libraries(ImageIOTest PRIVATE "-framework CoreFoundation")
+elseif(WIN32)
+    target_link_options(ImageIOTest PRIVATE "/IGNORE:4049")
 endif()
 
 target_compile_definitions(ImageIOTest PRIVATE BLUEBUILD)
