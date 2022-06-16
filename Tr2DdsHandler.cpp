@@ -255,6 +255,7 @@ void CacheSupportedFormats()
 	s_supportedFormats.insert( DDSFMT_A16B16G16R16F );
 	s_supportedFormats.insert( DDSFMT_A32B32G32R32F );
 	s_supportedFormats.insert( DDSFMT_R32F );
+	s_supportedFormats.insert( DDSFMT_R16F );
 
 	// Not supported by device but conversion done at load time (on background thread)
 	s_supportedFormats.insert( DDSFMT_R8G8B8 );
