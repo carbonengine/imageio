@@ -211,6 +211,7 @@ FormatDescriptor s_ddsFormats[] =
 	{ DDSFMT_A8L8,			16, 0xff,       0,          0,          0xff00,			0, PIXEL_FORMAT_R8G8_UNORM		},	// hack
 
 	{ DDSFMT_R32F,			32, 0,			0,          0,          0,				114, PIXEL_FORMAT_R32_FLOAT },
+	{ DDSFMT_R16F,			16, 0,			0,          0,          0,				111, PIXEL_FORMAT_R16_FLOAT },
 	{ DDSFMT_A16B16G16R16,	64, 0,          0,          0,          0,				36,  PIXEL_FORMAT_R16G16B16A16_UNORM },
 	{ DDSFMT_A16B16G16R16F, 64, 0,          0,          0,          0,				113, PIXEL_FORMAT_R16G16B16A16_FLOAT },
 	{ DDSFMT_A32B32G32R32F, 128,0,          0,          0,          0,				116, PIXEL_FORMAT_R32G32B32A32_FLOAT },
