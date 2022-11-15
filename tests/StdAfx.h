@@ -1,6 +1,6 @@
 #define NOMINMAX
 
-#include "CcpCore/include/CcpCore.h"
+#include <CcpCore.h>
 #include "TrinityAL/include/Tr2PixelFormat.h"
 #include "TrinityAL/include/Tr2TextureType.h"
 #include "TrinityAL/include/Tr2BitmapDimensions.h"
