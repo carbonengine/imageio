@@ -1,10 +1,10 @@
 #define NOMINMAX
 
 #include <CcpCore.h>
-#include "TrinityAL/include/Tr2PixelFormat.h"
-#include "TrinityAL/include/Tr2TextureType.h"
-#include "TrinityAL/include/Tr2BitmapDimensions.h"
-#include "TrinityAL/include/Tr2CubemapFace.h"
+#include <include/Tr2PixelFormat.h>
+#include <include/Tr2TextureType.h>
+#include <include/Tr2BitmapDimensions.h>
+#include <include/Tr2CubemapFace.h>
 
 #include <csetjmp>
 #include <cmath>
@@ -13,12 +13,12 @@
 
 #include "gtest/gtest.h"
 
-#include "ImageIO/HostBitmap.h"
-#include "ImageIO/Tr2ImageHandler.h"
-#include "ImageIO/Tr2BmpHandler.h"
-#include "ImageIO/Tr2DdsHandler.h"
-#include "ImageIO/Tr2JpgHandler.h"
-#include "ImageIO/Tr2PngHandler.h"
-#include "ImageIO/Tr2TgaHandler.h"
-#include "ImageIO/PsdHandler.h"
-#include "ImageIO/ImageUtility.h"
+#include <HostBitmap.h>
+#include <Tr2ImageHandler.h>
+#include <Tr2BmpHandler.h>
+#include <Tr2DdsHandler.h>
+#include <Tr2JpgHandler.h>
+#include <Tr2PngHandler.h>
+#include <Tr2TgaHandler.h>
+#include <PsdHandler.h>
+#include <ImageUtility.h>

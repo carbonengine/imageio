@@ -1,6 +1,6 @@
 project(ImageIOTest VERSION 1.0.0)
 
-add_executable(ImageIOTest
+ccp_add_executable(ImageIOTest
         ImageIOTest.cpp
         MemoryStream.cpp
         MemoryStream.h
@@ -24,6 +24,10 @@ target_include_directories(ImageIOTest
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_precompile_headers(ImageIOTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx.h)
+
+find_package(GTest REQUIRED)
+
+gtest_discover_tests(ImageIOTest myListOfTests)
 
 target_link_libraries(ImageIOTest PRIVATE ImageIO GTest::GTest GTest::Main)
 if(APPLE)
