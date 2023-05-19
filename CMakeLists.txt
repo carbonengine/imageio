@@ -34,18 +34,18 @@ ccp_add_library(ImageIO STATIC
 )
 
 set(PUBLIC_HEADER_FILES 
-    CcpMetadata.h
-    HostBitmap.h
-    ImageIOResult.h
-    ImageUtility.h
-    PsdHandler.h
-    StdAfx.h
-    Tr2BmpHandler.h
-    Tr2DdsHandler.h
-    Tr2ImageHandler.h
-    Tr2JpgHandler.h
-    Tr2PngHandler.h
-    Tr2TgaHandler.h
+    include/CcpMetadata.h
+    include/HostBitmap.h
+    include/ImageIOResult.h
+    include/ImageUtility.h
+    include/PsdHandler.h
+    include/StdAfx.h
+    include/Tr2BmpHandler.h
+    include/Tr2DdsHandler.h
+    include/Tr2ImageHandler.h
+    include/Tr2JpgHandler.h
+    include/Tr2PngHandler.h
+    include/Tr2TgaHandler.h
 )
 
 target_sources(ImageIO PRIVATE ${PUBLIC_HEADER_FILES})
@@ -63,13 +63,18 @@ find_package(CcpCore REQUIRED NO_CMAKE_PATH)
 # TrinityAL was not previously linked, however ImageIO stdAfx was referencing some headers from TrinityAL
 if(WIN32)
     find_package(TrinityAL_stub REQUIRED NO_CMAKE_PATH)
-    target_include_directories(ImageIO PUBLIC "$<TARGET_PROPERTY:TrinityAL_stub,INTERFACE_INCLUDE_DIRECTORIES>")
+    target_include_directories(ImageIO PRIVATE "$<TARGET_PROPERTY:TrinityAL_stub,INTERFACE_INCLUDE_DIRECTORIES>")
 elseif(APPLE)
     find_package(TrinityAL_metal REQUIRED NO_CMAKE_PATH)
-    target_include_directories(ImageIO PUBLIC "$<TARGET_PROPERTY:TrinityAL_metal,INTERFACE_INCLUDE_DIRECTORIES>")
+    target_include_directories(ImageIO PRIVATE "$<TARGET_PROPERTY:TrinityAL_metal,INTERFACE_INCLUDE_DIRECTORIES>")
 else()
     message(FATAL_ERROR "Unsupported platform!")
 endif()
+
+target_include_directories(ImageIO
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 target_link_libraries(ImageIO PUBLIC CcpCore JPEG::JPEG PNG::PNG ZLIB::ZLIB)
 
