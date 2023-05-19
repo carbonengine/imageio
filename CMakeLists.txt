@@ -32,7 +32,8 @@ ccp_add_library(ImageIO STATIC
         Tr2PngHandler.cpp
         Tr2TgaHandler.cpp
 )
-target_sources(ImageIO PRIVATE
+
+set(PUBLIC_HEADER_FILES 
     CcpMetadata.h
     HostBitmap.h
     ImageIOResult.h
@@ -46,6 +47,8 @@ target_sources(ImageIO PRIVATE
     Tr2PngHandler.h
     Tr2TgaHandler.h
 )
+
+target_sources(ImageIO PRIVATE ${PUBLIC_HEADER_FILES})
 
 target_precompile_headers(ImageIO PRIVATE StdAfx.h)
 set_target_properties(ImageIO PROPERTIES POSITION_INDEPENDENT_CODE ON EXPORT_NAME ImageIO)
