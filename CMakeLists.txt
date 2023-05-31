@@ -62,14 +62,16 @@ find_package(CcpCore REQUIRED NO_CMAKE_PATH)
 # TrinityAL was not previously linked, however ImageIO stdAfx was referencing some headers from TrinityAL
 if(WIN32)
     find_package(TrinityAL_stub REQUIRED NO_CMAKE_PATH)
+    target_include_directories(ImageIO PRIVATE "$<TARGET_PROPERTY:TrinityAL_stub,INTERFACE_INCLUDE_DIRECTORIES>")
 elseif(APPLE)
     find_package(TrinityAL_metal REQUIRED NO_CMAKE_PATH)
+    target_include_directories(ImageIO PRIVATE "$<TARGET_PROPERTY:TrinityAL_metal,INTERFACE_INCLUDE_DIRECTORIES>")
 else()
     message(FATAL_ERROR "Unsupported platform!")
 endif()
 
-target_include_directories(ImageIO PUBLIC "$<$<BOOL:${WIN32}>:$<TARGET_PROPERTY:TrinityAL_stub,INTERFACE_INCLUDE_DIRECTORIES>>")
-target_include_directories(ImageIO PUBLIC "$<$<BOOL:${APPLE}>:$<TARGET_PROPERTY:TrinityAL_metal,INTERFACE_INCLUDE_DIRECTORIES>>")
+
+
 
 target_include_directories(ImageIO
     PUBLIC

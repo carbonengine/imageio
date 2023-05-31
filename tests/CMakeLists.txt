@@ -29,6 +29,16 @@ find_package(GTest REQUIRED)
 
 gtest_discover_tests(ImageIOTest myListOfTests)
 
+if(WIN32)
+    find_package(TrinityAL_stub REQUIRED NO_CMAKE_PATH)
+    target_include_directories(ImageIOTest PRIVATE "$<TARGET_PROPERTY:TrinityAL_stub,INTERFACE_INCLUDE_DIRECTORIES>")
+elseif(APPLE)
+    find_package(TrinityAL_metal REQUIRED NO_CMAKE_PATH)
+    target_include_directories(ImageIOTest PRIVATE "$<TARGET_PROPERTY:TrinityAL_metal,INTERFACE_INCLUDE_DIRECTORIES>")
+else()
+    message(FATAL_ERROR "Unsupported platform!")
+endif()
+
 target_link_libraries(ImageIOTest PRIVATE ImageIO GTest::GTest GTest::Main)
 if(APPLE)
     target_link_libraries(ImageIOTest PRIVATE "-framework CoreFoundation")
