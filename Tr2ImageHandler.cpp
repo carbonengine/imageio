@@ -9,6 +9,7 @@ using namespace Tr2RenderContextEnum;
 #include "Tr2TgaHandler.h"
 #include "Tr2BmpHandler.h"
 #include "PsdHandler.h"
+#include "VtaHandler.h"
 
 namespace
 {
@@ -34,6 +35,7 @@ void RegisterImageIOHandlers()
 		ImageIO::Png::RegisterHandler();
 		ImageIO::Psd::RegisterHandler();
 		ImageIO::Tga::RegisterHandler();
+		ImageIO::Vta::RegisterHandler();
 		s_registered = true;
 	}
 }
