@@ -23,6 +23,7 @@ ccp_add_library(ImageIO STATIC
         HostBitmap.cpp
         ImageIOResult.cpp
         ImageUtility.cpp
+		NanoVdbSupport.cpp
         PsdHandler.cpp
         StdAfx.cpp
         Tr2BmpHandler.cpp
@@ -31,6 +32,7 @@ ccp_add_library(ImageIO STATIC
         Tr2JpgHandler.cpp
         Tr2PngHandler.cpp
         Tr2TgaHandler.cpp
+		VtaHandler.cpp
 )
 
 set(PUBLIC_HEADER_FILES 
@@ -38,6 +40,7 @@ set(PUBLIC_HEADER_FILES
     include/HostBitmap.h
     include/ImageIOResult.h
     include/ImageUtility.h
+    include/NanoVdbSupport.h
     include/PsdHandler.h
     include/Tr2BmpHandler.h
     include/Tr2DdsHandler.h
@@ -45,6 +48,7 @@ set(PUBLIC_HEADER_FILES
     include/Tr2JpgHandler.h
     include/Tr2PngHandler.h
     include/Tr2TgaHandler.h
+    include/VtaHandler.h
 )
 
 target_sources(ImageIO PRIVATE ${PUBLIC_HEADER_FILES})
@@ -58,6 +62,7 @@ find_package(JPEG REQUIRED NO_CMAKE_PATH)
 find_package(PNG REQUIRED NO_CMAKE_PATH)
 find_package(ZLIB REQUIRED NO_CMAKE_PATH)
 find_package(CcpCore REQUIRED NO_CMAKE_PATH)
+find_package(NanoVDB REQUIRED NO_CMAKE_PATH)
 
 # TrinityAL was not previously linked, however ImageIO stdAfx was referencing some headers from TrinityAL
 if(WIN32)
@@ -78,7 +83,7 @@ target_include_directories(ImageIO
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(ImageIO PUBLIC CcpCore JPEG::JPEG PNG::PNG ZLIB::ZLIB)
+target_link_libraries(ImageIO PUBLIC CcpCore JPEG::JPEG PNG::PNG ZLIB::ZLIB NanoVDB)
 
 target_compile_options(ImageIO PRIVATE "${MATH_OPTIMIZE_FLAG}")
 
