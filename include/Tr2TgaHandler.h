@@ -19,12 +19,12 @@ namespace Tga
 void RegisterHandler();
 bool IsTgaExtension( const wchar_t* extension );
 Result ReadImage( ICcpStream& src, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata );
-Result IsSaveSupported( const Tr2BitmapDimensions& bd );
+Result IsSaveSupported( const BitmapDimensions& bd );
 Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadata* metadata );
 
-Result IsSaveSupported( Tr2RenderContextEnum::PixelFormat format );
-Result SaveHeader( uint32_t width, uint32_t height, Tr2RenderContextEnum::PixelFormat format, ICcpStream& output );
-Result SaveRows( uint32_t width, uint32_t height, Tr2RenderContextEnum::PixelFormat format, const void* data, ICcpStream& output );
+Result IsSaveSupported( PixelFormat format );
+Result SaveHeader( uint32_t width, uint32_t height, PixelFormat format, ICcpStream& output );
+Result SaveRows( uint32_t width, uint32_t height, PixelFormat format, const void* data, ICcpStream& output );
 
 }
 }

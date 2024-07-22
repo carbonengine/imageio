@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "ImageUtility.h"
+#include "include/PixelFormat.h"
 
 namespace ImageUtility {
 
@@ -45,7 +46,7 @@ namespace ImageUtility {
 	{
 		// get the block index. ((width + 3) / 4) is basically a ceiling operator!
 		unsigned index = x / 4 + (y / 4) * ((width + 3) / 4);
-		index *= GetBlockByteSize( Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM );
+		index *= GetBlockByteSize( ImageIO::PIXEL_FORMAT_BC1_UNORM );
 		uint32_t pixelValue;
 		uint32_t color0 = *reinterpret_cast<const uint16_t*>( source + index );
 		uint32_t color1 = *reinterpret_cast<const uint16_t*>( source + index + 2 );
@@ -96,7 +97,7 @@ namespace ImageUtility {
 	uint32_t GetPixelColor_BC3( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* source )
 	{
 		unsigned index = x / 4 + (y / 4) * ((width + 3) / 4);
-		index *= GetBlockByteSize( Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM );
+		index *= GetBlockByteSize( ImageIO::PIXEL_FORMAT_BC3_UNORM );
 		unsigned pixelValue;
 		
 		uint32_t alpha[8];

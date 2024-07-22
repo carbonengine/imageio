@@ -1,18 +1,18 @@
 #include "StdAfx.h"
 #include "TestHelpers.h"
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 namespace
 {
 
 const TestImage s_rgb = { 
 	TEST_FILE( rgb, bmp ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 7, 3, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 7, 3, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xff005200>, &CheckBottomRightPixel<uint32_t, 0xff000039>, nullptr };
 const TestImage s_rgba = { 
 	TEST_FILE( rgba, bmp ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 4, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 4, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xd9f953a4>, &CheckBottomRightPixel<uint32_t, 0x2a630000>, nullptr };
 const TestImage s_rgbGarbled = { TEST_FILE( rgbGarbled, bmp ) };
 const TestImage s_rgbaGarbled = { TEST_FILE( rgbaGarbled, bmp ) };

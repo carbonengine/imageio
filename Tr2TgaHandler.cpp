@@ -10,7 +10,7 @@
 #include "HostBitmap.h"
 #include "CcpMetadata.h"
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 namespace
 {
@@ -96,27 +96,27 @@ static const char* EXPECTED_FOOTER_SIGNATURE = "TRUEVISION-XFILE.";
 
 
 
-Tr2RenderContextEnum::PixelFormat GetFormat( const Header& header ) 
+PixelFormat GetFormat( const Header& header ) 
 {
 	if( header.imageType == IMAGE_TYPE_RAW_INDEXED || header.imageType == IMAGE_TYPE_RLE_INDEXED )
 	{
-		return Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM;
+		return PIXEL_FORMAT_B8G8R8X8_UNORM;
 	}
 	else if( header.bpp == 8 )
 	{
-		return Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM;
+		return PIXEL_FORMAT_R8_UNORM;
 	}
 	else if( header.bpp < 32 )
 	{
-		return Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM;
+		return PIXEL_FORMAT_B8G8R8X8_UNORM;
 	}
 	else
 	{
-		return Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM;
+		return PIXEL_FORMAT_B8G8R8A8_UNORM;
 	}
 }
 
-ImageIO::Result DoReadHeader( ICcpStream& stream, Tr2BitmapDimensions& dimensions, Header& header )
+ImageIO::Result DoReadHeader( ICcpStream& stream, BitmapDimensions& dimensions, Header& header )
 {
 	if( stream.Read( &header, sizeof( Header ) ) != sizeof( Header ) )
 	{
@@ -149,7 +149,7 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, Tr2BitmapDimensions& dimension
 	uint32_t width = unsigned( header.right - header.left );
 	uint32_t height = unsigned( header.bottom - header.top );
 
-	dimensions = Tr2BitmapDimensions( width, height, 1, GetFormat( header ) );
+	dimensions = BitmapDimensions( width, height, 1, GetFormat( header ) );
 	return ImageIO::Result::OK;
 }
 
@@ -294,7 +294,7 @@ ImageIO::Result ReadRLEData( ICcpStream& stream, const Header& header, unsigned 
 
 	uint8_t* current = compressedData;
 	unsigned index = 0;
-	unsigned pixelSize = Tr2RenderContextEnum::GetBytesPerPixel( GetFormat( header ) );
+	unsigned pixelSize = GetBytesPerPixel( GetFormat( header ) );
 	unsigned inputPixelSize = ( header.colorMapType == COLOR_TYPE_INDEXED ? header.colorMapBpp : header.bpp ) / 8;
 	unsigned outputSize = bitmap.GetMipSize( 0 );
 
@@ -447,7 +447,7 @@ ImageIO::Result ReadImage( ICcpStream& stream, const Header& header, ImageIO::Ho
 	if( header.imageDescriptor & 0x10 )
 	{
 		// Filp horizontally
-		unsigned bpp = Tr2RenderContextEnum::GetBytesPerPixel( bitmap.GetFormat() );
+		unsigned bpp = GetBytesPerPixel( bitmap.GetFormat() );
 		uint32_t width = bitmap.GetWidth();
 		uint32_t height = bitmap.GetHeight();
 		uint32_t pitch = bitmap.GetPitch();
@@ -467,7 +467,7 @@ ImageIO::Result ReadImage( ICcpStream& stream, const Header& header, ImageIO::Ho
 	if( header.imageDescriptor & 0x20 )
 	{
 		// Filp vertically
-		unsigned bpp = Tr2RenderContextEnum::GetBytesPerPixel( bitmap.GetFormat() );
+		unsigned bpp = GetBytesPerPixel( bitmap.GetFormat() );
 		uint32_t width = bitmap.GetWidth();
 		uint32_t height = bitmap.GetHeight();
 		uint32_t pitch = bitmap.GetPitch();
@@ -644,7 +644,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters&, ImageIO::H
 		metadata->metadata.clear();
 	}
 
-	Tr2BitmapDimensions dimensions;
+	BitmapDimensions dimensions;
 	Header header;
 	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, dimensions, header ) );
 
@@ -674,7 +674,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters&, ImageIO::H
 // Return Value:
 //   Result of the operation (OK if image saving is supported)
 // --------------------------------------------------------------------------------------
-Result IsSaveSupported( const Tr2BitmapDimensions& bd )
+Result IsSaveSupported( const BitmapDimensions& bd )
 {
 	return bd.GetType() != TEX_TYPE_2D || bd.GetArraySize() != 1 ? Result( Result::SAVE_NOT_SUPPORTED ) : IsSaveSupported( bd.GetFormat() );
 }
@@ -687,7 +687,7 @@ Result IsSaveSupported( const Tr2BitmapDimensions& bd )
 // Return Value:
 //   Result of the operation (OK if image saving is supported)
 // --------------------------------------------------------------------------------------
-Result IsSaveSupported( Tr2RenderContextEnum::PixelFormat format )
+Result IsSaveSupported( PixelFormat format )
 {
 	return format == PIXEL_FORMAT_B8G8R8X8_UNORM ||
 		format != PIXEL_FORMAT_B8G8R8A8_UNORM ||
@@ -708,7 +708,7 @@ Result IsSaveSupported( Tr2RenderContextEnum::PixelFormat format )
 Result SaveHeader( 
 	uint32_t width, 
 	uint32_t height, 
-	Tr2RenderContextEnum::PixelFormat format, 
+	PixelFormat format, 
 	ICcpStream& output )
 {
 	IMAGE_IO_CR_RETURN_RESULT( IsSaveSupported( format ) );
@@ -766,7 +766,7 @@ Result SaveHeader(
 Result SaveRows( 
 	uint32_t width, 
 	uint32_t height, 
-	Tr2RenderContextEnum::PixelFormat format, 
+	PixelFormat format, 
 	const void* data, 
 	ICcpStream& output )
 {

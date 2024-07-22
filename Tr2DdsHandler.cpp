@@ -45,7 +45,7 @@
 #define D3D10_RESOURCE_DIMENSION_TEXTURE2D 3
 #define D3D10_RESOURCE_DIMENSION_TEXTURE3D 4
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 namespace
 {
@@ -92,7 +92,7 @@ struct DDS_HEADER
 
 struct DDS_HEADER_DXT10
 {
-	Tr2RenderContextEnum::PixelFormat dxgiFormat;
+	PixelFormat dxgiFormat;
 	uint32_t resourceDimension;
 	uint32_t miscFlag;
 	uint32_t arraySize;
@@ -422,9 +422,9 @@ ImageIO::Result CheckSupportedFormat( const DDS_HEADER& header,  const DDS_HEADE
 
 }
 
-void CopyHeaderValuesToMembers( const DDS_HEADER& header, const DDS_HEADER_DXT10& headerDxt10, Tr2BitmapDimensions& dimensions )
+void CopyHeaderValuesToMembers( const DDS_HEADER& header, const DDS_HEADER_DXT10& headerDxt10, ImageIO::BitmapDimensions& dimensions )
 {
-	Tr2RenderContextEnum::PixelFormat format;
+	PixelFormat format;
 	uint32_t arraySize;
 	if( header.ddspf.dwFourCC == FOURCC_DX10 )
 	{
@@ -442,20 +442,20 @@ void CopyHeaderValuesToMembers( const DDS_HEADER& header, const DDS_HEADER_DXT10
 
 	if( IsCubeTexture( header ) )
 	{
-		dimensions = Tr2BitmapDimensions( TEX_TYPE_CUBE, format, width, width, 1, mipLevelCount );
+		dimensions = BitmapDimensions( TEX_TYPE_CUBE, format, width, width, 1, mipLevelCount );
 	}
 	else if( IsVolumeTexture( header ) )
 	{
 		uint32_t volumeDepth = header.dwDepth;
-		dimensions = Tr2BitmapDimensions( TEX_TYPE_3D, format, width, height, volumeDepth, mipLevelCount, arraySize );
+		dimensions = BitmapDimensions( TEX_TYPE_3D, format, width, height, volumeDepth, mipLevelCount, arraySize );
 	}
 	else
 	{
-		dimensions = Tr2BitmapDimensions( TEX_TYPE_2D, format, width, height, 1, mipLevelCount, arraySize );
+		dimensions = BitmapDimensions( TEX_TYPE_2D, format, width, height, 1, mipLevelCount, arraySize );
 	}
 }
 
-ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, Tr2BitmapDimensions& dimensions, DDS_HEADER& header, DDS_HEADER_DXT10& headerDxt10, size_t& skipBytes )
+ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, BitmapDimensions& dimensions, DDS_HEADER& header, DDS_HEADER_DXT10& headerDxt10, size_t& skipBytes )
 {
 	if( stream.Read( &header, sizeof( header ) ) == -1 )
 	{
@@ -519,7 +519,7 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, const ImageIO::LoadParameters&
 	return ImageIO::Result::OK;
 }
 
-bool MakePixelFormat( DDS_PIXELFORMAT &ddspf, const Tr2BitmapDimensions& bd )
+bool MakePixelFormat( DDS_PIXELFORMAT& ddspf, const BitmapDimensions& bd )
 {
 	const PixelFormat pixelFormat = bd.GetFormat();
 	const bool bCompressed = IsCompressedFormat( pixelFormat );
@@ -658,11 +658,11 @@ bool MakePixelFormat( DDS_PIXELFORMAT &ddspf, const Tr2BitmapDimensions& bd )
 
 
 
-ImageIO::Result BuildHeaders( const Tr2BitmapDimensions& bd, DDS_HEADER& header, DDS_HEADER_DXT10& headerDxt10 )
+ImageIO::Result BuildHeaders( const BitmapDimensions& bd, DDS_HEADER& header, DDS_HEADER_DXT10& headerDxt10 )
 {
 	unsigned int mips = bd.GetTrueMipCount();
 
-	const bool bCompressed = Tr2RenderContextEnum::IsCompressedFormat( bd.GetFormat() );
+	const bool bCompressed = IsCompressedFormat( bd.GetFormat() );
 	
 	memset( &header, 0, sizeof( header ) );
 	memset( &headerDxt10, 0, sizeof( headerDxt10 ) );
@@ -919,7 +919,7 @@ bool IsDdsExtension( const wchar_t* ext )
 // --------------------------------------------------------------------------------------
 Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata )
 {
-	Tr2BitmapDimensions dimensions;
+	BitmapDimensions dimensions;
 	DDS_HEADER header = DDS_HEADER();
 	DDS_HEADER_DXT10 headerDxt10 = DDS_HEADER_DXT10();
 	size_t skipBytes = 0;
@@ -956,7 +956,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParamet
 // Return Value:
 //   Result of the operation (OK if image saving is supported)
 // --------------------------------------------------------------------------------------
-Result IsSaveSupported( const Tr2BitmapDimensions& bd )
+Result IsSaveSupported( const BitmapDimensions& bd )
 {
 	DDS_PIXELFORMAT ddspf;
 	if( !MakePixelFormat( ddspf, bd ) )		

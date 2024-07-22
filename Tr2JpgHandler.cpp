@@ -34,7 +34,7 @@
 #define HAVE_STDLIB_H HAD_STDLIB_H_OVER_HERE
 #endif
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 //callbacks for libjpeg source and error handlers
 namespace 
@@ -349,7 +349,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParamet
 		uint32_t height = impl.m_decode.image_height;
 		uint32_t width = impl.m_decode.image_width;
 		channels = impl.m_decode.num_components;
-		bitmap.Create( width, height, 1, Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM );
+		bitmap.Create( width, height, 1, PIXEL_FORMAT_B8G8R8A8_UNORM );
 	} 
 	else 
 	{
@@ -378,7 +378,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParamet
 // Return Value:
 //   Result of the operation (OK if image saving is supported)
 // --------------------------------------------------------------------------------------
-Result IsSaveSupported( const Tr2BitmapDimensions& bd )
+Result IsSaveSupported( const BitmapDimensions& bd )
 {
 	if( bd.GetType() != TEX_TYPE_2D || bd.GetArraySize() != 1 )
 	{
@@ -412,8 +412,6 @@ Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadat
 	{
 		return Result::INVALID_BITMAP;
 	}
-
-	using namespace Tr2RenderContextEnum;
 
 	IMAGE_IO_CR_RETURN_RESULT( IsSaveSupported( image ) );
 

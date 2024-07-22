@@ -60,7 +60,7 @@ struct LoadParameters
 
 typedef bool ( *CheckExtensionFunc )( const wchar_t* extension );
 typedef Result ( *ReadImageFunc )( ICcpStream& src, const LoadParameters& loadParameters, HostBitmap& bitmap, Metadata* metadata );
-typedef Result ( *IsSaveSupportedFunc )( const Tr2BitmapDimensions& bd );
+typedef Result ( *IsSaveSupportedFunc )( const BitmapDimensions& bd );
 typedef Result ( *SaveFunc )( const HostBitmap& image, ICcpStream& output, const Metadata* metadata );
 
 // --------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ struct ImageFormatFunctions
 
 void RegisterImageHandler( const ImageFormatFunctions& imageHandler );
 Result ReadImage( ICcpStream& src, const LoadParameters& loadParameters, HostBitmap& bitmap, Metadata* metadata = nullptr );
-Result IsSaveSupported( const wchar_t* sourceName, const Tr2BitmapDimensions& dimensions );
+Result IsSaveSupported( const wchar_t* sourceName, const BitmapDimensions& dimensions );
 Result SaveImage( const wchar_t* sourceName, const HostBitmap& bitmap, ICcpStream& dest, const Metadata* metadata = nullptr );
 
 }

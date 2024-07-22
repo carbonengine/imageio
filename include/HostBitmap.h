@@ -2,12 +2,14 @@
 #ifndef HostBitmap_H
 #define HostBitmap_H
 
+#include "BitmapDimensions.h"
+
 class Tr2ImageHandler;
 
 namespace ImageIO
 {
 
-class HostBitmap: public Tr2BitmapDimensions
+class HostBitmap: public BitmapDimensions
 {
 public:
     HostBitmap();
@@ -19,11 +21,11 @@ public:
 	bool IsValid() const;
 	virtual void Destroy();
 
-	bool Create( unsigned width, unsigned height, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format );
-	bool Create2DArray( unsigned width, unsigned height, unsigned mipCount, unsigned arraySize, Tr2RenderContextEnum::PixelFormat format );
-	bool CreateCube( unsigned width, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format );
-	bool CreateVolume( unsigned width, unsigned height, unsigned depth, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format );
-	bool CreateFromBitmapDimensions( const Tr2BitmapDimensions& dimensions );
+	bool Create( unsigned width, unsigned height, unsigned mipCount, PixelFormat format );
+	bool Create2DArray( unsigned width, unsigned height, unsigned mipCount, unsigned arraySize, PixelFormat format );
+	bool CreateCube( unsigned width, unsigned mipCount, PixelFormat format );
+	bool CreateVolume( unsigned width, unsigned height, unsigned depth, unsigned mipCount, PixelFormat format );
+	bool CreateFromBitmapDimensions( const BitmapDimensions& dimensions );
 
 	unsigned GetPitch() const;
 
@@ -48,16 +50,16 @@ public:
 	bool ConvertCrossmapToCubemap();
 	bool ConvertToVolume();
 
-	bool ChangeFormat( Tr2RenderContextEnum::PixelFormat format );
+	bool ChangeFormat( PixelFormat format );
 
 	bool GenerateMipMaps( unsigned levels = 0 );
 	bool DropMipMaps();
-	bool ConvertFormat( Tr2RenderContextEnum::PixelFormat format );
+	bool ConvertFormat( PixelFormat format );
 	bool GetAverageColor( float &r, float &g, float &b, float &a );
 	bool GetPixel( uint32_t x, uint32_t y, float &r, float &g, float &b, float &a ) const;
 
 protected:
-	bool CheckForMatch( const Tr2BitmapDimensions& bd, bool checkDimensions, bool& alphaConvert, const char* log );
+	bool CheckForMatch( const BitmapDimensions& bd, bool checkDimensions, bool& alphaConvert, const char* log );
 
 	std::string m_name;
 

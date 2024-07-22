@@ -2,7 +2,6 @@
 #include "TestHelpers.h"
 #include "MemoryStream.h"
 
-using namespace Tr2RenderContextEnum;
 using namespace ImageIO;
 namespace {
 
@@ -14,19 +13,19 @@ namespace {
 
 	const TestImage s_rgbx = {
 		TEST_FILE( rgbx, dds ),
-		Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 12, 1, 1 ), nullptr };
+		BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 12, 1, 1 ), nullptr };
 
 	const TestImage s_rgba = {
 		TEST_FILE( rgba, dds ),
-		Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 12, 1, 1 ), nullptr };
+		BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 12, 1, 1 ), nullptr };
 
 	const TestImage s_bc1 = {
 		TEST_FILE( bc1, dds ),
-		Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_BC1_UNORM, 8, 8, 1, 4 ), nullptr };
+		BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_BC1_UNORM, 8, 8, 1, 4 ), nullptr };
 
 	const TestImage s_bc3 = {
 		TEST_FILE( bc3, dds ),
-		Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_BC3_UNORM, 32, 32, 1, 5 ), nullptr };
+		BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_BC3_UNORM, 32, 32, 1, 5 ), nullptr };
 
 }
 

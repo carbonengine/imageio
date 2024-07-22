@@ -24,13 +24,13 @@ struct NanoVDBGridMetadata
 	nanovdb::GridType type;
 };
 
-bool RasterizeNanoVDB( const char* vdbPath, uint32_t gridNumber, Tr2RenderContextEnum::PixelFormat format, int32_t bpp, HostBitmap& bitmap );
+bool RasterizeNanoVDB( const char* vdbPath, uint32_t gridNumber, PixelFormat format, int32_t bpp, HostBitmap& bitmap );
 bool GetNanoVDBMetaData( const char* vdbPath, std::vector<NanoVDBGridMetadata>& metaData );
 
 struct RasterizeGridInfo
 {
 	uint32_t index;
-	Tr2RenderContextEnum::PixelFormat format;
+	PixelFormat format;
 	Vta::Encoding encoding;
 };
 std::vector<uint8_t> NanoVDBToVTA( const std::vector<std::string>& vdbPaths, const std::vector<RasterizeGridInfo>& grids );

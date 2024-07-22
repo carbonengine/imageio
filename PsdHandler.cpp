@@ -2,8 +2,6 @@
 #include "PsdHandler.h"
 #include "HostBitmap.h"
 
-using namespace Tr2RenderContextEnum;
-
 namespace
 {
 
@@ -63,22 +61,22 @@ ImageIO::Result WriteZeroLengthBlock( ICcpStream& stream )
 	return ImageIO::Result::OK;
 }
 
-Tr2RenderContextEnum::PixelFormat GetFormat( Header& header ) 
+ImageIO::PixelFormat GetFormat( Header& header ) 
 {
 	switch( header.channelCount )
 	{
 	case 1:
-		return Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM;
+		return ImageIO::PIXEL_FORMAT_R8_UNORM;
 	case 2:
-		return Tr2RenderContextEnum::PIXEL_FORMAT_R8G8_UNORM;
+		return ImageIO::PIXEL_FORMAT_R8G8_UNORM;
 	case 3:
-		return Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM;
+		return ImageIO::PIXEL_FORMAT_B8G8R8X8_UNORM;
 	default:
-		return Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM;
+		return ImageIO::PIXEL_FORMAT_B8G8R8A8_UNORM;
 	}
 }
 
-ImageIO::Result DoReadHeader( ICcpStream& stream, Tr2BitmapDimensions& dimensions, Header& header, uint16_t& compression )
+ImageIO::Result DoReadHeader( ICcpStream& stream, ImageIO::BitmapDimensions& dimensions, Header& header, uint16_t& compression )
 {
 	if( stream.Read( &header, sizeof( Header ) ) != sizeof( Header ) )
 	{
@@ -120,7 +118,7 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, Tr2BitmapDimensions& dimension
         // Unknown compression type.
         return ImageIO::Result::HEADER_NOT_SUPPORTED;
     }
-	dimensions = Tr2BitmapDimensions( header.width, header.height, 1, GetFormat( header ) );
+	dimensions = ImageIO::BitmapDimensions( header.width, header.height, 1, GetFormat( header ) );
 
 	return ImageIO::Result::OK;
 }
@@ -298,7 +296,7 @@ bool IsPsdExtension( const wchar_t* ext )
 // --------------------------------------------------------------------------------------
 Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata )
 {
-	Tr2BitmapDimensions dimensions;
+	BitmapDimensions dimensions;
 	Header header;
 	uint16_t compression = 0;
 	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, dimensions, header, compression ) );
@@ -329,7 +327,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters& loadParamet
 // Return Value:
 //   Result of the operation (OK if image saving is supported)
 // --------------------------------------------------------------------------------------
-Result IsSaveSupported( const Tr2BitmapDimensions& bd )
+Result IsSaveSupported( const BitmapDimensions& bd )
 {
 	if( bd.GetType() != TEX_TYPE_2D || bd.GetArraySize() != 1 ||
 		( bd.GetFormat() != PIXEL_FORMAT_R8_UNORM &&

@@ -1,26 +1,26 @@
 #include "StdAfx.h"
 #include "TestHelpers.h"
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 namespace
 {
 
 const TestImage s_r = { 
 	TEST_FILE( r, png ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8_UNORM, 7, 5, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8_UNORM, 7, 5, 1, 1 ), 
 	&CheckTopLeftPixel<uint8_t, 0x54>, &CheckBottomRightPixel<uint8_t, 0x22> };
 const TestImage s_rg = { 
 	TEST_FILE( rg, png ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8G8_UNORM, 7, 4, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8G8_UNORM, 7, 4, 1, 1 ), 
 	&CheckTopLeftPixel<uint16_t, 0xffd3>, &CheckBottomRightPixel<uint16_t, 0xff30> };
 const TestImage s_rgb = { 
 	TEST_FILE( rgb, png ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 8, 3, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 8, 3, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xffb12401>, &CheckBottomRightPixel<uint32_t, 0xff003600> };
 const TestImage s_rgba = { 
 	TEST_FILE( rgba, png ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 12, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 12, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0x72627f00>, &CheckBottomRightPixel<uint32_t, 0x02150000> };
 const TestImage s_iDontExist = { L"resources/iDontExist.png", nullptr, 0 };
 

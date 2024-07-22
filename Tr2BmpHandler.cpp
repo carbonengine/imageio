@@ -9,7 +9,7 @@
 #include "Tr2BmpHandler.h"
 #include "HostBitmap.h"
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 namespace
 {
@@ -65,19 +65,19 @@ struct DibHeader: public MinDibHeader
 };
 #pragma pack(pop)
 
-Tr2RenderContextEnum::PixelFormat GetFormat( DibHeader& dibHeader ) 
+PixelFormat GetFormat( DibHeader& dibHeader ) 
 {
 	if( dibHeader.bitCount == 24 )
 	{
-		return Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM;
+		return PIXEL_FORMAT_B8G8R8X8_UNORM;
 	}
 	else
 	{
-		return Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM;
+		return PIXEL_FORMAT_B8G8R8A8_UNORM;
 	}
 }
 
-ImageIO::Result DoReadHeader( ICcpStream& stream, Tr2BitmapDimensions& dimensions, BmpHeader& bmpHeader, DibHeader& dibHeader )
+ImageIO::Result DoReadHeader( ICcpStream& stream, BitmapDimensions& dimensions, BmpHeader& bmpHeader, DibHeader& dibHeader )
 {
 	if( stream.Read( &bmpHeader, sizeof( BmpHeader ) ) != sizeof( BmpHeader ) )
 	{
@@ -121,7 +121,7 @@ ImageIO::Result DoReadHeader( ICcpStream& stream, Tr2BitmapDimensions& dimension
 	uint32_t width = dibHeader.width;
 	uint32_t height = dibHeader.height;
 
-	dimensions = Tr2BitmapDimensions( width, height, 1, GetFormat( dibHeader ) );
+	dimensions = BitmapDimensions( width, height, 1, GetFormat( dibHeader ) );
 	return ImageIO::Result::OK;
 }
 
@@ -226,7 +226,7 @@ bool IsBmpExtension( const wchar_t* ext )
 // --------------------------------------------------------------------------------------
 Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters&, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata )
 {
-	Tr2BitmapDimensions dimensions;
+	BitmapDimensions dimensions;
 	BmpHeader bmpHeader;
 	DibHeader dibHeader;
 	IMAGE_IO_CR_RETURN_RESULT( DoReadHeader( stream, dimensions, bmpHeader, dibHeader ) );
@@ -259,7 +259,7 @@ Result ReadImage( ICcpStream& stream, const ImageIO::LoadParameters&, ImageIO::H
 // Return Value:
 //   Result of the operation (OK if image saving is supported)
 // --------------------------------------------------------------------------------------
-Result IsSaveSupported( const Tr2BitmapDimensions& bd )
+Result IsSaveSupported( const BitmapDimensions& bd )
 {
 	if( bd.GetType() != TEX_TYPE_2D || bd.GetArraySize() != 1 || 
 		( bd.GetFormat() != PIXEL_FORMAT_B8G8R8X8_UNORM &&

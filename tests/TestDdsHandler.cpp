@@ -1,46 +1,46 @@
 #include "StdAfx.h"
 #include "TestHelpers.h"
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 namespace
 {
 
 const TestImage s_rgb = { 
 	TEST_FILE( rgb, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 12, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 12, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0x00000000>, &CheckBottomRightPixel<uint32_t, 0x00120000>, nullptr };
 const TestImage s_rgba = { 
 	TEST_FILE( rgba, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 12, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 12, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xf7000000>, &CheckBottomRightPixel<uint32_t, 0x74120000>, nullptr };
 const TestImage s_rgbx = { 
 	TEST_FILE( rgbx, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 12, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 12, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0x00000000>, &CheckBottomRightPixel<uint32_t, 0x00120000>, nullptr };
 const TestImage s_a = { 
 	TEST_FILE( a, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_A8_UNORM, 7, 6, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_A8_UNORM, 7, 6, 1, 1 ), 
 	&CheckTopLeftPixel<uint8_t, 0xa3>, &CheckBottomRightPixel<uint8_t, 0x00>, nullptr };
 const TestImage s_l = { 
 	TEST_FILE( l, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8_UNORM, 7, 6, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8_UNORM, 7, 6, 1, 1 ), 
 	&CheckTopLeftPixel<uint8_t, 0xb4>, &CheckBottomRightPixel<uint8_t, 0x00>, nullptr };
 const TestImage s_al = { 
 	TEST_FILE( al, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 7, 6, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 7, 6, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xa3696969>, &CheckBottomRightPixel<uint32_t, 0x00262626>, nullptr };
 const TestImage s_rgba16f = { 
 	TEST_FILE( rgba16f, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R16G16B16A16_FLOAT, 4, 7, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R16G16B16A16_FLOAT, 4, 7, 1, 1 ), 
 	&CheckTopLeftPixel<uint64_t, 0x0000000000000000>, &CheckBottomRightPixel<uint64_t, 0x3a250000000034ef>, nullptr };
 const TestImage s_rgba16 = { 
 	TEST_FILE( rgba16, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R16G16B16A16_UNORM, 16, 15, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R16G16B16A16_UNORM, 16, 15, 1, 1 ), 
 	&CheckTopLeftPixel<uint64_t, 0xdd07000000000000>, &CheckBottomRightPixel<uint64_t, 0xdd07182e177a173e>, nullptr };
 const TestImage s_rgbCube = { 
 	TEST_FILE( rgbCube, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_CUBE, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 5, 1, 1 ),
+	BitmapDimensions( TEX_TYPE_CUBE, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 5, 1, 1 ),
 	&CheckFaceTopLeftPixel<CUBEMAP_FACE_POSITIVE_X, uint32_t, 0xb44100>, 
 	&CheckFaceBottomRightPixel<CUBEMAP_FACE_POSITIVE_X, uint32_t, 0xb80000>, 
 	&CheckFaceTopLeftPixel<CUBEMAP_FACE_NEGATIVE_X, uint32_t, 0x000009>, 
@@ -56,7 +56,7 @@ const TestImage s_rgbCube = {
 	nullptr };
 const TestImage s_rgbaCube = { 
 	TEST_FILE( rgbaCube, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_CUBE, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 5, 1, 1 ),
+	BitmapDimensions( TEX_TYPE_CUBE, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 5, 1, 1 ),
 	&CheckFaceTopLeftPixel<CUBEMAP_FACE_POSITIVE_X, uint32_t, 0x6bb44100>, 
 	&CheckFaceBottomRightPixel<CUBEMAP_FACE_POSITIVE_X, uint32_t, 0x00b80000>, 
 	&CheckFaceTopLeftPixel<CUBEMAP_FACE_NEGATIVE_X, uint32_t, 0x00000009>, 
@@ -72,11 +72,11 @@ const TestImage s_rgbaCube = {
 	nullptr };
 const TestImage s_rgbaVolume = { 
 	TEST_FILE( rgbaVolume, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_3D, PIXEL_FORMAT_B8G8R8A8_UNORM, 4, 4, 4, 1 ),
+	BitmapDimensions( TEX_TYPE_3D, PIXEL_FORMAT_B8G8R8A8_UNORM, 4, 4, 4, 1 ),
 	&CheckTopLeftPixel<uint32_t, 0x0000c79c>, &CheckBottomRightPixel<uint32_t, 0x55bd54e2>, nullptr };
 const TestImage s_rgbaMips = { 
 	TEST_FILE( rgbaMips, dds ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 24, 27, 1, 3 ),
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 24, 27, 1, 3 ),
 	&CheckTopLeftPixel<uint32_t, 0xff0000d3>, 
 	&CheckBottomRightPixel<uint32_t, 0x37b200ff>, 
 	&CheckMipTopLeftPixel<1, uint32_t, 0x6d2c1031>, 
