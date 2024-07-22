@@ -29,7 +29,7 @@ enum class Encoding : uint32_t
 
 struct GridInfo
 {
-	Tr2RenderContextEnum::PixelFormat format;
+	PixelFormat format;
 	Encoding encoding;
 	uint32_t width;
 	uint32_t height;
@@ -130,7 +130,7 @@ private:
 void RegisterHandler();
 bool IsVtaExtension( const wchar_t* extension );
 Result ReadImage( ICcpStream& src, const ImageIO::LoadParameters& loadParameters, ImageIO::HostBitmap& bitmap, ImageIO::Metadata* metadata );
-Result IsSaveSupported( const Tr2BitmapDimensions& bd );
+Result IsSaveSupported( const BitmapDimensions& bd );
 Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadata* metadata );
 
 }

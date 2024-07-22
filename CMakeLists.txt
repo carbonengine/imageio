@@ -35,13 +35,17 @@ ccp_add_library(ImageIO STATIC
 		VtaHandler.cpp
 )
 
-set(PUBLIC_HEADER_FILES 
+set(PUBLIC_HEADER_FILES
+    include/BitmapDimensions.h
+    include/CubemapFace.h
     include/CcpMetadata.h
     include/HostBitmap.h
     include/ImageIOResult.h
     include/ImageUtility.h
     include/NanoVdbSupport.h
+    include/PixelFormat.h
     include/PsdHandler.h
+    include/TextureType.h
     include/Tr2BmpHandler.h
     include/Tr2DdsHandler.h
     include/Tr2ImageHandler.h
@@ -63,17 +67,6 @@ find_package(PNG REQUIRED NO_CMAKE_PATH)
 find_package(ZLIB REQUIRED NO_CMAKE_PATH)
 find_package(CcpCore REQUIRED NO_CMAKE_PATH)
 find_package(NanoVDB REQUIRED NO_CMAKE_PATH)
-
-# TrinityAL was not previously linked, however ImageIO stdAfx was referencing some headers from TrinityAL
-if(WIN32)
-    find_package(TrinityAL_stub REQUIRED NO_CMAKE_PATH)
-    target_include_directories(ImageIO PRIVATE "$<TARGET_PROPERTY:TrinityAL_stub,INTERFACE_INCLUDE_DIRECTORIES>")
-elseif(APPLE)
-    find_package(TrinityAL_metal REQUIRED NO_CMAKE_PATH)
-    target_include_directories(ImageIO PRIVATE "$<TARGET_PROPERTY:TrinityAL_metal,INTERFACE_INCLUDE_DIRECTORIES>")
-else()
-    message(FATAL_ERROR "Unsupported platform!")
-endif()
 
 
 

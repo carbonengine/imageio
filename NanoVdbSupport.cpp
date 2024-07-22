@@ -207,9 +207,9 @@ void DownsampleVolume( const ImageIO::HostBitmap& srcBitmap, ImageIO::HostBitmap
 namespace ImageIO
 {
 
-bool RasterizeNanoVDB( const char* vdbPath, uint32_t gridNumber, Tr2RenderContextEnum::PixelFormat format, int32_t bpp, HostBitmap& bitmap )
+bool RasterizeNanoVDB( const char* vdbPath, uint32_t gridNumber, PixelFormat format, int32_t bpp, HostBitmap& bitmap )
 {
-	if( format != Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM && format != Tr2RenderContextEnum::PIXEL_FORMAT_R32_FLOAT )
+	if( format != PIXEL_FORMAT_R8_UNORM && format != PIXEL_FORMAT_R32_FLOAT )
 	{
 		return false;
 	}
@@ -249,7 +249,7 @@ bool RasterizeNanoVDB( const char* vdbPath, uint32_t gridNumber, Tr2RenderContex
 	}
 
 
-	if( format == Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM )
+	if( format == PIXEL_FORMAT_R8_UNORM )
 	{
 		if( bpp < 0 )
 		{
@@ -389,7 +389,7 @@ std::vector<uint8_t> NanoVDBToVTA( const std::vector<std::string>& vdbPaths, con
 	bitmaps.resize( grids.size() );
 	for( auto& bmp : bitmaps )
 	{
-		bmp.CreateVolume( totalBounds.dim().x(), totalBounds.dim().y(), totalBounds.dim().z(), 1, Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM );
+		bmp.CreateVolume( totalBounds.dim().x(), totalBounds.dim().y(), totalBounds.dim().z(), 1, PIXEL_FORMAT_R8_UNORM );
 		if( !bmp.IsValid() )
 		{
 			return {};

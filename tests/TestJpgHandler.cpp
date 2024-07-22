@@ -1,14 +1,14 @@
 #include "StdAfx.h"
 #include "TestHelpers.h"
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 namespace
 {
 
 const TestImage s_rgb = { 
 	TEST_FILE( rgb, jpg ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 7, 3, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 7, 3, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xff005305>,&CheckBottomRightPixel<uint32_t,  0xff000c23>, nullptr };
 const TestImage s_iDontExist = { L"resources/iDontExist.jpg", nullptr, 0 };
 

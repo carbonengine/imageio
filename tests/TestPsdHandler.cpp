@@ -1,30 +1,30 @@
 #include "StdAfx.h"
 #include "TestHelpers.h"
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 namespace
 {
 
 const TestImage s_rgb = { 
 	TEST_FILE( rgb, psd ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 12, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 12, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xff000000>, &CheckBottomRightPixel<uint32_t, 0xff100000>, nullptr };
 const TestImage s_rgba = { 
 	TEST_FILE( rgba, psd ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 12, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 12, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0x79000000>, &CheckBottomRightPixel<uint32_t, 0xd1100000>, nullptr };
 const TestImage s_al = { 
 	TEST_FILE( al, psd ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8G8_UNORM, 5, 12, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8G8_UNORM, 5, 12, 1, 1 ), 
 	&CheckTopLeftPixel<uint16_t, 0x7900>, &CheckBottomRightPixel<uint16_t, 0xd104>, nullptr };
 const TestImage s_r = { 
 	TEST_FILE( r, psd ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8_UNORM, 5, 12, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8_UNORM, 5, 12, 1, 1 ), 
 	&CheckTopLeftPixel<uint8_t, 0x00>, &CheckBottomRightPixel<uint8_t, 0x04>, nullptr };
 const TestImage s_rgbRle = { 
 	TEST_FILE( rgbRle, psd ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 32, 32, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 32, 32, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xff636161>, &CheckBottomRightPixel<uint32_t, 0xffbfbfbf>, nullptr };
 const TestImage s_iDontExist = { L"resources/iDontExist.psd", nullptr, 0 };
 

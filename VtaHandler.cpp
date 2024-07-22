@@ -528,10 +528,10 @@ Result ReadImage( ICcpStream& src, const ImageIO::LoadParameters& loadParameters
 	return Result::OK;
 }
 
-Result IsSaveSupported( const Tr2BitmapDimensions& bd )
+Result IsSaveSupported( const BitmapDimensions& bd )
 {
-	if( bd.GetType() == Tr2RenderContextEnum::TEX_TYPE_3D && 
-		bd.GetFormat() == Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM &&
+	if( bd.GetType() == TEX_TYPE_3D && 
+		bd.GetFormat() == PIXEL_FORMAT_R8_UNORM &&
 		bd.GetArraySize() < 2 &&
 		bd.GetMipCount() == 1 )
 	{
@@ -553,7 +553,7 @@ Result Save( const ImageIO::HostBitmap& image, ICcpStream& output, const Metadat
 	}
 
 	GridInfo grid;
-	grid.format = Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM;
+	grid.format = PIXEL_FORMAT_R8_UNORM;
 	grid.width = image.GetWidth();
 	grid.height = image.GetHeight();
 	grid.depth = image.GetDepth();

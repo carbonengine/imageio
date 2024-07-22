@@ -1,34 +1,34 @@
 #include "StdAfx.h"
 #include "TestHelpers.h"
 
-using namespace Tr2RenderContextEnum;
+using namespace ImageIO;
 
 namespace
 {
 
 const TestImage s_rgb = { 
 	TEST_FILE( rgb, tga ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 8, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 8, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xffff2aff>, &CheckBottomRightPixel<uint32_t, 0xffff00b9>, nullptr };
 const TestImage s_rgbRle = { 
 	TEST_FILE( rgbRle, tga ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 8, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 8, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xffff2aff>, &CheckBottomRightPixel<uint32_t, 0xffff00b9>, nullptr };
 const TestImage s_rgba = { 
 	TEST_FILE( rgba, tga ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 8, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 8, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xffff2aff>, &CheckBottomRightPixel<uint32_t, 0x61ff00b9>, nullptr };
 const TestImage s_rgbaRle = { 
 	TEST_FILE( rgbaRle, tga ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 8, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8A8_UNORM, 5, 8, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xffff2aff>, &CheckBottomRightPixel<uint32_t, 0x61ff00b9>, nullptr };
 const TestImage s_r = { 
 	TEST_FILE( r, tga ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8_UNORM, 5, 8, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_R8_UNORM, 5, 8, 1, 1 ), 
 	&CheckTopLeftPixel<uint8_t, 0xff>, &CheckBottomRightPixel<uint8_t, 0x61>, nullptr };
 const TestImage s_rgbIndexed = { 
 	TEST_FILE( rgbIndexed, tga ),
-	Tr2BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 8, 1, 1 ), 
+	BitmapDimensions( TEX_TYPE_2D, PIXEL_FORMAT_B8G8R8X8_UNORM, 5, 8, 1, 1 ), 
 	&CheckTopLeftPixel<uint32_t, 0xffff2aff>, &CheckBottomRightPixel<uint32_t, 0xffff00b9>, nullptr };
 const TestImage s_iDontExist = { L"resources/iDontExist.tga", nullptr, 0 };
 

@@ -5,14 +5,14 @@
 namespace
 {
 
-void AssertBitmapDimensionsEqual( const Tr2BitmapDimensions& actualDimensions, const Tr2BitmapDimensions& expectedDimensions )
+void AssertBitmapDimensionsEqual( const ImageIO::BitmapDimensions& actualDimensions, const ImageIO::BitmapDimensions& expectedDimensions )
 {
 	EXPECT_EQ( expectedDimensions.GetWidth(), actualDimensions.GetWidth() );
 	EXPECT_EQ( expectedDimensions.GetHeight(), actualDimensions.GetHeight() );
 	EXPECT_EQ( expectedDimensions.GetDepth(), actualDimensions.GetDepth() );
 	EXPECT_EQ( expectedDimensions.GetFormat(), actualDimensions.GetFormat() );
 	EXPECT_EQ( expectedDimensions.GetType(), actualDimensions.GetType() );
-	EXPECT_FALSE( Tr2RenderContextEnum::IsCompressedFormat( actualDimensions.GetFormat() ) );
+	EXPECT_FALSE( IsCompressedFormat( actualDimensions.GetFormat() ) );
 }
 
 void SaveAndLoadImage( const TestImage& image, ImageIO::HostBitmap& loaded, ImageIO::HostBitmap& loadedFromSaved )

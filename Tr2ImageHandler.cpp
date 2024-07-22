@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "Tr2ImageHandler.h"
 
-using namespace Tr2RenderContextEnum;
 
 #include "Tr2PngHandler.h"
 #include "Tr2DdsHandler.h"
@@ -110,7 +109,7 @@ Result ReadImage( ICcpStream& src, const LoadParameters& loadParameters, HostBit
 // Return Value:
 //   Result of the operation (OK if image saving is supported)
 // --------------------------------------------------------------------------------------
-Result IsSaveSupported( const wchar_t* filename, const Tr2BitmapDimensions& dimensions )
+Result IsSaveSupported( const wchar_t* filename, const BitmapDimensions& dimensions )
 {
 	auto handler = GetImageHandler( GetExtension( filename ) );
 	if( !handler )

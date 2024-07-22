@@ -3,17 +3,15 @@
 #include "Tr2ImageHandler.h"
 #include "ImageUtility.h"
 
-using namespace Tr2RenderContextEnum;
-
 namespace
 {
 
-size_t GetDataSize( const Tr2BitmapDimensions& dim )
+size_t GetDataSize( const ImageIO::BitmapDimensions& dim )
 {
 	uint32_t mipCount = dim.GetTrueMipCount();
 	uint32_t width = dim.GetWidth();
 	uint32_t height = dim.GetHeight();
-	uint32_t depth = dim.GetType() == TEX_TYPE_3D ? dim.GetDepth() : 1;
+	uint32_t depth = dim.GetType() == ImageIO::TEX_TYPE_3D ? dim.GetDepth() : 1;
 	size_t size = 0;
 	if( IsCompressedFormat( dim.GetFormat() ) )
 	{
@@ -49,7 +47,7 @@ HostBitmap::HostBitmap()
 }
 
 HostBitmap::HostBitmap( HostBitmap&& other )
-	:Tr2BitmapDimensions( other )
+	:BitmapDimensions( other )
 {
 	std::swap( m_name, other.m_name );
 	std::swap( m_data, other.m_data );
@@ -62,13 +60,13 @@ HostBitmap::~HostBitmap()
 
 HostBitmap& HostBitmap::operator=( HostBitmap&& other )
 {
-	std::swap( static_cast<Tr2BitmapDimensions&>( *this ), static_cast<Tr2BitmapDimensions&>( other ) );
+	std::swap( static_cast<BitmapDimensions&>( *this ), static_cast<BitmapDimensions&>( other ) );
 	std::swap( m_name, other.m_name );
 	std::swap( m_data, other.m_data );
 	return *this;
 }
 
-bool HostBitmap::Create( unsigned width, unsigned height, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format )
+bool HostBitmap::Create( unsigned width, unsigned height, unsigned mipCount, PixelFormat format )
 {
 	Destroy();
 
@@ -109,7 +107,7 @@ bool HostBitmap::Create( unsigned width, unsigned height, unsigned mipCount, Tr2
 	return true;
 }
 
-bool HostBitmap::Create2DArray( unsigned width, unsigned height, unsigned mipCount, unsigned arraySize, Tr2RenderContextEnum::PixelFormat format )
+bool HostBitmap::Create2DArray( unsigned width, unsigned height, unsigned mipCount, unsigned arraySize, PixelFormat format )
 {
 	Destroy();
 
@@ -150,7 +148,7 @@ bool HostBitmap::Create2DArray( unsigned width, unsigned height, unsigned mipCou
 	return true;
 }
 
-bool HostBitmap::CreateCube( unsigned width, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format )
+bool HostBitmap::CreateCube( unsigned width, unsigned mipCount, PixelFormat format )
 {
 	Destroy();
 
@@ -181,7 +179,7 @@ bool HostBitmap::CreateCube( unsigned width, unsigned mipCount, Tr2RenderContext
 	return true;
 }
 
-bool HostBitmap::CreateVolume( unsigned width, unsigned height, unsigned depth, unsigned mipCount, Tr2RenderContextEnum::PixelFormat format )
+bool HostBitmap::CreateVolume( unsigned width, unsigned height, unsigned depth, unsigned mipCount, PixelFormat format )
 {
 	Destroy();
 
@@ -212,13 +210,13 @@ bool HostBitmap::CreateVolume( unsigned width, unsigned height, unsigned depth, 
 	return true;
 }
 
-bool HostBitmap::CreateFromBitmapDimensions( const Tr2BitmapDimensions& dimensions )
+bool HostBitmap::CreateFromBitmapDimensions( const BitmapDimensions& dimensions )
 {
 	if( dimensions.GetWidth() == 0 || dimensions.GetFormat() == PIXEL_FORMAT_UNKNOWN )
 	{
 		return false;
 	}
-	static_cast<Tr2BitmapDimensions&>( *this ) = dimensions;
+	static_cast<BitmapDimensions&>( *this ) = dimensions;
 	m_data.resize( "HostBitmap::m_data", GetDataSize( *this ) );
 	if( !m_data.get() )
 	{
@@ -234,19 +232,19 @@ bool HostBitmap::IsValid() const
 
 void HostBitmap::Destroy()
 {
-	Tr2BitmapDimensions::Destroy();
+	BitmapDimensions::Destroy();
 	
 	m_data.clear();	
 }
 
-bool HostBitmap::ChangeFormat( Tr2RenderContextEnum::PixelFormat format )
+bool HostBitmap::ChangeFormat( PixelFormat format )
 {
 	if( !IsValid() )
 	{
 		return false;
 	}
-	if( Tr2RenderContextEnum::IsCompressedFormat( format ) || Tr2RenderContextEnum::IsCompressedFormat( m_format ) ||
-		Tr2RenderContextEnum::GetBytesPerPixel( format ) != Tr2RenderContextEnum::GetBytesPerPixel( m_format ) )
+	if( IsCompressedFormat( format ) || IsCompressedFormat( m_format ) ||
+		GetBytesPerPixel( format ) != GetBytesPerPixel( m_format ) )
 	{
 		return false;
 	}
@@ -267,7 +265,7 @@ bool HostBitmap::ChangeFormat( Tr2RenderContextEnum::PixelFormat format )
 //   true When conversion was successful
 //   false Otherwise
 // --------------------------------------------------------------------------------------
-bool HostBitmap::ConvertFormat( Tr2RenderContextEnum::PixelFormat format )
+bool HostBitmap::ConvertFormat( PixelFormat format )
 {
 	if( !IsValid() )
 	{
@@ -297,7 +295,7 @@ bool HostBitmap::ConvertFormat( Tr2RenderContextEnum::PixelFormat format )
 
 	if( format == PIXEL_FORMAT_R8_UNORM && ( GetFormat() == PIXEL_FORMAT_B8G8R8A8_UNORM || GetFormat() == PIXEL_FORMAT_B8G8R8X8_UNORM ) )
 	{
-		size_t pixelCount = GetRawDataSize() / Tr2RenderContextEnum::GetBytesPerPixel( GetFormat() );
+		size_t pixelCount = GetRawDataSize() / GetBytesPerPixel( GetFormat() );
 		uint8_t* oldData = (unsigned char*)CCP_MALLOC( "HostBitmap::ConvertFormat", GetRawDataSize() );
 		if( !oldData )
 		{
@@ -351,7 +349,7 @@ bool HostBitmap::ConvertFormat( Tr2RenderContextEnum::PixelFormat format )
 	if( ( format == PIXEL_FORMAT_B8G8R8A8_UNORM && ( GetFormat() == PIXEL_FORMAT_R8_UNORM || GetFormat() == PIXEL_FORMAT_R8G8_UNORM ) ) ||
 		( format == PIXEL_FORMAT_B8G8R8X8_UNORM && GetFormat() == PIXEL_FORMAT_R8_UNORM ) )
 	{
-		size_t pixelCount = GetRawDataSize() / Tr2RenderContextEnum::GetBytesPerPixel( GetFormat() );
+		size_t pixelCount = GetRawDataSize() / GetBytesPerPixel( GetFormat() );
 		uint8_t* oldData = (unsigned char*)CCP_MALLOC( "HostBitmap::ConvertFormat", GetRawDataSize() );
 		if( !oldData )
 		{
@@ -402,7 +400,7 @@ bool HostBitmap::ConvertFormat( Tr2RenderContextEnum::PixelFormat format )
 	return false;
 }
 
-bool HostBitmap::CheckForMatch( const Tr2BitmapDimensions& bd, bool checkDimensions, bool& alphaConvert, const char* log )
+bool HostBitmap::CheckForMatch( const BitmapDimensions& bd, bool checkDimensions, bool& alphaConvert, const char* log )
 {
 	if( !IsValid() )
 	{
@@ -1131,7 +1129,7 @@ bool HostBitmap::GenerateMipMaps( unsigned levels )
 
 bool HostBitmap::GenerateMipLevel( uint8_t* source, unsigned width, unsigned height, uint8_t* destination )
 {
-	unsigned bpp = Tr2RenderContextEnum::GetBytesPerPixel( m_format );
+	unsigned bpp = GetBytesPerPixel( m_format );
 	unsigned dstWidth = std::max( width / 2, 1u );
 	unsigned dstHeight = std::max( height / 2, 1u );
 	unsigned srcStride = width * bpp;
@@ -1207,10 +1205,10 @@ bool HostBitmap::GetAverageColor(float &r, float &g, float &b, float &a) {
 	if( GetType() == TEX_TYPE_2D && GetArraySize() < 2 )
 	{
 		auto format = GetFormat();
-		if( format != Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM &&
-			format != Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM &&
-			format != Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM &&
-			format != Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM ) {
+		if( format != PIXEL_FORMAT_B8G8R8X8_UNORM &&
+			format != PIXEL_FORMAT_B8G8R8A8_UNORM &&
+			format != PIXEL_FORMAT_BC1_UNORM &&
+			format != PIXEL_FORMAT_BC3_UNORM ) {
 			return false;
 		}
 
@@ -1254,13 +1252,13 @@ bool HostBitmap::GetAverageColor(float &r, float &g, float &b, float &a) {
 		// Setup the correct get pixel function
 		switch( format ) 
 		{
-		case Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM:
+		case PIXEL_FORMAT_B8G8R8A8_UNORM:
 			GetPixel = []( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* data ) { return ImageUtility::GetPixelColor_BGRA( x, y, pitch, data ); };
 			break;
-		case Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM:
+		case PIXEL_FORMAT_B8G8R8X8_UNORM:
 			GetPixel = []( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* data ) { return ImageUtility::GetPixelColor_BGRX( x, y, pitch, data ); };
 			break;
-		case Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM:
+		case PIXEL_FORMAT_BC1_UNORM:
 			GetPixel = []( uint32_t x, uint32_t y, uint32_t width, uint32_t pitch, const char* data ) { return ImageUtility::GetPixelColor_BC1( x, y, width, pitch, data ); };
 			break;
 		default:			
@@ -1311,10 +1309,10 @@ bool HostBitmap::GetPixel( uint32_t x, uint32_t y, float& r, float& g, float& b,
 	if( GetType() == TEX_TYPE_2D )
 	{
 		auto format = GetFormat();
-		if( format != Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM &&
-			format != Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM &&
-			format != Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM &&
-			format != Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM ) {
+		if( format != PIXEL_FORMAT_B8G8R8X8_UNORM &&
+			format != PIXEL_FORMAT_B8G8R8A8_UNORM &&
+			format != PIXEL_FORMAT_BC1_UNORM &&
+			format != PIXEL_FORMAT_BC3_UNORM ) {
 			return false;
 		}
 
@@ -1329,19 +1327,19 @@ bool HostBitmap::GetPixel( uint32_t x, uint32_t y, float& r, float& g, float& b,
 		const char* data = GetRawData();
 		unsigned int pixelValue = 0;
 		switch( format ) {
-		case Tr2RenderContextEnum::PIXEL_FORMAT_R8_UNORM:
+		case PIXEL_FORMAT_R8_UNORM:
 			pixelValue = ImageUtility::GetPixelColor_R( x, y, pitch, data );
 			break;
-		case Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8A8_UNORM:
+		case PIXEL_FORMAT_B8G8R8A8_UNORM:
 			pixelValue = ImageUtility::GetPixelColor_BGRA( x, y, pitch, data );
 			break;
-		case Tr2RenderContextEnum::PIXEL_FORMAT_B8G8R8X8_UNORM:
+		case PIXEL_FORMAT_B8G8R8X8_UNORM:
 			pixelValue = ImageUtility::GetPixelColor_BGRX( x, y, pitch, data );
 			break;
-		case Tr2RenderContextEnum::PIXEL_FORMAT_BC1_UNORM:
+		case PIXEL_FORMAT_BC1_UNORM:
 			pixelValue = ImageUtility::GetPixelColor_BC1( x, y, width, pitch, data );
 			break;
-		case Tr2RenderContextEnum::PIXEL_FORMAT_BC3_UNORM:
+		case PIXEL_FORMAT_BC3_UNORM:
 			pixelValue = ImageUtility::GetPixelColor_BC3( x, y, width, pitch, data );
 			break;
 		default:
