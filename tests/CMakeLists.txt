@@ -27,25 +27,43 @@ target_precompile_headers(ImageIOTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx
 
 find_package(GTest REQUIRED)
 
-gtest_discover_tests(ImageIOTest myListOfTests)
 
-if(WIN32)
-    find_package(TrinityAL_stub REQUIRED NO_CMAKE_PATH)
-    target_include_directories(ImageIOTest PRIVATE "$<TARGET_PROPERTY:TrinityAL_stub,INTERFACE_INCLUDE_DIRECTORIES>")
-elseif(APPLE)
-    find_package(TrinityAL_metal REQUIRED NO_CMAKE_PATH)
-    target_include_directories(ImageIOTest PRIVATE "$<TARGET_PROPERTY:TrinityAL_metal,INTERFACE_INCLUDE_DIRECTORIES>")
-else()
-    message(FATAL_ERROR "Unsupported platform!")
-endif()
 
-target_link_libraries(ImageIOTest PRIVATE ImageIO GTest::GTest GTest::Main)
+# if(WIN32)
+#     find_package(TrinityAL_stub REQUIRED NO_CMAKE_PATH)
+#     target_include_directories(ImageIOTest PRIVATE "$<TARGET_PROPERTY:INTERFACE_INCLUDE_DIRECTORIES>")
+# elseif(APPLE)
+#     find_package(TrinityAL_metal REQUIRED NO_CMAKE_PATH)
+#     target_include_directories(ImageIOTest PRIVATE "$<TARGET_PROPERTY:INTERFACE_INCLUDE_DIRECTORIES>")
+# else()
+#     message(FATAL_ERROR "Unsupported platform!")
+# endif()
+
+
+target_link_libraries(ImageIOTest PRIVATE ImageIO GTest::GTest GTest::Main ccp::log)
 if(APPLE)
     target_link_libraries(ImageIOTest PRIVATE "-framework CoreFoundation")
 elseif(WIN32)
     target_link_options(ImageIOTest PRIVATE "/IGNORE:4049")
 endif()
 
+if(CMAKE_IMPORT_LIBRARY_SUFFIX)
+    add_custom_command(TARGET ImageIOTest POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:ImageIOTest> $<TARGET_FILE_DIR:ImageIOTest>
+            COMMAND_EXPAND_LISTS
+            VERBATIM
+    )
+elseif(APPLE)
+    add_custom_command(
+            TARGET ImageIOTest POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:Python> $<TARGET_FILE_DIR:ImageIOTest>
+            COMMAND_EXPAND_LISTS
+    )
+endif()
+
 target_compile_definitions(ImageIOTest PRIVATE BLUEBUILD)
 
 set_target_properties(ImageIOTest PROPERTIES FOLDER "Tests")
+
+gtest_discover_tests(ImageIOTest myListOfTests)
