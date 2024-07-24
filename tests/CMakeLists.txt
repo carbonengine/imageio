@@ -41,13 +41,6 @@ if(CMAKE_IMPORT_LIBRARY_SUFFIX)
             COMMAND_EXPAND_LISTS
             VERBATIM
     )
-elseif(APPLE)
-    add_custom_command(
-            TARGET ImageIOTest POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_FILE:Python> $<TARGET_FILE_DIR:ImageIOTest>
-            COMMAND_EXPAND_LISTS
-    )
 endif()
 
 target_compile_definitions(ImageIOTest PRIVATE BLUEBUILD)
