@@ -27,13 +27,14 @@ target_precompile_headers(ImageIOTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx
 
 find_package(GTest REQUIRED)
 
-# Copy binary runtime dependencies on DLL platforms
-find_package(Tracy REQUIRED NO_CMAKE_PATH)
-add_custom_command(TARGET ImageIOTest POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_RUNTIME_DLLS:ImageIOTest>
-    $<TARGET_FILE_DIR:ImageIOTest>
-)
+if(WIN32)
+    # Copy binary runtime dependencies
+    add_custom_command(TARGET ImageIOTest POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_RUNTIME_DLLS:ImageIOTest>
+        $<TARGET_FILE_DIR:ImageIOTest>
+    )
+endif()
 
 gtest_discover_tests(ImageIOTest myListOfTests)
 
