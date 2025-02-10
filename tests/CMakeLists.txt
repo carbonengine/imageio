@@ -28,7 +28,7 @@ target_precompile_headers(ImageIOTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx
 find_package(GTest REQUIRED)
 
 
-target_link_libraries(ImageIOTest PRIVATE ImageIO GTest::GTest GTest::Main ccp::log)
+target_link_libraries(ImageIOTest PRIVATE ImageIO GTest::GTest GTest::Main)
 if(APPLE)
     target_link_libraries(ImageIOTest PRIVATE "-framework CoreFoundation")
 elseif(WIN32)
