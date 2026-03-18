@@ -97,7 +97,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     configure_ccp_vendor_config_file(
         TARGET ImageIO
         DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/ImageIOConfig.cmake"
-        DEPENDENCIES ""
+        DEPENDENCIES JPEG PNG ZLIB NanoVDB
     )
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ImageIOConfig.cmake DESTINATION .)
 
