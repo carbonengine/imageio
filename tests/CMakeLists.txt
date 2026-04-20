@@ -36,11 +36,21 @@ elseif(WIN32)
 endif()
 
 if(CMAKE_IMPORT_LIBRARY_SUFFIX)
+
     add_custom_command(TARGET ImageIOTest POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:ImageIOTest> $<TARGET_FILE_DIR:ImageIOTest>
             COMMAND_EXPAND_LISTS
             VERBATIM
     )
+
+    #Manually run applocal force no debug in config to copy dlls for libjpeg-turbo and libpng
+    add_custom_command(TARGET ImageIOTest POST_BUILD
+        COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
+        -targetBinary "$<TARGET_FILE:ImageIOTest>"
+        -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin"
+        VERBATIM
+    )
+
 endif()
 
 target_compile_definitions(ImageIOTest PRIVATE BLUEBUILD)
