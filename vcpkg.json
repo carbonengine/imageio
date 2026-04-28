@@ -32,7 +32,7 @@
   "overrides": [
     {
       "name": "libpng",
-      "version": "1.6.47"
+      "version": "1.6.37"
     },
     {
       "name": "openvdb",
