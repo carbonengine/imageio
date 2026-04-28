@@ -51,8 +51,8 @@ set_target_properties(ImageIO PROPERTIES POSITION_INDEPENDENT_CODE ON EXPORT_NAM
 
 target_precompile_headers(ImageIO PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx.h)
 
-find_package(JPEG REQUIRED)
-find_package(PNG REQUIRED)
+find_package(libjpeg-turbo CONFIG REQUIRED)
+find_package(libpng REQUIRED)
 find_package(zlib-ng REQUIRED)
 find_package(carbon-core CONFIG REQUIRED)
 find_package(OpenVDB REQUIRED)
@@ -63,7 +63,7 @@ target_include_directories(ImageIO
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(ImageIO PUBLIC CcpCore JPEG::JPEG PNG::PNG zlib-ng::zlib OpenVDB::openvdb)
+target_link_libraries(ImageIO PUBLIC CcpCore libjpeg-turbo::jpeg PNG::PNG zlib-ng::zlib OpenVDB::openvdb)
 
 target_compile_options(ImageIO PRIVATE "${MATH_OPTIMIZE_FLAG}")
 
