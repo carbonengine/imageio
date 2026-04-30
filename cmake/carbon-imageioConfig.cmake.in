@@ -2,7 +2,7 @@
 
 include(CMakeFindDependencyMacro)
 
-find_dependency(libpng REQUIRED)
+find_dependency(PNG CONFIG REQUIRED)
 find_dependency(libjpeg-turbo CONFIG REQUIRED)
 find_dependency(zlib-ng CONFIG REQUIRED)
 find_dependency(OpenVDB REQUIRED)

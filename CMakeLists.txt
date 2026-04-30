@@ -52,7 +52,7 @@ set_target_properties(CcpImageIO PROPERTIES POSITION_INDEPENDENT_CODE ON EXPORT_
 target_precompile_headers(CcpImageIO PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx.h)
 
 find_package(libjpeg-turbo CONFIG REQUIRED)
-find_package(libpng REQUIRED)
+find_package(PNG CONFIG REQUIRED)
 find_package(zlib-ng REQUIRED)
 find_package(carbon-core CONFIG REQUIRED)
 find_package(OpenVDB REQUIRED)
