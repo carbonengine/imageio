@@ -103,15 +103,17 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         install(FILES ${CMAKE_CURRENT_BINARY_DIR}/carbon-imageioConfig.cmake DESTINATION .)
     else ()
 
-        # Install rule for available public headers
+        # Install rule to ensure that our runtime and linker files are in the vcpkg structure
         install(
                 TARGETS CcpImageIO
                 EXPORT CcpImageIOTarget
                 CONFIGURATIONS ${CMAKE_CONFIGURATION_TYPES}
-                DESTINATION ${CMAKE_INSTALL_PREFIX}/share/carbon-imageio
                 LIBRARY DESTINATION lib
                 RUNTIME DESTINATION bin
         )
+
+         # Install rule for available public headers
+        install(FILES ${PUBLIC_HEADER_FILES} DESTINATION include)
 
         install(EXPORT CcpImageIOTarget
                 DESTINATION share/carbon-imageio
