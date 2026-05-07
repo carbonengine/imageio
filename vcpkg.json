@@ -19,7 +19,7 @@
     {
       "name": "openvdb",
       "version>=": "10.0.0",
-      "features": [ "nanovdb" ],
+      "features": [ "nanovdb-nocuda" ],
       "default-features": false
     },
     {

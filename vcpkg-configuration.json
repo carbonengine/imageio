@@ -15,7 +15,7 @@
       "kind": "git",
       "repository": "git@github.com:carbonengine/vcpkg-registry.git",
       "baseline": "d431d05377ae8d620c644c49c3f4d1bd974cee18",
-      "packages": ["carbon-core", "ccp-debug-info", "tracy"]
+      "packages": ["carbon-core", "ccp-debug-info", "tracy", "openvdb"]
     }
   ]
 }
