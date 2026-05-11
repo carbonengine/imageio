@@ -28,12 +28,6 @@
       "host": true
     }
 
-  ],
-  "overrides": [
-    {
-      "name": "openvdb",
-      "version": "10.0.0#6"
-    }
   ]
   
 }

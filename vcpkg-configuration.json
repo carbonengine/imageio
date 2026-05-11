@@ -7,14 +7,8 @@
   "registries": [
     {
       "kind": "git",
-      "repository": "git@github.com:ccpgames/carbon-vcpkg-registry.git",
-      "baseline": "bd0e4644d7d8a7ce9bfa426192cdf37a23e61b5f",
-      "packages": ["cuda"]
-    },
-    {
-      "kind": "git",
       "repository": "git@github.com:carbonengine/vcpkg-registry.git",
-      "baseline": "d431d05377ae8d620c644c49c3f4d1bd974cee18",
+      "baseline": "bcc6d146b99547f6654310495730e4cbba9ca7c3",
       "packages": ["carbon-core", "ccp-debug-info", "tracy", "openvdb"]
     }
   ]
