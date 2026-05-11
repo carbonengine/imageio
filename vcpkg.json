@@ -28,6 +28,12 @@
       "host": true
     }
 
+  ],
+  "overrides": [
+    {
+      "name": "openexr",
+      "version": "3.2.4#0"
+    }
   ]
   
 }
