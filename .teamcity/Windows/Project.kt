@@ -208,6 +208,12 @@ class CarbonBuildWindows(buildName: String, configType: String, preset: String) 
                 authType = token {
                     token = "%GITHUB_CARBON_PAT%"
                 }
+                // Constrain PR triggers to compatible refs so as to avoid erroneous triggers
+                filterTargetBranch = """
+                    +:refs/heads/main
+                    +:refs/heads/release/*.x
+                    -:refs/heads/release/1.x
+                """.trimIndent()
                 filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER
             }
         }
