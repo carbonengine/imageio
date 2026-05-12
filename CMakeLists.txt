@@ -80,8 +80,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
  option(INSTALL_TO_MONOLITH "Install this package to a perforce branch vendor folder - provided for backwards compatability" OFF)
     if (INSTALL_TO_MONOLITH)
-        include(cmake/CcpMonolithVendorConfig.cmake)
-        include(cmake/CcpPackageConfigHelpers.cmake)
 
         # Install rule to ensure that our runtime and linker files are in the expected, platform-specific folders
         install(
