@@ -9,7 +9,7 @@
       "version>=": "2.1.2"
     },
     {
-      "name": "zlib-ng",
+      "name": "zlib",
       "version>=": "2.2.5"
     },
     {

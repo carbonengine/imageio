@@ -53,7 +53,7 @@ target_precompile_headers(CcpImageIO PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx.
 
 find_package(libjpeg-turbo CONFIG REQUIRED)
 find_package(PNG CONFIG REQUIRED)
-find_package(zlib-ng REQUIRED)
+find_package(zlib REQUIRED)
 find_package(carbon-core CONFIG REQUIRED)
 find_package(OpenVDB REQUIRED)
 
@@ -63,7 +63,7 @@ target_include_directories(CcpImageIO
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(CcpImageIO PUBLIC CcpCore libjpeg-turbo::jpeg PNG::PNG zlib-ng::zlib OpenVDB::openvdb)
+target_link_libraries(CcpImageIO PUBLIC CcpCore libjpeg-turbo::jpeg PNG::PNG ZLIB::ZLIB OpenVDB::openvdb)
 
 target_compile_options(CcpImageIO PRIVATE "${MATH_OPTIMIZE_FLAG}")
 
