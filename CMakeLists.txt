@@ -1,24 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
-project(ImageIO VERSION 1.0.0)
 
-if(NOT DEFINED ENV{CCP_EVE_PERFORCE_BRANCH_PATH})
-    message(FATAL_ERROR "Missing required environment variable CCP_EVE_PERFORCE_BRANCH_PATH")
-elseif(NOT IS_ABSOLUTE $ENV{CCP_EVE_PERFORCE_BRANCH_PATH})
-    message(FATAL_ERROR "CCP_EVE_PERFORCE_BRANCH_PATH needs to be an absolute path")
-elseif(NOT EXISTS $ENV{CCP_EVE_PERFORCE_BRANCH_PATH})
-    message(FATAL_ERROR "CCP_EVE_PERFORCE_BRANCH_PATH is pointing at a non-existing location $ENV{CCP_EVE_PERFORCE_BRANCH_PATH}")
-elseif(NOT IS_DIRECTORY $ENV{CCP_EVE_PERFORCE_BRANCH_PATH})
-    message(FATAL_ERROR "CCP_EVE_PERFORCE_BRANCH_PATH needs to be a directory")
-else()
-    message(STATUS "Using CCP_EVE_PERFORCE_BRANCH_PATH located at $ENV{CCP_EVE_PERFORCE_BRANCH_PATH}")
-endif()
+project(carbon-imageio VERSION 1.0.0)
 
-file(TO_CMAKE_PATH "$ENV{CCP_EVE_PERFORCE_BRANCH_PATH}" BRANCH_ROOT_DIR)
-list(INSERT CMAKE_MODULE_PATH 0 ${BRANCH_ROOT_DIR}/cmake)
-include(CcpGlobalSettings)
-include(CcpPackageConfigHelpers)
+include(cmake/CcpTargetConfigurations.cmake)
+include(cmake/CcpDocsGenerator.cmake)
+include(cmake/CcpPackageConfigHelpers.cmake)
+include(cmake/CcpBuildConfigurations.cmake)
 
-ccp_add_library(ImageIO STATIC
+ccp_add_library(CcpImageIO STATIC
         CcpMetadata.cpp
         HostBitmap.cpp
         ImageIOResult.cpp
@@ -55,53 +44,28 @@ set(PUBLIC_HEADER_FILES
     include/VtaHandler.h
 )
 
-target_sources(ImageIO PRIVATE ${PUBLIC_HEADER_FILES})
+target_sources(CcpImageIO PRIVATE ${PUBLIC_HEADER_FILES})
 
-target_precompile_headers(ImageIO PRIVATE StdAfx.h)
-set_target_properties(ImageIO PROPERTIES POSITION_INDEPENDENT_CODE ON EXPORT_NAME ImageIO)
+target_precompile_headers(CcpImageIO PRIVATE StdAfx.h)
+set_target_properties(CcpImageIO PROPERTIES POSITION_INDEPENDENT_CODE ON EXPORT_NAME CcpImageIO)
 
-target_precompile_headers(ImageIO PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx.h)
+target_precompile_headers(CcpImageIO PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx.h)
 
-find_package(JPEG REQUIRED NO_CMAKE_PATH)
-find_package(PNG REQUIRED NO_CMAKE_PATH)
-find_package(ZLIB REQUIRED NO_CMAKE_PATH)
-find_package(CcpCore REQUIRED NO_CMAKE_PATH)
-find_package(NanoVDB REQUIRED NO_CMAKE_PATH)
+find_package(libjpeg-turbo CONFIG REQUIRED)
+find_package(PNG CONFIG REQUIRED)
+find_package(zlib REQUIRED)
+find_package(carbon-core CONFIG REQUIRED)
+find_package(OpenVDB REQUIRED)
 
-
-
-
-target_include_directories(ImageIO
+target_include_directories(CcpImageIO
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(ImageIO PUBLIC CcpCore JPEG::JPEG PNG::PNG ZLIB::ZLIB NanoVDB)
+target_link_libraries(CcpImageIO PUBLIC CcpCore libjpeg-turbo::jpeg PNG::PNG ZLIB::ZLIB OpenVDB::openvdb)
 
-target_compile_options(ImageIO PRIVATE "${MATH_OPTIMIZE_FLAG}")
-
-# Provide an install target iff this is the top level project only
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    # Install rule to ensure that our runtime and linker files are in the expected, platform-specific folders
-    install(
-        TARGETS ImageIO
-        EXPORT ImageIOTargets
-        CONFIGURATIONS ${CMAKE_CONFIGURATION_TYPES}
-        LIBRARY DESTINATION lib/${CCP_PLATFORM}/${CCP_ARCHITECTURE}/${CCP_TOOLSET}/
-        ARCHIVE DESTINATION lib/${CCP_PLATFORM}/${CCP_ARCHITECTURE}/${CCP_TOOLSET}/
-        RUNTIME DESTINATION bin/${CCP_PLATFORM}/${CCP_ARCHITECTURE}/${CCP_TOOLSET}/
-    )
-    # Install rule for available public headers
-    install(FILES ${PUBLIC_HEADER_FILES} DESTINATION include)
-
-    configure_ccp_vendor_config_file(
-        TARGET ImageIO
-        DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/ImageIOConfig.cmake"
-        DEPENDENCIES JPEG PNG ZLIB NanoVDB
-    )
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ImageIOConfig.cmake DESTINATION .)
-
-endif()
+target_compile_options(CcpImageIO PRIVATE "${MATH_OPTIMIZE_FLAG}")
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     option(BUILD_TESTING "Build and run tests. Enabled by default." ON)
@@ -109,4 +73,60 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     if(BUILD_TESTING)
 	    add_subdirectory(tests)
     endif()
+endif()
+
+# Provide an install target iff this is the top level project only
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+
+ option(INSTALL_TO_MONOLITH "Install this package to a perforce branch vendor folder - provided for backwards compatability" OFF)
+    if (INSTALL_TO_MONOLITH)
+
+        # Install rule to ensure that our runtime and linker files are in the expected, platform-specific folders
+        install(
+            TARGETS CcpImageIO
+            EXPORT CcpImageIOTargets
+            CONFIGURATIONS ${CMAKE_CONFIGURATION_TYPES}
+            LIBRARY DESTINATION lib/${CCP_PLATFORM}/${CCP_ARCHITECTURE}/${CCP_TOOLSET}/
+            ARCHIVE DESTINATION lib/${CCP_PLATFORM}/${CCP_ARCHITECTURE}/${CCP_TOOLSET}/
+            RUNTIME DESTINATION bin/${CCP_PLATFORM}/${CCP_ARCHITECTURE}/${CCP_TOOLSET}/
+        )
+        # Install rule for available public headers
+        install(FILES ${PUBLIC_HEADER_FILES} DESTINATION include)
+
+        configure_ccp_vendor_config_file(
+            TARGET CcpImageIO
+            DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/carbon-imageioConfig.cmake"
+            DEPENDENCIES JPEG PNG ZLIB NanoVDB
+        )
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/carbon-imageioConfig.cmake DESTINATION .)
+    else ()
+
+        # Install rule to ensure that our runtime and linker files are in the vcpkg structure
+        install(
+                TARGETS CcpImageIO
+                EXPORT CcpImageIOTarget
+                CONFIGURATIONS ${CMAKE_CONFIGURATION_TYPES}
+                LIBRARY DESTINATION lib
+                RUNTIME DESTINATION bin
+        )
+
+         # Install rule for available public headers
+        install(FILES ${PUBLIC_HEADER_FILES} DESTINATION include)
+
+        install(EXPORT CcpImageIOTarget
+                DESTINATION share/carbon-imageio
+                FILE carbon-imageioTargets.cmake
+        )
+
+        include(CMakePackageConfigHelpers)
+
+        configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/carbon-imageioConfig.cmake.in 
+                                      ${CMAKE_CURRENT_BINARY_DIR}/carbon-imageioConfig.cmake
+                                      INSTALL_DESTINATION share/carbon-imageio)
+
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/carbon-imageioConfig.cmake
+                DESTINATION share/carbon-imageio)
+
+    endif()
+
 endif()

@@ -1,0 +1,39 @@
+{
+  "dependencies": [
+    {
+      "name": "libpng",
+      "version>=": "1.6.47"
+    },
+    {
+      "name": "libjpeg-turbo",
+      "version>=": "2.1.2"
+    },
+    {
+      "name": "zlib",
+      "version>=": "2.2.5"
+    },
+    {
+      "name": "carbon-core",
+      "version>=": "2.4.0"
+    },
+    {
+      "name": "openvdb",
+      "version>=": "10.0.0",
+      "features": [ "nanovdb-nocuda" ],
+      "default-features": false
+    },
+    {
+      "name": "gtest",
+      "version>=": "1.16.0",
+      "host": true
+    }
+
+  ],
+  "overrides": [
+    {
+      "name": "openexr",
+      "version": "3.2.4#0"
+    }
+  ]
+  
+}

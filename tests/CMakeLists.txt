@@ -28,7 +28,7 @@ target_precompile_headers(ImageIOTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/StdAfx
 find_package(GTest REQUIRED)
 
 
-target_link_libraries(ImageIOTest PRIVATE ImageIO GTest::GTest GTest::Main)
+target_link_libraries(ImageIOTest PRIVATE CcpImageIO GTest::GTest GTest::Main)
 if(APPLE)
     target_link_libraries(ImageIOTest PRIVATE "-framework CoreFoundation")
 elseif(WIN32)
@@ -36,11 +36,13 @@ elseif(WIN32)
 endif()
 
 if(CMAKE_IMPORT_LIBRARY_SUFFIX)
+
     add_custom_command(TARGET ImageIOTest POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:ImageIOTest> $<TARGET_FILE_DIR:ImageIOTest>
             COMMAND_EXPAND_LISTS
             VERBATIM
     )
+
 endif()
 
 target_compile_definitions(ImageIOTest PRIVATE BLUEBUILD)

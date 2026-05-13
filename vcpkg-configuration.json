@@ -1,0 +1,15 @@
+{
+  "default-registry": {
+    "kind": "git",
+    "baseline": "242ac6932a9cd2607332969129e9572516f28d65",
+    "repository": "https://github.com/microsoft/vcpkg.git"
+  },
+  "registries": [
+    {
+      "kind": "git",
+      "repository": "git@github.com:carbonengine/vcpkg-registry.git",
+      "baseline": "bcc6d146b99547f6654310495730e4cbba9ca7c3",
+      "packages": ["carbon-core", "ccp-debug-info", "tracy", "openvdb", "zlib"]
+    }
+  ]
+}
