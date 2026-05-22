@@ -1,3 +1,5 @@
+// Copyright © 2014 CCP ehf.
+
 #pragma once
 #ifndef Tr2JpgHandler_h
 #define Tr2JpgHandler_h

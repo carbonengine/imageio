@@ -1,3 +1,5 @@
+// Copyright © 2023 CCP ehf.
+
 #include "StdAfx.h"
 #include "NanoVdbSupport.h"
 #include "HostBitmap.h"

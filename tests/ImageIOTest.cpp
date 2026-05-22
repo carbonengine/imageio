@@ -1,3 +1,5 @@
+// Copyright © 2014 CCP ehf.
+
 #include "StdAfx.h"
 
 const char* g_moduleName = "ImageIOTest";

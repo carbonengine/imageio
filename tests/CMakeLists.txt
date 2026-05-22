@@ -1,3 +1,5 @@
+# Copyright © 2021 CCP ehf.
+
 project(ImageIOTest VERSION 1.0.0)
 
 ccp_add_executable(ImageIOTest

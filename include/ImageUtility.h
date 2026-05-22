@@ -1,3 +1,5 @@
+// Copyright © 2018 CCP ehf.
+
 #pragma once
 
 #ifndef ImageUtility_H

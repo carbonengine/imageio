@@ -1,3 +1,5 @@
+// Copyright © 2014 CCP ehf.
+
 #include "StdAfx.h"
 
 #include "Tr2DdsHandler.h"
@@ -598,7 +600,7 @@ bool MakePixelFormat( DDS_PIXELFORMAT& ddspf, const BitmapDimensions& bd )
 			ddspf.dwFourCC = FOURCC_DXT5;
 		}
 #if 0
-		else	// TODO legacy crap
+		else	// TODO legacy stuff
 		if( pixelFormat_Legacy == D3DFMT_DXT1 )
 		{
 			ddspf.dwFlags |= DDS_FOURCC;

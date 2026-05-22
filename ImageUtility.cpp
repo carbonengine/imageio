@@ -1,3 +1,5 @@
+// Copyright © 2018 CCP ehf.
+
 #include "StdAfx.h"
 #include "ImageUtility.h"
 #include "include/PixelFormat.h"
