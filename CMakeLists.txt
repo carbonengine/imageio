@@ -67,8 +67,9 @@ target_include_directories(CcpImageIO
 
 target_link_libraries(CcpImageIO PUBLIC
         CcpCore
-        libjpeg-turbo::turbojpeg-static
-        PNG::PNG ZLIB::ZLIB
+        $<IF:$<TARGET_EXISTS:libjpeg-turbo::turbojpeg>,libjpeg-turbo::turbojpeg,libjpeg-turbo::turbojpeg-static>
+        PNG::PNG
+        ZLIB::ZLIB
         OpenVDB::openvdb
 )
 
