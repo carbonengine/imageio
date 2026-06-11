@@ -65,7 +65,13 @@ target_include_directories(CcpImageIO
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(CcpImageIO PUBLIC CcpCore libjpeg-turbo::jpeg PNG::PNG ZLIB::ZLIB OpenVDB::openvdb)
+target_link_libraries(CcpImageIO PUBLIC
+        CcpCore
+        $<IF:$<TARGET_EXISTS:libjpeg-turbo::turbojpeg>,libjpeg-turbo::turbojpeg,libjpeg-turbo::turbojpeg-static>
+        PNG::PNG
+        ZLIB::ZLIB
+        OpenVDB::openvdb
+)
 
 target_compile_options(CcpImageIO PRIVATE "${MATH_OPTIMIZE_FLAG}")
 
