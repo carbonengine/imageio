@@ -1,5 +1,3 @@
-// Copyright © 2026 CCP ehf.
-
 package MacOS
 
 import jetbrains.buildServer.configs.kotlin.DslContext
@@ -53,7 +51,7 @@ class CarbonBuildMacOS(buildName: String, configType: String, preset: String, ag
     id(buildName.toId())
     name = buildName
 
-    artifactRules = "%env.CMAKE_INSTALL_PREFIX%"
+    artifactRules = "%env.CMAKE_INSTALL_PREFIX% => artifact.zip"
 
     params {
         param("env.SENTRY_CLI_DEBUG_SYMBOL_TYPE", "dsym")
@@ -154,13 +152,7 @@ class CarbonBuildMacOS(buildName: String, configType: String, preset: String, ag
                 authType = token {
                     token = "%GITHUB_CARBON_PAT%"
                 }
-                // Constrain PR triggers to compatible refs so as to avoid erroneous triggers
-                filterTargetBranch = """
-                    +:refs/heads/main
-                    +:refs/heads/release/*.x
-                    -:refs/heads/release/1.x
-                """.trimIndent()
-                filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER
+                filterAuthorRole = PullRequests.GitHubRoleFilter.EVERYBODY
             }
         }
         commitStatusPublisher {
@@ -195,5 +187,4 @@ class CarbonBuildMacOS(buildName: String, configType: String, preset: String, ag
         startsWith("teamcity.agent.jvm.os.arch", agentArchitecture)
     }
 })
-
 

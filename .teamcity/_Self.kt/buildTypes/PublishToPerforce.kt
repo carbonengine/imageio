@@ -1,5 +1,3 @@
-// Copyright © 2026 CCP ehf.
-
 package _Self.buildTypes
 
 import jetbrains.buildServer.configs.kotlin.*
@@ -33,7 +31,7 @@ class Publish(perforce_publish_path: String) : BuildType({
         param("env.P4PORT", "p4is.ccp.ad.local:1666")
         param("env.TC_EVE_BRANCH_SHORTNAME", "%eve_branch_shortname%")
         param("env.TC_EVE_PROJECT", "%project%")
-        param("carbon-pipeline-tools-ref", "refs/heads/main")
+        param("carbon-pipeline-tools-ref", "refs/tags/v0.1.0")
         select("eve_branch_path", "//%project%/%eve_branch_shortname%/", label = "Perforce branch", description = "Is this a regular perforce branch or a perforce stream? Used for setting the proper branch path.", display = ParameterDisplay.PROMPT,
                 options = listOf("Regular" to "//%project%/branches/%eve_branch_type%/%eve_branch_shortname%/", "Frontier Stream" to "//%project%/%eve_branch_shortname%/"))
         select("eve_branch_type", "sandbox", label = "Branch type", description = "The type of branch to publish into", display = ParameterDisplay.PROMPT,
@@ -210,7 +208,7 @@ class Publish(perforce_publish_path: String) : BuildType({
             }
 
             artifacts {
-                artifactRules = "**/*=>%perforce_path_to_publish_into%/${MacOS.arm64_Release.depParamRefs["env.GIT_TAG_HASH"]}"
+                artifactRules = "artifact.zip!**=>%perforce_path_to_publish_into%/${MacOS.arm64_Release.depParamRefs["env.GIT_TAG_HASH"]}"
             }
         }
         dependency(Windows.Debug) {
@@ -219,7 +217,7 @@ class Publish(perforce_publish_path: String) : BuildType({
             }
 
             artifacts {
-                artifactRules = "**/*=>%perforce_path_to_publish_into%/${Windows.Debug.depParamRefs["env.GIT_TAG_HASH"]}"
+                artifactRules = "artifact.zip!**=>%perforce_path_to_publish_into%/${Windows.Debug.depParamRefs["env.GIT_TAG_HASH"]}"
             }
         }
         dependency(Windows.Internal) {
@@ -228,7 +226,7 @@ class Publish(perforce_publish_path: String) : BuildType({
             }
 
             artifacts {
-                artifactRules = "**/*=>%perforce_path_to_publish_into%/${Windows.Internal.depParamRefs["env.GIT_TAG_HASH"]}"
+                artifactRules = "artifact.zip!**=>%perforce_path_to_publish_into%/${Windows.Internal.depParamRefs["env.GIT_TAG_HASH"]}"
             }
         }
         dependency(Windows.Release) {
@@ -237,7 +235,7 @@ class Publish(perforce_publish_path: String) : BuildType({
             }
 
             artifacts {
-                artifactRules = "**/*=>%perforce_path_to_publish_into%/${Windows.Release.depParamRefs["env.GIT_TAG_HASH"]}"
+                artifactRules = "artifact.zip!**=>%perforce_path_to_publish_into%/${Windows.Release.depParamRefs["env.GIT_TAG_HASH"]}"
             }
         }
         dependency(Windows.TrinityDev) {
@@ -246,7 +244,7 @@ class Publish(perforce_publish_path: String) : BuildType({
             }
 
             artifacts {
-                artifactRules = "**/*=>%perforce_path_to_publish_into%/${Windows.TrinityDev.depParamRefs["env.GIT_TAG_HASH"]}"
+                artifactRules = "artifact.zip!**=>%perforce_path_to_publish_into%/${Windows.TrinityDev.depParamRefs["env.GIT_TAG_HASH"]}"
             }
         }
         artifacts(AbsoluteId("Infrastructure_MetaTeamCity_Tools_TeamcityChanges")) {
